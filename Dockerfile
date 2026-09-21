@@ -59,9 +59,13 @@ ARG BUILD_MODE=release
 # mendapat 404 - halaman putih tanpa pesan galat apa pun.
 ARG BASE_HREF=/
 
+# --no-web-resources-cdn: CanvasKit diambil dari origin sendiri, bukan
+# gstatic.com. Membuat CSP dapat dikunci ke 'self', sekaligus menghilangkan
+# ketergantungan internet luar pada jaringan sekolah.
 RUN flutter build web \
         --${BUILD_MODE} \
         --base-href="${BASE_HREF}" \
+        --no-web-resources-cdn \
         --dart-define=API_SAME_ORIGIN=true \
         --dart-define=API_BASE_URL="${API_BASE_URL}"
 
