@@ -64,6 +64,22 @@ final temaGelapProvider = StateProvider<bool>((ref) {
   return tersimpan;
 });
 
+/// Jumlah notifikasi yang belum dibaca, untuk lencana di ikon lonceng.
+///
+/// FutureProvider, bukan Stream: notifikasi keterlambatan dibuat sekali
+/// sehari oleh pekerja server, sehingga menariknya berulang kali hanya
+/// membebani jaringan sekolah tanpa menampilkan apa pun yang baru.
+/// Disegarkan saat beranda dimuat ulang dan setelah kotak masuk dibuka.
+final unreadNotificationProvider = FutureProvider<int>((ref) async {
+  try {
+    return (await ref.watch(repositoryProvider).notifications()).unread;
+  } catch (_) {
+    // Lencana bukan informasi kritis; kegagalan jaringan tidak boleh
+    // memunculkan galat di beranda.
+    return 0;
+  }
+});
+
 /// Jumlah absensi yang masih menunggu terkirim.
 final pendingCountProvider = StreamProvider<int>((ref) async* {
   final repo = ref.watch(repositoryProvider);

@@ -608,3 +608,47 @@ class SubmissionEvent {
             DateTime.now(),
       );
 }
+
+/// Satu notifikasi di kotak masuk aplikasi.
+class AppNotification {
+  const AppNotification({
+    required this.id,
+    required this.kind,
+    required this.title,
+    required this.body,
+    required this.isRead,
+    required this.createdAt,
+  });
+
+  final String id;
+  final String kind;
+  final String title;
+  final String body;
+  final bool isRead;
+  final DateTime createdAt;
+
+  static AppNotification fromJson(Map<String, dynamic> j) => AppNotification(
+        id: j['id'] as String? ?? '',
+        kind: j['kind'] as String? ?? '',
+        title: j['title'] as String? ?? '',
+        body: j['body'] as String? ?? '',
+        isRead: j['is_read'] as bool? ?? false,
+        createdAt:
+            DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+                DateTime.now(),
+      );
+}
+
+class NotificationList {
+  const NotificationList({required this.unread, required this.items});
+
+  final int unread;
+  final List<AppNotification> items;
+
+  static NotificationList fromJson(Map<String, dynamic> j) => NotificationList(
+        unread: (j['unread'] as num?)?.toInt() ?? 0,
+        items: ((j['items'] as List<dynamic>?) ?? const [])
+            .map((e) => AppNotification.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+}

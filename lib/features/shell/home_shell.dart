@@ -11,6 +11,7 @@ import '../absensi/absensi_screen.dart';
 import '../berkas/berkas_screen.dart';
 import '../panic/panic_feed_screen.dart';
 import 'beranda_tab.dart';
+import 'notifikasi_screen.dart';
 import 'profile_screen.dart';
 import 'sidebar_menu.dart';
 import 'server_settings_screen.dart';
@@ -62,6 +63,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         _summary = summary;
         _loading = false;
       });
+      // Lencana lonceng ikut disegarkan saat beranda ditarik ulang.
+      ref.invalidate(unreadNotificationProvider);
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
@@ -259,6 +262,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ],
         ),
         actions: [
+          _LonengNotifikasi(
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NotifikasiScreen()),
+              );
+              if (mounted) ref.invalidate(unreadNotificationProvider);
+            },
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 18),
             child: ClaySurface(
@@ -304,3 +315,63 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 }
 
+
+
+/// Ikon lonceng dengan lencana jumlah notifikasi belum dibaca.
+class _LonengNotifikasi extends ConsumerWidget {
+  const _LonengNotifikasi({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Lencana gagal-diam: kegagalan jaringan mengembalikan 0, bukan galat.
+    // Angka di pojok atas bukan informasi yang layak menghentikan beranda.
+    final belum = ref.watch(unreadNotificationProvider).value ?? 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: ClaySurface(
+        radius: ClayTheme.radiusPill,
+        padding: const EdgeInsets.all(10),
+        depth: 0.7,
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(
+              belum > 0
+                  ? Icons.notifications_active_rounded
+                  : Icons.notifications_none_rounded,
+              size: ClayTheme.icon,
+              color: belum > 0 ? ClayTheme.primary : ClayTheme.textBody,
+            ),
+            if (belum > 0)
+              Positioned(
+                right: -4,
+                top: -4,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  constraints: const BoxConstraints(minWidth: 14),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: ClayTheme.danger,
+                    borderRadius: BorderRadius.circular(99),
+                  ),
+                  child: Text(
+                    belum > 9 ? '9+' : '$belum',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}

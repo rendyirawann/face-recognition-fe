@@ -341,6 +341,15 @@ class AbsensiRepository {
     return HomeSummary.fromJson(data);
   }
 
+  Future<NotificationList> notifications() async {
+    final data = await _api.getObject(ApiRoutes.myNotifications);
+    return NotificationList.fromJson(data);
+  }
+
+  Future<void> markNotificationsRead() async {
+    await _api.post(ApiRoutes.myNotificationsRead);
+  }
+
   /// Riwayat absensi siswa yang tertaut ke akun.
   ///
   /// [studentId] hanya mempersempit; server tetap memeriksa bahwa siswa itu

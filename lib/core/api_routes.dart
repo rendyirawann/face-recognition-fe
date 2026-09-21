@@ -47,6 +47,9 @@ class ApiRoutes {
   static String myRecap(String studentId) =>
       '$prefix/me/attendance/$studentId/recap';
 
+  static const String myNotifications = '$prefix/me/notifications';
+  static const String myNotificationsRead = '$prefix/me/notifications/read';
+
   // =================================================================
   // Absensi (pemantauan guru & kepala sekolah)
   // =================================================================
