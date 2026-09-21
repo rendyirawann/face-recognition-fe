@@ -148,7 +148,14 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+              // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
+              // menutupi isi terakhir bila paddingnya dipatok tetap.
+              padding: EdgeInsets.fromLTRB(
+                20,
+                8,
+                20,
+                32 + MediaQuery.viewPaddingOf(context).bottom,
+              ),
               children: [
                 // --- Jaminan anonimitas ---
                 ClaySurface(

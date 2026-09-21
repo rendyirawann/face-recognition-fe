@@ -149,7 +149,14 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Alamat Server')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+        // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
+        // menutupi isi terakhir bila paddingnya dipatok tetap.
+        padding: EdgeInsets.fromLTRB(
+          20,
+          12,
+          20,
+          32 + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           ClayCard(
             title: 'Alamat API',

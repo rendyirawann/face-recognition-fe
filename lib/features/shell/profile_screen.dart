@@ -27,7 +27,14 @@ class ProfileScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Profil')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+        // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
+        // menutupi isi terakhir bila paddingnya dipatok tetap.
+        padding: EdgeInsets.fromLTRB(
+          20,
+          12,
+          20,
+          32 + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           ClaySurface(
             child: Column(
