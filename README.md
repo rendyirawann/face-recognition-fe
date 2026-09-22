@@ -48,20 +48,29 @@ flutter pub get
 ### 3. Jalankan
 
 Aplikasi perlu backend yang hidup. Nyalakan
-[`jargon-be`](https://github.com/rendyirawann/jargon-be) lebih dulu — panduannya
-ada di README repositori itu.
+[`jargon-be`](https://github.com/rendyirawann/jargon-be) lebih dulu — satu
+perintah, `setup.bat`, dan panduannya ada di README repositori itu. Setelah
+itu seluruh backend berada di satu alamat: `http://localhost`.
+
+**Versi web sudah ikut jalan di sana.** Buka <http://localhost> dan aplikasi
+Jargon GO langsung terbuka — tidak perlu menjalankan Flutter sama sekali.
+Flutter baru dibutuhkan untuk dua hal: membangun APK, dan mengubah kode
+aplikasi dengan hot reload.
 
 ```bash
-# Paling cepat: di browser, tanpa emulator
-run-web.bat                      # Windows
-flutter run -d chrome --web-port 5000    # lain-lain
-
 # Emulator Android — 10.0.2.2 adalah localhost mesin host
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2
 
 # HP fisik — pakai IP laptop di jaringan yang sama
-flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8080
+flutter run --dart-define=API_BASE_URL=http://192.168.1.10
+
+# Di browser, bila sedang mengubah kode dan ingin hot reload
+flutter run -d chrome --web-port 5000 --dart-define=API_BASE_URL=http://localhost
 ```
+
+> Port 80 sudah dipakai Apache atau IIS? `jargon-be` dijalankan dengan
+> `HTTP_PORT=8090` di `.env`, dan semua alamat di atas menjadi
+> `http://localhost:8090`, `http://10.0.2.2:8090`, dan seterusnya.
 
 > Alamat API **tidak perlu** dipaku saat build. Buka **Profil → Alamat Server**
 > di dalam aplikasi untuk menggantinya kapan saja; pilihannya tersimpan di
@@ -189,38 +198,25 @@ balik nama domain — tanpa dibangun ulang.
 
 Berkasnya: [`Dockerfile`](Dockerfile) dan [`docker/web.conf`](docker/web.conf).
 
-### Debug cepat di browser
+### Menguji di browser
 
-Cara tercepat menguji menu Jargon GO tanpa emulator atau kabel USB:
+Aplikasi versi web sudah dilayani oleh backend di <http://localhost> — itu
+container `web` yang dibangun dari repositori ini. Untuk sekadar menjelajahi
+menu, tidak perlu Flutter, emulator, maupun kabel USB.
 
-```bat
-run-web.bat
+Bila sedang **mengubah kode** dan ingin hot reload:
+
+```bash
+flutter run -d chrome --web-port 5000 --dart-define=API_BASE_URL=http://localhost
 ```
 
-Aplikasi terbuka di <http://127.0.0.1:5000>, memakai API di
-`http://127.0.0.1:8080`. **Brave dipakai otomatis** bila terpasang — Flutter
-membaca variabel `CHROME_EXECUTABLE`, dan Brave berbasis Chromium sehingga
-hot reload serta DevTools tetap bekerja penuh.
+Port webnya dibuat tetap (`--web-port 5000`), bukan dibiarkan acak. Origin
+yang berganti setiap kali dijalankan berarti CORS ditolak setiap kali, dan
+gejalanya di layar hanya "tidak dapat menghubungi server".
 
-```bat
-run-web.bat 5001                                 :: ganti port web
-run-web.bat 5000 http://192.168.1.10:8080        :: ganti alamat API
-run-web.bat 5000 - server                        :: jangan buka browser
-```
-
-Mode `server` hanya melayani di <http://127.0.0.1:5000> tanpa membuka
-browser — pakai ini bila ingin memakai profil Brave Anda sendiri (lengkap
-dengan ekstensi dan login), bukan profil sementara yang dibuat Flutter.
-
-Skrip ini **tidak** menjalankan `cargo`. API dijalankan terpisah
-(`cd jargon-be/api && cargo run`), atau sekaligus lewat `dev.bat`.
-
-Untuk menyalakan **semuanya sekaligus** (PostgreSQL, API + Swagger, dashboard,
-dan aplikasi web) dalam satu jendela Windows Terminal, jalankan
-[`dev.bat`](../dev.bat) di akar repositori. Tab Web-nya memanggil
-`run-web.bat` ini setelah API siap, jadi layar login tidak langsung
-menampilkan "tidak dapat menghubungi server". Rincian tiap tab ada di
-[`dev-manual.txt`](../dev-manual.txt).
+Sengaja **tidak** memakai `--disable-web-security`. Mematikan CORS di browser
+membuat masalah konfigurasi tidak terlihat saat debug lalu muncul di
+produksi, tempat tidak ada flag yang bisa mematikannya.
 
 | Yang bisa diuji di browser | Yang **tidak** bisa |
 |---|---|
@@ -264,13 +260,13 @@ tidak ada di repositori: [`assets/models/README.md`](assets/models/README.md).
 flutter pub get
 
 # Emulator Android (10.0.2.2 = localhost mesin host)
-flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2
 
 # Produksi
 flutter build apk --release \
   --dart-define=API_BASE_URL=https://absensi.disdik.sumutprov.go.id \
   --dart-define=FACE_MODEL_VERSION=mobilefacenet-v1 \
-  --dart-define=FACE_EMBEDDING_DIM=512
+  --dart-define=FACE_EMBEDDING_DIM=128
 ```
 
 ---
@@ -289,15 +285,20 @@ Tombolnya sengaja ada juga di layar login: kalau alamatnya salah, pengguna
 tidak bisa masuk — sehingga layar Profil yang ada di balik login tidak akan
 pernah terjangkau untuk memperbaikinya.
 
+Backend dijalankan dengan Docker, dan nginx menyatukan API, dashboard, serta
+aplikasi web di **satu port** — 80 secara bawaan, atau nilai `HTTP_PORT` di
+`.env` milik `jargon-be`.
+
 | Tempat menjalankan | Alamat |
 |---|---|
-| Debug di browser | `http://127.0.0.1:8080` |
-| Emulator Android | `http://10.0.2.2:8080` |
-| Ponsel/tablet fisik | `http://<IP laptop>:8080` (`ipconfig` → IPv4) |
+| Debug di browser | `http://localhost` |
+| Emulator Android | `http://10.0.2.2` |
+| Ponsel/tablet fisik | `http://<IP laptop>` (`ipconfig` → IPv4) |
 | Produksi | `https://absensi.disdik.sumutprov.go.id` |
 
-Untuk perangkat fisik, ponsel harus berada di Wi-Fi yang sama dan port 8080
-perlu diizinkan Windows Firewall.
+Untuk perangkat fisik, ponsel harus berada di Wi-Fi yang sama dan port yang
+dipakai nginx (80, atau `HTTP_PORT` yang Anda setel) perlu diizinkan Windows
+Firewall.
 
 Kodenya: [`lib/core/api_config.dart`](lib/core/api_config.dart) (nilai aktif +
 validasi) dan [`lib/features/shell/server_settings_screen.dart`](lib/features/shell/server_settings_screen.dart) (layarnya).
@@ -325,9 +326,9 @@ yang membingungkan: token **ada**, hanya jenisnya yang keliru.
 
 | Kunci `--dart-define` | Bawaan | Keterangan |
 |---|---|---|
-| `API_BASE_URL` | web `127.0.0.1:8080`, lainnya `10.0.2.2:8080` | alamat awal; dapat ditimpa pengguna |
+| `API_BASE_URL` | web `127.0.0.1:8080`, lainnya `10.0.2.2:8080` | alamat awal; dapat ditimpa pengguna. Build container memakai `API_SAME_ORIGIN` |
 | `FACE_MODEL_VERSION` | `mobilefacenet-v1` | **harus sama** dengan server |
-| `FACE_EMBEDDING_DIM` | `512` | **harus sama** dengan server & model |
+| `FACE_EMBEDDING_DIM` | `128` | **harus sama** dengan server & model |
 | `FACE_MODEL_INPUT` | `112` | sisi input model (piksel) |
 | `KIOSK_ROTATION` | `0` | isi bila tablet dipasang miring |
 
