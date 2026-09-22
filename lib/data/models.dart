@@ -91,7 +91,7 @@ class DeviceConfig {
   final int heartbeatIntervalSeconds;
 
   factory DeviceConfig.fromJson(Map<String, dynamic> j) => DeviceConfig(
-    embeddingDim: (j['embedding_dim'] as num?)?.toInt() ?? 512,
+    embeddingDim: (j['embedding_dim'] as num?)?.toInt() ?? 128,
     modelVersion: j['model_version'] as String? ?? 'mobilefacenet-v1',
     matchThreshold: (j['match_threshold'] as num?)?.toDouble() ?? 0.62,
     minLiveness: (j['min_liveness'] as num?)?.toDouble() ?? 0.5,

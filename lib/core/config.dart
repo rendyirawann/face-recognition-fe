@@ -32,10 +32,15 @@ class AppConfig {
     defaultValue: 'mobilefacenet-v1',
   );
 
-  /// Dimensi vektor embedding (MobileFaceNet = 512).
+  /// Dimensi vektor embedding.
+  ///
+  /// Wajib sama dengan kolom `face_embeddings.embedding` di server, yang
+  /// bertipe `VECTOR(128)` sejak migrasi 0014. Nilai yang berbeda ditolak
+  /// saat pairing, bukan dibiarkan menghasilkan embedding yang tidak
+  /// sebanding.
   static const int embeddingDim = int.fromEnvironment(
     'FACE_EMBEDDING_DIM',
-    defaultValue: 512,
+    defaultValue: 128,
   );
 
   /// Ukuran input model, sisi persegi dalam piksel.
