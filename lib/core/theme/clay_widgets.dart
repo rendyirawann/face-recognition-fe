@@ -679,3 +679,29 @@ void showClaySnack(BuildContext context, String message, {bool error = false}) {
       ),
     );
 }
+
+/// Membatasi lebar isi pada layar lebar.
+///
+/// Aplikasi ini dirancang untuk ponsel. Dibentangkan penuh di tablet 10 inci,
+/// satu baris teks menjadi 900 piksel — jauh melewati panjang baris yang
+/// nyaman dibaca, dan kartu absensi berubah menjadi pita tipis melintang.
+///
+/// TIDAK dipasang di akar aplikasi, melainkan per layar. Layar kios absensi
+/// justru membutuhkan lebar penuh untuk pratinjau kamera; membatasi semuanya
+/// dari satu tempat akan mengecilkan kameranya juga.
+class ClayConstrained extends StatelessWidget {
+  const ClayConstrained({super.key, required this.child, this.maxWidth = 560});
+
+  final Widget child;
+  final double maxWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: child,
+      ),
+    );
+  }
+}

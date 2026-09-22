@@ -81,39 +81,41 @@ class _NotifikasiScreenState extends ConsumerState<NotifikasiScreen> {
               ),
             )
           : _error != null
-              ? ClayEmpty(
-                  icon: Icons.cloud_off_rounded,
-                  title: 'Tidak dapat memuat notifikasi',
-                  message: _error,
-                  action: ClayButton(
-                    label: 'Coba Lagi',
-                    icon: Icons.refresh_rounded,
-                    expanded: false,
-                    onPressed: _muat,
+          ? ClayEmpty(
+              icon: Icons.cloud_off_rounded,
+              title: 'Tidak dapat memuat notifikasi',
+              message: _error,
+              action: ClayButton(
+                label: 'Coba Lagi',
+                icon: Icons.refresh_rounded,
+                expanded: false,
+                onPressed: _muat,
+              ),
+            )
+          : (_data?.items.isEmpty ?? true)
+          ? const ClayEmpty(
+              icon: Icons.notifications_none_rounded,
+              title: 'Belum ada notifikasi',
+              message: 'Pemberitahuan penting akan muncul di sini.',
+            )
+          : ClayRefresh(
+              onRefresh: _muat,
+              child: ClayConstrained(
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    12,
+                    20,
+                    32 + MediaQuery.viewPaddingOf(context).bottom,
                   ),
-                )
-              : (_data?.items.isEmpty ?? true)
-                  ? const ClayEmpty(
-                      icon: Icons.notifications_none_rounded,
-                      title: 'Belum ada notifikasi',
-                      message: 'Pemberitahuan penting akan muncul di sini.',
-                    )
-                  : ClayRefresh(
-                      onRefresh: _muat,
-                      child: ListView.builder(
-                        padding: EdgeInsets.fromLTRB(
-                          20,
-                          12,
-                          20,
-                          32 + MediaQuery.viewPaddingOf(context).bottom,
-                        ),
-                        itemCount: _data!.items.length,
-                        itemBuilder: (_, i) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _Kartu(item: _data!.items[i]),
-                        ),
-                      ),
-                    ),
+                  itemCount: _data!.items.length,
+                  itemBuilder: (_, i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _Kartu(item: _data!.items[i]),
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
@@ -126,7 +128,10 @@ class _Kartu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (ikon, warna) = switch (item.kind) {
-      'telat_beruntun' => (Icons.running_with_errors_rounded, ClayTheme.warning),
+      'telat_beruntun' => (
+        Icons.running_with_errors_rounded,
+        ClayTheme.warning,
+      ),
       'panic_escalated' => (Icons.campaign_rounded, ClayTheme.danger),
       _ => (Icons.notifications_rounded, ClayTheme.info),
     };
@@ -157,8 +162,7 @@ class _Kartu extends StatelessWidget {
                   item.title,
                   style: TextStyle(
                     fontSize: 13.5,
-                    fontWeight:
-                        item.isRead ? FontWeight.w600 : FontWeight.w800,
+                    fontWeight: item.isRead ? FontWeight.w600 : FontWeight.w800,
                     color: ClayTheme.textStrong,
                   ),
                 ),

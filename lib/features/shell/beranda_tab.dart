@@ -29,82 +29,89 @@ class BerandaTab extends StatelessWidget {
 
     return ClayRefresh(
       onRefresh: onRefresh,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
-        children: [
-          // Tanggal, jam, dan lokasi. Ditaruh paling atas karena inilah yang
-          // dipakai memastikan perangkat dan jam sekolah sudah benar sebelum
-          // melihat data absensi di bawahnya.
-          const WaktuLokasiCard(),
-          const SizedBox(height: 6),
+      child: ClayConstrained(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+          children: [
+            // Tanggal, jam, dan lokasi. Ditaruh paling atas karena inilah yang
+            // dipakai memastikan perangkat dan jam sekolah sudah benar sebelum
+            // melihat data absensi di bawahnya.
+            const WaktuLokasiCard(),
+            const SizedBox(height: 6),
 
-          // --- Kartu absensi per siswa yang tertaut ---
-          if (s.students.isNotEmpty) ...[
-            const _SectionLabel('Absensi Hari Ini'),
-            ...s.students.map((student) => Padding(
+            // --- Kartu absensi per siswa yang tertaut ---
+            if (s.students.isNotEmpty) ...[
+              const _SectionLabel('Absensi Hari Ini'),
+              ...s.students.map(
+                (student) => Padding(
                   padding: const EdgeInsets.only(bottom: 14),
                   child: _StudentCard(student: student),
-                )),
-          ],
-
-          // --- Kartu sekolah untuk guru / kepala sekolah ---
-          if (s.school != null) ...[
-            const _SectionLabel('Sekolah Anda'),
-            _SchoolCard(school: s.school!),
-            const SizedBox(height: 14),
-          ],
-
-          // --- Pintasan tindakan ---
-          if (s.panicUpdates > 0 || s.documentActions > 0) ...[
-            const _SectionLabel('Perlu Perhatian'),
-            if (s.panicUpdates > 0)
-              _AlertRow(
-                icon: Icons.campaign_rounded,
-                color: ClayTheme.info,
-                background: ClayTheme.infoSoft,
-                title: '${s.panicUpdates} laporan Anda diperbarui',
-                subtitle: 'Buka menu Lapor untuk melihat tindak lanjutnya.',
+                ),
               ),
-            if (s.documentActions > 0)
-              _AlertRow(
-                icon: Icons.folder_open_rounded,
-                color: ClayTheme.warning,
-                background: ClayTheme.warningSoft,
-                title: '${s.documentActions} pengajuan berkas menunggu',
-                subtitle: 'Ada berkas yang perlu dilengkapi atau diperiksa.',
-              ),
-            const SizedBox(height: 6),
-          ],
+            ],
 
-          // --- Menu yang tersedia ---
-          const _SectionLabel('Layanan'),
-          _MenuGrid(menus: s.availableMenus),
+            // --- Kartu sekolah untuk guru / kepala sekolah ---
+            if (s.school != null) ...[
+              const _SectionLabel('Sekolah Anda'),
+              _SchoolCard(school: s.school!),
+              const SizedBox(height: 14),
+            ],
 
-          const SizedBox(height: 20),
-          ClaySurface(
-            sunken: true,
-            radius: ClayTheme.radiusSmall,
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(Icons.auto_awesome_rounded,
-                    size: 18, color: ClayTheme.textMuted),
-                const SizedBox(width: 11),
-                Expanded(
-                  child: Text(
-                    'Layanan lain dari lingkungan Pemerintah Provinsi Sumatera '
-                    'Utara akan ditambahkan ke Jargon GO secara bertahap.',
-                    style: TextStyle(
-                      color: ClayTheme.textMuted,
-                      fontSize: 11.5,
-                      height: 1.5,
+            // --- Pintasan tindakan ---
+            if (s.panicUpdates > 0 || s.documentActions > 0) ...[
+              const _SectionLabel('Perlu Perhatian'),
+              if (s.panicUpdates > 0)
+                _AlertRow(
+                  icon: Icons.campaign_rounded,
+                  color: ClayTheme.info,
+                  background: ClayTheme.infoSoft,
+                  title: '${s.panicUpdates} laporan Anda diperbarui',
+                  subtitle: 'Buka menu Lapor untuk melihat tindak lanjutnya.',
+                ),
+              if (s.documentActions > 0)
+                _AlertRow(
+                  icon: Icons.folder_open_rounded,
+                  color: ClayTheme.warning,
+                  background: ClayTheme.warningSoft,
+                  title: '${s.documentActions} pengajuan berkas menunggu',
+                  subtitle: 'Ada berkas yang perlu dilengkapi atau diperiksa.',
+                ),
+              const SizedBox(height: 6),
+            ],
+
+            // --- Menu yang tersedia ---
+            const _SectionLabel('Layanan'),
+            _MenuGrid(menus: s.availableMenus),
+
+            const SizedBox(height: 20),
+            ClaySurface(
+              sunken: true,
+              radius: ClayTheme.radiusSmall,
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.auto_awesome_rounded,
+                    size: 18,
+                    color: ClayTheme.textMuted,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Layanan lain dari lingkungan Pemerintah Provinsi Sumatera '
+                      'Utara akan ditambahkan ke Jargon GO secara bertahap.',
+                      style: TextStyle(
+                        color: ClayTheme.textMuted,
+                        fontSize: 11.5,
+                        height: 1.5,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -117,17 +124,17 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 6, top: 14, bottom: 12),
-        child: Text(
-          text.toUpperCase(),
-          style: TextStyle(
-            color: ClayTheme.textMuted,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.1,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(left: 6, top: 14, bottom: 12),
+    child: Text(
+      text.toUpperCase(),
+      style: TextStyle(
+        color: ClayTheme.textMuted,
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.1,
+      ),
+    ),
+  );
 }
 
 class _StudentCard extends StatelessWidget {
@@ -327,26 +334,26 @@ class _MiniStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          Text(
-            '$value',
-            style: TextStyle(
-              color: color,
-              fontSize: 19,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: ClayTheme.textMuted,
-              fontSize: 10.5,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      );
+    children: [
+      Text(
+        '$value',
+        style: TextStyle(
+          color: color,
+          fontSize: 19,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+      const SizedBox(height: 2),
+      Text(
+        label,
+        style: TextStyle(
+          color: ClayTheme.textMuted,
+          fontSize: 10.5,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ],
+  );
 }
 
 class _SchoolCard extends StatelessWidget {
@@ -359,8 +366,8 @@ class _SchoolCard extends StatelessWidget {
     final rateColor = school.rate >= 90
         ? ClayTheme.success
         : school.rate >= 75
-            ? ClayTheme.warning
-            : ClayTheme.danger;
+        ? ClayTheme.warning
+        : ClayTheme.danger;
 
     return ClaySurface(
       child: Column(
@@ -452,7 +459,13 @@ class _AlertRow extends StatelessWidget {
       depth: 0.75,
       child: Row(
         children: [
-          ClayIcon(icon: icon, color: color, background: background, size: 19, padding: 11),
+          ClayIcon(
+            icon: icon,
+            color: color,
+            background: background,
+            size: 19,
+            padding: 11,
+          ),
           SizedBox(width: 13),
           Expanded(
             child: Column(
@@ -553,10 +566,7 @@ class _MenuGrid extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      color: ClayTheme.textMuted,
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: ClayTheme.textMuted, fontSize: 11),
                   ),
                 ],
               ),

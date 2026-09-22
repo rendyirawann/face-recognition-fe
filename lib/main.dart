@@ -134,6 +134,29 @@ class _JargonAppState extends ConsumerState<JargonApp> {
       child: MaterialApp(
       title: 'Jargon GO',
       navigatorKey: navigatorKey,
+
+      // Skala font sistem dibatasi 0,9-1,3.
+      //
+      // Android mengizinkan pengguna menyetelnya sampai 200%. Pada nilai itu
+      // kartu absensi, lencana, dan bilah navigasi meluap — dan meluapnya
+      // bukan sekadar jelek: angka jam masuk terpotong, yang justru satu-
+      // satunya hal yang dicari orang tua di layar itu.
+      //
+      // Batas bawah 0,9 mencegah teks mengecil sampai tidak terbaca di layar
+      // ponsel murah. Yang dibatasi hanya rentangnya; pengguna yang menyetel
+      // font besar tetap mendapat teks yang lebih besar.
+      builder: (context, child) {
+        final mq = MediaQuery.of(context);
+        return MediaQuery(
+          data: mq.copyWith(
+            textScaler: mq.textScaler.clamp(
+              minScaleFactor: 0.9,
+              maxScaleFactor: 1.3,
+            ),
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
       debugShowCheckedModeBanner: false,
       locale: const Locale('id'),
       supportedLocales: const [Locale('id'), Locale('en')],
