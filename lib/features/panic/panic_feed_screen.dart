@@ -62,9 +62,9 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
   }
 
   Future<void> _openCompose() async {
-    final created = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => const PanicComposeScreen()),
-    );
+    final created = await Navigator.of(
+      context,
+    ).push<bool>(MaterialPageRoute(builder: (_) => const PanicComposeScreen()));
     if (created == true) {
       setState(() => _mineOnly = true);
       await _load();
@@ -121,8 +121,11 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
               padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
-                  Icon(Icons.shield_rounded,
-                      size: 19, color: ClayTheme.primary),
+                  Icon(
+                    Icons.shield_rounded,
+                    size: 19,
+                    color: ClayTheme.primary,
+                  ),
                   const SizedBox(width: 11),
                   Expanded(
                     child: Text(
@@ -171,57 +174,55 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
-                    ? ClayEmpty(
-                        icon: Icons.cloud_off_rounded,
-                        title: 'Gagal memuat laporan',
-                        message: _error,
-                        action: ClayButton(
-                          label: 'Coba Lagi',
-                          icon: Icons.refresh_rounded,
-                          expanded: false,
-                          onPressed: _load,
-                        ),
-                      )
-                    : _reports.isEmpty
-                        ? ClayEmpty(
-                            icon: _mineOnly
-                                ? Icons.drafts_outlined
-                                : Icons.forum_outlined,
-                            title: _mineOnly
-                                ? 'Anda belum membuat laporan'
-                                : 'Belum ada laporan',
-                            message: _mineOnly
-                                ? 'Laporan yang Anda kirim akan muncul di sini '
-                                    'beserta perkembangan penanganannya.'
-                                : 'Laporan yang sudah diperiksa petugas akan '
-                                    'tampil di sini.',
-                          )
-                        : RefreshIndicator(
-                            onRefresh: _load,
-                            color: ClayTheme.primary,
-                            child: ListView.builder(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 8, 20, 110),
-                              itemCount: _reports.length,
-                              itemBuilder: (context, i) => Padding(
-                                padding: const EdgeInsets.only(bottom: 14),
-                                child: PanicReportCard(
-                                  report: _reports[i],
-                                  onSupport: () => _toggleSupport(_reports[i]),
-                                  onTap: () async {
-                                    await Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) => PanicDetailScreen(
-                                          reportId: _reports[i].id,
-                                        ),
-                                      ),
-                                    );
-                                    if (mounted) await _load();
-                                  },
-                                ),
+                ? ClayEmpty(
+                    icon: Icons.cloud_off_rounded,
+                    title: 'Gagal memuat laporan',
+                    message: _error,
+                    action: ClayButton(
+                      label: 'Coba Lagi',
+                      icon: Icons.refresh_rounded,
+                      expanded: false,
+                      onPressed: _load,
+                    ),
+                  )
+                : _reports.isEmpty
+                ? ClayEmpty(
+                    icon: _mineOnly
+                        ? Icons.drafts_outlined
+                        : Icons.forum_outlined,
+                    title: _mineOnly
+                        ? 'Anda belum membuat laporan'
+                        : 'Belum ada laporan',
+                    message: _mineOnly
+                        ? 'Laporan yang Anda kirim akan muncul di sini '
+                              'beserta perkembangan penanganannya.'
+                        : 'Laporan yang sudah diperiksa petugas akan '
+                              'tampil di sini.',
+                  )
+                : RefreshIndicator(
+                    onRefresh: _load,
+                    color: ClayTheme.primary,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
+                      itemCount: _reports.length,
+                      itemBuilder: (context, i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 14),
+                        child: PanicReportCard(
+                          report: _reports[i],
+                          onSupport: () => _toggleSupport(_reports[i]),
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    PanicDetailScreen(reportId: _reports[i].id),
                               ),
-                            ),
-                          ),
+                            );
+                            if (mounted) await _load();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -242,20 +243,20 @@ class _FilterPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ClaySurface(
-        radius: ClayTheme.radiusPill,
-        padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 9),
-        color: selected ? ClayTheme.primary : ClayTheme.surface,
-        depth: 0.6,
-        onTap: onTap,
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.white : ClayTheme.textMuted,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
+    radius: ClayTheme.radiusPill,
+    padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 9),
+    color: selected ? ClayTheme.primary : ClayTheme.surface,
+    depth: 0.6,
+    onTap: onTap,
+    child: Text(
+      label,
+      style: TextStyle(
+        color: selected ? Colors.white : ClayTheme.textMuted,
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 }
 
 /// Kartu laporan di feed.
@@ -311,10 +312,7 @@ class PanicReportCard extends StatelessWidget {
                         ),
                         if (report.isMine) ...[
                           const SizedBox(width: 7),
-                          ClayBadge(
-                            label: 'Anda',
-                            color: ClayTheme.primary,
-                          ),
+                          ClayBadge(label: 'Anda', color: ClayTheme.primary),
                         ],
                       ],
                     ),
@@ -370,11 +368,7 @@ class PanicReportCard extends StatelessWidget {
                 separatorBuilder: (_, _) => const SizedBox(width: 9),
                 itemBuilder: (context, i) => ClipRRect(
                   borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
-                  child: AuthedImage(
-                    report.media[i],
-                    width: 92,
-                    height: 92,
-                  ),
+                  child: AuthedImage(report.media[i], width: 92, height: 92),
                 ),
               ),
             ),
@@ -394,8 +388,8 @@ class PanicReportCard extends StatelessWidget {
                 color: report.isResolved
                     ? ClayTheme.success
                     : report.isHandled
-                        ? ClayTheme.info
-                        : ClayTheme.textMuted,
+                    ? ClayTheme.info
+                    : ClayTheme.textMuted,
               ),
             ],
           ),
@@ -465,29 +459,29 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 9),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 17, color: color),
-              const SizedBox(width: 7),
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 17, color: color),
+          const SizedBox(width: 7),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w700,
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }

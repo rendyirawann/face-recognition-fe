@@ -7,29 +7,18 @@ import 'package:flutter/material.dart';
 /// SEPASANG bayangan — gelap di kanan-bawah dan terang di kiri-atas. Tidak ada
 /// garis tepi; kedalamanlah yang memisahkan elemen.
 ///
-/// Konsekuensi yang perlu dijaga di seluruh aplikasi:
+/// Tersedia dalam dua palet, terang dan gelap. Tiga aturan yang berlaku di
+/// keduanya:
 ///
-/// Palet ini **GELAP** — biru malam. Dua hal berubah dibanding versi terang,
-/// dan keduanya bukan sekadar menukar angka warna:
-///
-/// * **Bayangan terang harus sangat tipis.** Pada latar terang, highlight
-///   kiri-atas nyaris putih penuh. Nilai yang sama di atas latar gelap
-///   terlihat seperti garis tepi menyala, dan seluruh kesan tanah liat
-///   hilang. Sebaliknya bayangan gelapnya harus lebih PEKAT, karena bayangan
-///   tipis di atas latar gelap tidak menghasilkan kedalaman apa pun.
-/// * **Pasangan "soft" jadi lebih gelap, bukan lebih muda.** `primarySoft`
-///   dan kawan-kawannya dipakai sebagai latar lencana; versi pastel di atas
-///   latar gelap membuat teks di dalamnya kehilangan kontras.
-///
-/// * **Kontras teks tidak boleh ikut melunak.** Latar lembut menggoda untuk
-///   memakai teks abu-abu muda, dan hasilnya tidak terbaca di layar ponsel
-///   murah di bawah sinar matahari. Di mode gelap godaannya terbalik —
-///   abu-abu tua yang "kalem" di atas latar gelap sama-sama tidak terbaca.
-///   Warna teks di sini sengaja tetap pekat kontrasnya.
-/// * **Bayangan bukan hiasan, melainkan penanda status.** Elemen yang bisa
-///   ditekan timbul (bayangan keluar); elemen yang sedang aktif atau berupa
-///   isian tenggelam (bayangan ke dalam). Bila keduanya dipakai sembarangan,
-///   pengguna kehilangan satu-satunya petunjuk mana yang bisa disentuh.
+/// * **Bayangan terang berbalik arah.** Nyaris putih pada latar terang; biru
+///   muda ber-alpha rendah pada latar gelap, karena putih pekat di sana
+///   terbaca sebagai garis tepi menyala. Bayangan gelapnya justru lebih pekat
+///   di mode gelap.
+/// * **Pasangan "soft" berbalik arah.** Pastel di mode terang, pekat di mode
+///   gelap. Keduanya latar lencana, dan pastel di atas gelap membuat teksnya
+///   hilang kontras.
+/// * **Bayangan adalah penanda status, bukan hiasan.** Elemen yang bisa
+///   ditekan timbul; yang sedang aktif atau berupa isian tenggelam.
 class ClayTheme {
   const ClayTheme._();
 
@@ -53,22 +42,10 @@ class ClayTheme {
   /// rebuild tidak akan mengubah apa pun di layar.
   static void pakai({required bool gelap}) => _gelap = gelap;
 
-  // ---------------------------------------------------------------
-  // Palet — getter, bukan `const`
-  //
-  // Semula seluruhnya `static const`, dan 298 tempat di aplikasi membacanya
-  // langsung. Itu bekerja sempurna untuk SATU tema dan mustahil untuk dua:
-  // nilai const ditentukan saat kompilasi, jadi tidak ada cara menukarnya
-  // saat aplikasi berjalan.
-  //
-  // Perlu dicatat bahwa ini BUKAN akibat memilih pendekatan getter —
-  // `Theme.of(context).x` juga tidak bisa dipakai di dalam `const TextStyle`.
-  // Melepas `const` pada widget yang memakai warna tema tidak dapat
-  // dihindari oleh pendekatan mana pun.
-  //
-  // Yang hilang: `const` pada widget-widget itu, sehingga Flutter tidak lagi
-  // menyimpan instansnya. Yang didapat: 298 tempat itu tidak perlu diubah.
-  // ---------------------------------------------------------------
+  // Warna berupa getter, bukan `const`: nilai const ditentukan saat
+  // kompilasi sehingga tidak bisa ditukar saat aplikasi berjalan. Melepas
+  // `const` pada widget pemakainya tidak terhindarkan — `Theme.of(context)`
+  // pun tidak bisa masuk ke dalam `const TextStyle`.
 
   static Color get background => _gelap ? _G.background : _T.background;
   static Color get surface => _gelap ? _G.surface : _T.surface;
@@ -99,18 +76,12 @@ class ClayTheme {
   static Color get snackText =>
       _gelap ? _G.textStrong : const Color(0xFFF4F6FD);
 
-  /// Latar kotak isian. TERANG walau temanya gelap.
+  /// Latar kotak isian. Terang di kedua tema — pada palet gelap, isian
+  /// berwarna `surface` menyatu dengan kartu di sekelilingnya.
   ///
-  /// Ini pengecualian yang disengaja terhadap palet gelap. Isian yang
-  /// digambar dengan warna `surface` menyatu dengan kartu di sekelilingnya,
-  /// dan pengguna kehilangan satu-satunya petunjuk mana yang bisa diketik.
-  /// Kotak terang adalah isyarat yang sudah dikenal semua orang tanpa perlu
-  /// dipelajari.
-  ///
-  /// Konsekuensi yang WAJIB diikuti: teks dan hint di dalam isian memakai
-  /// [fieldText] dan [fieldHint], BUKAN `textStrong`/`textMuted`. Memakai
-  /// warna teks tema gelap di atas kotak terang menghasilkan teks terang di
-  /// atas latar terang — isian yang tampak kosong padahal ada isinya.
+  /// Wajib diikuti: teks dan hint di dalamnya memakai [fieldText] dan
+  /// [fieldHint]. Warna teks tema gelap di atas kotak terang menghasilkan
+  /// isian yang tampak kosong padahal sudah diisi.
   static const Color fieldFill = Color(0xFFF3F5FC);
   static const Color fieldText = Color(0xFF1B2540);
   static const Color fieldHint = Color(0xFF8A93AD);
@@ -188,31 +159,23 @@ class ClayTheme {
 
   /// Bayangan "timbul" untuk elemen yang bisa ditekan.
   static List<BoxShadow> raised({double depth = 1}) => [
-        BoxShadow(
-          color: shadowDark,
-          offset: Offset(6 * depth, 7 * depth),
-          blurRadius: 16 * depth,
-        ),
-        BoxShadow(
-          color: shadowLight,
-          offset: Offset(-5 * depth, -5 * depth),
-          blurRadius: 14 * depth,
-        ),
-      ];
+    BoxShadow(
+      color: shadowDark,
+      offset: Offset(6 * depth, 7 * depth),
+      blurRadius: 16 * depth,
+    ),
+    BoxShadow(
+      color: shadowLight,
+      offset: Offset(-5 * depth, -5 * depth),
+      blurRadius: 14 * depth,
+    ),
+  ];
 
   /// Bayangan lebih rendah untuk elemen yang sedang ditekan.
   static List<BoxShadow> pressed() => [
-        BoxShadow(
-          color: shadowDark,
-          offset: Offset(2, 2),
-          blurRadius: 6,
-        ),
-        BoxShadow(
-          color: shadowLight,
-          offset: Offset(-1, -1),
-          blurRadius: 4,
-        ),
-      ];
+    BoxShadow(color: shadowDark, offset: Offset(2, 2), blurRadius: 6),
+    BoxShadow(color: shadowLight, offset: Offset(-1, -1), blurRadius: 4),
+  ];
 
   // ---------------------------------------------------------------
   // ThemeData
@@ -390,51 +353,51 @@ class ClayTheme {
 
   /// Warna aksen untuk status absensi.
   static Color statusColor(String status) => switch (status) {
-        'hadir' => success,
-        'terlambat' => warning,
-        'izin' || 'dispensasi' => info,
-        'sakit' => secondary,
-        'alfa' => danger,
-        _ => textMuted,
-      };
+    'hadir' => success,
+    'terlambat' => warning,
+    'izin' || 'dispensasi' => info,
+    'sakit' => secondary,
+    'alfa' => danger,
+    _ => textMuted,
+  };
 
   /// Latar lencana status. Pada mode gelap nilainya adalah versi PEKAT dari
   /// warna statusnya, bukan versi pastel — pastel di atas latar gelap
   /// membuat teks di dalam lencana kehilangan kontras.
   static Color statusSoft(String status) => switch (status) {
-        'hadir' => successSoft,
-        'terlambat' => warningSoft,
-        'izin' || 'dispensasi' => infoSoft,
-        'sakit' => const Color(0xFF10332F),
-        'alfa' => dangerSoft,
-        _ => const Color(0xFF232D48),
-      };
+    'hadir' => successSoft,
+    'terlambat' => warningSoft,
+    'izin' || 'dispensasi' => infoSoft,
+    'sakit' => const Color(0xFF10332F),
+    'alfa' => dangerSoft,
+    _ => const Color(0xFF232D48),
+  };
 
   static String statusLabel(String status) => switch (status) {
-        'hadir' => 'Hadir',
-        'terlambat' => 'Terlambat',
-        'izin' => 'Izin',
-        'sakit' => 'Sakit',
-        'alfa' => 'Tanpa Keterangan',
-        'dispensasi' => 'Dispensasi',
-        'belum_absen' => 'Belum Absen',
-        _ => status,
-      };
+    'hadir' => 'Hadir',
+    'terlambat' => 'Terlambat',
+    'izin' => 'Izin',
+    'sakit' => 'Sakit',
+    'alfa' => 'Tanpa Keterangan',
+    'dispensasi' => 'Dispensasi',
+    'belum_absen' => 'Belum Absen',
+    _ => status,
+  };
 
   /// Warna untuk tingkat keparahan pengaduan.
   static Color severityColor(String severity) => switch (severity) {
-        'darurat' => danger,
-        'tinggi' => const Color(0xFFFB923C),
-        'sedang' => warning,
-        _ => info,
-      };
+    'darurat' => danger,
+    'tinggi' => const Color(0xFFFB923C),
+    'sedang' => warning,
+    _ => info,
+  };
 
   static String severityLabel(String severity) => switch (severity) {
-        'darurat' => 'Darurat',
-        'tinggi' => 'Tinggi',
-        'sedang' => 'Sedang',
-        _ => 'Rendah',
-      };
+    'darurat' => 'Darurat',
+    'tinggi' => 'Tinggi',
+    'sedang' => 'Sedang',
+    _ => 'Rendah',
+  };
 }
 
 /// Palet GELAP — biru malam.

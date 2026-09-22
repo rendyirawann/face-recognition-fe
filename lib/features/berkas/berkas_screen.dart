@@ -63,15 +63,20 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
   }
 
   Future<void> _createSubmission() async {
-    final result = await showModalBottomSheet<({String purpose, String title, String? period})>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => const _NewSubmissionSheet(),
-    );
+    final result =
+        await showModalBottomSheet<
+          ({String purpose, String title, String? period})
+        >(
+          context: context,
+          isScrollControlled: true,
+          builder: (_) => const _NewSubmissionSheet(),
+        );
     if (result == null) return;
 
     try {
-      final created = await ref.read(repositoryProvider).createSubmission(
+      final created = await ref
+          .read(repositoryProvider)
+          .createSubmission(
             purpose: result.purpose,
             title: result.title,
             period: result.period,
@@ -120,48 +125,48 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? ClayEmpty(
-                  icon: Icons.cloud_off_rounded,
-                  title: 'Gagal memuat pengajuan',
-                  message: _error,
-                  action: ClayButton(
-                    label: 'Coba Lagi',
-                    icon: Icons.refresh_rounded,
-                    expanded: false,
-                    onPressed: _load,
-                  ),
-                )
-              : _items.isEmpty
-                  ? const ClayEmpty(
-                      icon: Icons.folder_open_rounded,
-                      title: 'Belum ada pengajuan',
-                      message: 'Buat pengajuan untuk mengunggah berkas '
-                          'kenaikan pangkat, sertifikasi, atau keperluan lain.',
-                    )
-                  : RefreshIndicator(
-                      onRefresh: _load,
-                      color: ClayTheme.primary,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
-                        itemCount: _items.length,
-                        itemBuilder: (context, i) => Padding(
-                          padding: const EdgeInsets.only(bottom: 13),
-                          child: _SubmissionCard(
-                            item: _items[i],
-                            onTap: () async {
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => BerkasDetailScreen(
-                                    submissionId: _items[i].id,
-                                  ),
-                                ),
-                              );
-                              if (mounted) await _load();
-                            },
-                          ),
+          ? ClayEmpty(
+              icon: Icons.cloud_off_rounded,
+              title: 'Gagal memuat pengajuan',
+              message: _error,
+              action: ClayButton(
+                label: 'Coba Lagi',
+                icon: Icons.refresh_rounded,
+                expanded: false,
+                onPressed: _load,
+              ),
+            )
+          : _items.isEmpty
+          ? const ClayEmpty(
+              icon: Icons.folder_open_rounded,
+              title: 'Belum ada pengajuan',
+              message:
+                  'Buat pengajuan untuk mengunggah berkas '
+                  'kenaikan pangkat, sertifikasi, atau keperluan lain.',
+            )
+          : RefreshIndicator(
+              onRefresh: _load,
+              color: ClayTheme.primary,
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
+                itemCount: _items.length,
+                itemBuilder: (context, i) => Padding(
+                  padding: const EdgeInsets.only(bottom: 13),
+                  child: _SubmissionCard(
+                    item: _items[i],
+                    onTap: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              BerkasDetailScreen(submissionId: _items[i].id),
                         ),
-                      ),
-                    ),
+                      );
+                      if (mounted) await _load();
+                    },
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
@@ -320,8 +325,10 @@ class _NewSubmissionSheetState extends State<_NewSubmissionSheet> {
               final selected = _purpose == e.key;
               return ClaySurface(
                 radius: ClayTheme.radiusPill,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
+                ),
                 color: selected ? ClayTheme.primary : ClayTheme.surface,
                 depth: 0.6,
                 onTap: () => setState(() => _purpose = e.key),

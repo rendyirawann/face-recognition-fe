@@ -33,12 +33,28 @@ enum _Lokasi { memuat, siap, layananMati, ditolak, ditolakPermanen, gagal }
 
 class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
   static const _hari = [
-    'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu',
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu',
+    'Minggu',
   ];
 
   static const _bulan = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
   ];
 
   Timer? _jam;
@@ -113,7 +129,8 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
       // Koordinat dipasang lebih dulu sebagai cadangan. Bila penerjemahan
       // ke nama tempat gagal — biasanya karena jaringan — kartunya tetap
       // menampilkan sesuatu yang benar alih-alih pesan galat.
-      var nama = '${posisi.latitude.toStringAsFixed(4)}, '
+      var nama =
+          '${posisi.latitude.toStringAsFixed(4)}, '
           '${posisi.longitude.toStringAsFixed(4)}';
 
       try {
@@ -230,30 +247,30 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
   Widget _barisLokasi() {
     final (ikon, warna, teks) = switch (_status) {
       _Lokasi.memuat => (
-          Icons.my_location_rounded,
-          ClayTheme.textMuted,
-          'Mencari lokasi…',
-        ),
+        Icons.my_location_rounded,
+        ClayTheme.textMuted,
+        'Mencari lokasi…',
+      ),
       _Lokasi.siap => (
-          Icons.location_on_rounded,
-          ClayTheme.primary,
-          _tempat ?? '-',
-        ),
+        Icons.location_on_rounded,
+        ClayTheme.primary,
+        _tempat ?? '-',
+      ),
       _Lokasi.layananMati => (
-          Icons.location_disabled_rounded,
-          ClayTheme.warning,
-          _pesan ?? 'Layanan lokasi mati.',
-        ),
+        Icons.location_disabled_rounded,
+        ClayTheme.warning,
+        _pesan ?? 'Layanan lokasi mati.',
+      ),
       _Lokasi.ditolak || _Lokasi.ditolakPermanen => (
-          Icons.location_off_rounded,
-          ClayTheme.warning,
-          _pesan ?? 'Izin lokasi belum diberikan.',
-        ),
+        Icons.location_off_rounded,
+        ClayTheme.warning,
+        _pesan ?? 'Izin lokasi belum diberikan.',
+      ),
       _Lokasi.gagal => (
-          Icons.location_off_rounded,
-          ClayTheme.textMuted,
-          _pesan ?? 'Lokasi tidak terbaca.',
-        ),
+        Icons.location_off_rounded,
+        ClayTheme.textMuted,
+        _pesan ?? 'Lokasi tidak terbaca.',
+      ),
     };
 
     // Tindakan pemulihan berbeda menurut sebabnya. Menawarkan "Coba lagi"
@@ -261,22 +278,20 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
     // satu-satunya jalan keluarnya ada di Pengaturan sistem.
     final Widget? aksi = switch (_status) {
       _Lokasi.memuat => const SizedBox(
-          width: 14,
-          height: 14,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
+        width: 14,
+        height: 14,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
       _Lokasi.ditolakPermanen => _AksiKecil(
-          label: 'Pengaturan',
-          onTap: () => Geolocator.openAppSettings(),
-        ),
+        label: 'Pengaturan',
+        onTap: () => Geolocator.openAppSettings(),
+      ),
       _Lokasi.layananMati => _AksiKecil(
-          label: 'Aktifkan',
-          onTap: () => Geolocator.openLocationSettings(),
-        ),
-      _Lokasi.ditolak || _Lokasi.gagal => _AksiKecil(
-          label: 'Coba lagi',
-          onTap: _muatLokasi,
-        ),
+        label: 'Aktifkan',
+        onTap: () => Geolocator.openLocationSettings(),
+      ),
+      _Lokasi.ditolak ||
+      _Lokasi.gagal => _AksiKecil(label: 'Coba lagi', onTap: _muatLokasi),
       _Lokasi.siap => null,
     };
 

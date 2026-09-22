@@ -84,12 +84,12 @@ class ClayBerandaSkeleton extends StatelessWidget {
   }
 
   Widget _kartu({required double tinggi}) => Container(
-        height: tinggi,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(ClayTheme.radius),
-        ),
-      );
+    height: tinggi,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(ClayTheme.radius),
+    ),
+  );
 }
 
 /// Tarik-ke-bawah bergaya claymorphism.
@@ -99,11 +99,7 @@ class ClayBerandaSkeleton extends StatelessWidget {
 /// aplikasi lain. Paket `custom_refresh_indicator` memberi kendali penuh
 /// atas apa yang digambar, dengan imbalan indikatornya harus disusun sendiri.
 class ClayRefresh extends StatelessWidget {
-  const ClayRefresh({
-    super.key,
-    required this.onRefresh,
-    required this.child,
-  });
+  const ClayRefresh({super.key, required this.onRefresh, required this.child});
 
   final Future<void> Function() onRefresh;
   final Widget child;
@@ -134,17 +130,11 @@ class ClayRefresh extends StatelessWidget {
                   child: Center(
                     child: Opacity(
                       opacity: v.clamp(0.0, 1.0),
-                      child: _Indikator(
-                        maju: v,
-                        memuat: kendali.isLoading,
-                      ),
+                      child: _Indikator(maju: v, memuat: kendali.isLoading),
                     ),
                   ),
                 ),
-                Transform.translate(
-                  offset: Offset(0, 72 * v),
-                  child: anak,
-                ),
+                Transform.translate(offset: Offset(0, 72 * v), child: anak),
               ],
             );
           },

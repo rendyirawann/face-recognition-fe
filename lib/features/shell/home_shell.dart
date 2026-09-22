@@ -31,13 +31,9 @@ class HomeShell extends ConsumerStatefulWidget {
 }
 
 class _HomeShellState extends ConsumerState<HomeShell> {
-  /// Kendali drawer dipegang di sini, BUKAN diambil lewat
-  /// `ZoomDrawer.of(context)` dari dalam bilah navigasi.
-  ///
-  /// Bilah itu dibangun pada build method yang sama dengan `ZoomDrawer`,
-  /// sehingga context yang dipakainya berada DI ATAS drawer dalam pohon
-  /// widget — `ZoomDrawer.of` di sana mengembalikan null, dan tombolnya
-  /// tidak melakukan apa pun tanpa satu pun pesan galat.
+  /// Kendali drawer dipegang di sini, bukan lewat `ZoomDrawer.of(context)`:
+  /// bilah navigasi dibangun pada build yang sama, sehingga contextnya berada
+  /// di atas drawer dan `ZoomDrawer.of` mengembalikan null tanpa pesan galat.
   final ZoomDrawerController _drawer = ZoomDrawerController();
 
   int _index = 0;
@@ -92,36 +88,40 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         label: 'Beranda',
       ),
     ];
-    final pages = <Widget>[
-      BerandaTab(summary: summary, onRefresh: _load),
-    ];
+    final pages = <Widget>[BerandaTab(summary: summary, onRefresh: _load)];
 
     if (summary?.hasMenu('absensi') ?? false) {
-      items.add(const ClayNavItem(
-        icon: Icons.fact_check_outlined,
-        activeIcon: Icons.fact_check_rounded,
-        label: 'Absensi',
-      ));
+      items.add(
+        const ClayNavItem(
+          icon: Icons.fact_check_outlined,
+          activeIcon: Icons.fact_check_rounded,
+          label: 'Absensi',
+        ),
+      );
       pages.add(const AbsensiScreen());
     }
 
     if (summary?.hasMenu('panic_button') ?? false) {
-      items.add(ClayNavItem(
-        icon: Icons.campaign_outlined,
-        activeIcon: Icons.campaign_rounded,
-        label: 'Lapor',
-        badge: summary?.panicUpdates ?? 0,
-      ));
+      items.add(
+        ClayNavItem(
+          icon: Icons.campaign_outlined,
+          activeIcon: Icons.campaign_rounded,
+          label: 'Lapor',
+          badge: summary?.panicUpdates ?? 0,
+        ),
+      );
       pages.add(const PanicFeedScreen());
     }
 
     if (summary?.hasMenu('pemberkasan') ?? false) {
-      items.add(ClayNavItem(
-        icon: Icons.folder_outlined,
-        activeIcon: Icons.folder_rounded,
-        label: 'Berkas',
-        badge: summary?.documentActions ?? 0,
-      ));
+      items.add(
+        ClayNavItem(
+          icon: Icons.folder_outlined,
+          activeIcon: Icons.folder_rounded,
+          label: 'Berkas',
+          badge: summary?.documentActions ?? 0,
+        ),
+      );
       pages.add(const BerkasScreen());
     }
 
@@ -153,20 +153,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       // digulir, dan gestur drawer akan merebut sentuhan itu.
       disableDragGesture: true,
 
-      // Ketuk di mana pun untuk menutup — di layar utama maupun di area
-      // kosong sidebar. Tanpa dua opsi ini, drawer hanya bisa ditutup dengan
-      // memilih salah satu menu, dan pengguna yang cuma ingin melihat
-      // daftarnya lalu kembali menjadi terjebak.
-      //
-      // Aman terhadap salah sentuh: `mainScreenAbsorbPointer` bawaan paket
-      // bernilai true, dan GestureDetector penutupnya dipasang DI LUAR
-      // AbsorbPointer itu — jadi ketukan menutup drawer tanpa menembus ke
-      // tombol yang ada di bawahnya.
-      //
-      // Ketukan pada baris menu dan pemilih tema tetap bekerja seperti
-      // biasa: GestureDetector di dalamnya memenangkan gesture arena lebih
-      // dulu. Pemilih tema sengaja TIDAK menutup drawer, supaya perubahan
-      // temanya langsung terlihat dan bisa dikembalikan.
+      // Ketuk di mana pun untuk menutup. Aman terhadap salah sentuh:
+      // `mainScreenAbsorbPointer` bawaan paket bernilai true dan
+      // GestureDetector penutupnya berada di luar AbsorbPointer itu, jadi
+      // ketukan tidak menembus ke tombol di bawahnya. Baris menu tetap bisa
+      // diketuk karena detektornya lebih dalam.
       mainScreenTapClose: true,
       menuScreenTapClose: true,
 
@@ -191,20 +182,16 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         onPilihTab: (i) => setState(() => _index = i),
         tab: [
           for (final it in tabs.items)
-            SidebarItem(
-              icon: it.activeIcon,
-              label: it.label,
-              badge: it.badge,
-            ),
+            SidebarItem(icon: it.activeIcon, label: it.label, badge: it.badge),
         ],
         lainnya: [
           SidebarItem(
             icon: Icons.person_outline_rounded,
             label: 'Profil Saya',
             keterangan: 'Lengkapi data diri',
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            ),
+            onTap: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const ProfileScreen())),
           ),
           SidebarItem(
             icon: Icons.dns_outlined,
@@ -217,105 +204,103 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ],
       ),
       mainScreen: Scaffold(
-      appBar: AppBar(
-        // Tombol sidebar di ATAS, pada posisi leading — tempat yang memang
-        // dicari orang untuk menu. Sebelumnya ditaruh di bilah bawah agar
-        // tetap terlihat saat digulir, tetapi itu menempatkannya di tempat
-        // yang tidak lazim: bilah bawah dibaca sebagai perpindahan tab,
-        // bukan sebagai pembuka menu.
-        leadingWidth: 62,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 18),
-          child: ClaySurface(
-            radius: ClayTheme.radiusPill,
-            padding: const EdgeInsets.all(10),
-            depth: 0.7,
-            onTap: () => _drawer.toggle?.call(),
-            child: Icon(
-              Icons.menu_rounded,
-              size: ClayTheme.icon,
-              color: ClayTheme.primary,
-            ),
-          ),
-        ),
-        titleSpacing: 8,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _summary?.greeting ?? 'Jargon GO',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w800,
-                color: ClayTheme.textStrong,
-              ),
-            ),
-            Text(
-              _summary?.roleLabel ?? user?.roleLabel ?? '',
-              style: TextStyle(
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-                color: ClayTheme.textMuted,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          _LonengNotifikasi(
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const NotifikasiScreen()),
-              );
-              if (mounted) ref.invalidate(unreadNotificationProvider);
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 18),
+        appBar: AppBar(
+          // Tombol sidebar di ATAS, pada posisi leading — tempat yang memang
+          // dicari orang untuk menu. Sebelumnya ditaruh di bilah bawah agar
+          // tetap terlihat saat digulir, tetapi itu menempatkannya di tempat
+          // yang tidak lazim: bilah bawah dibaca sebagai perpindahan tab,
+          // bukan sebagai pembuka menu.
+          leadingWidth: 62,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 18),
             child: ClaySurface(
               radius: ClayTheme.radiusPill,
               padding: const EdgeInsets.all(10),
               depth: 0.7,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const ProfileScreen()),
-              ),
+              onTap: () => _drawer.toggle?.call(),
               child: Icon(
-                Icons.person_outline_rounded,
-                size: 20,
+                Icons.menu_rounded,
+                size: ClayTheme.icon,
                 color: ClayTheme.primary,
               ),
             ),
           ),
-        ],
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? ClayEmpty(
-                  icon: Icons.cloud_off_rounded,
-                  title: 'Tidak dapat memuat data',
-                  message: _error,
-                  action: ClayButton(
-                    label: 'Coba Lagi',
-                    icon: Icons.refresh_rounded,
-                    expanded: false,
-                    onPressed: _load,
-                  ),
-                )
-              : IndexedStack(index: index, children: tabs.pages),
-      bottomNavigationBar: _loading || _error != null || tabs.items.length < 2
-          ? null
-          : ClayNavBar(
-              items: tabs.items,
-              currentIndex: index,
-              onSelected: (i) => setState(() => _index = i),
+          titleSpacing: 8,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _summary?.greeting ?? 'Jargon GO',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  color: ClayTheme.textStrong,
+                ),
+              ),
+              Text(
+                _summary?.roleLabel ?? user?.roleLabel ?? '',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
+                  color: ClayTheme.textMuted,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            _LonengNotifikasi(
+              onTap: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const NotifikasiScreen()),
+                );
+                if (mounted) ref.invalidate(unreadNotificationProvider);
+              },
             ),
+            Padding(
+              padding: const EdgeInsets.only(right: 18),
+              child: ClaySurface(
+                radius: ClayTheme.radiusPill,
+                padding: const EdgeInsets.all(10),
+                depth: 0.7,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                ),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  size: 20,
+                  color: ClayTheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+            ? ClayEmpty(
+                icon: Icons.cloud_off_rounded,
+                title: 'Tidak dapat memuat data',
+                message: _error,
+                action: ClayButton(
+                  label: 'Coba Lagi',
+                  icon: Icons.refresh_rounded,
+                  expanded: false,
+                  onPressed: _load,
+                ),
+              )
+            : IndexedStack(index: index, children: tabs.pages),
+        bottomNavigationBar: _loading || _error != null || tabs.items.length < 2
+            ? null
+            : ClayNavBar(
+                items: tabs.items,
+                currentIndex: index,
+                onSelected: (i) => setState(() => _index = i),
+              ),
       ),
     );
   }
 }
-
-
 
 /// Ikon lonceng dengan lencana jumlah notifikasi belum dibaca.
 class _LonengNotifikasi extends ConsumerWidget {
@@ -351,8 +336,10 @@ class _LonengNotifikasi extends ConsumerWidget {
                 right: -4,
                 top: -4,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 1,
+                  ),
                   constraints: const BoxConstraints(minWidth: 14),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(

@@ -40,37 +40,37 @@ class PairResult {
   final DeviceConfig config;
 
   factory PairResult.fromJson(Map<String, dynamic> j) => PairResult(
-        deviceId: j['device_id'] as String,
-        deviceCode: j['device_code'] as String? ?? '-',
-        deviceName: j['device_name'] as String? ?? '-',
-        schoolId: j['school_id'] as String,
-        schoolName: j['school_name'] as String? ?? '-',
-        classroomId: j['classroom_id'] as String?,
-        classroomName: j['classroom_name'] as String?,
-        mode: j['mode'] as String? ?? 'auto',
-        placement: j['placement'] as String? ?? 'gate',
-        deviceToken: j['device_token'] as String,
-        hmacSecret: j['hmac_secret'] as String? ?? '',
-        config: DeviceConfig.fromJson(
-          (j['config'] as Map<String, dynamic>?) ?? const {},
-        ),
-      );
+    deviceId: j['device_id'] as String,
+    deviceCode: j['device_code'] as String? ?? '-',
+    deviceName: j['device_name'] as String? ?? '-',
+    schoolId: j['school_id'] as String,
+    schoolName: j['school_name'] as String? ?? '-',
+    classroomId: j['classroom_id'] as String?,
+    classroomName: j['classroom_name'] as String?,
+    mode: j['mode'] as String? ?? 'auto',
+    placement: j['placement'] as String? ?? 'gate',
+    deviceToken: j['device_token'] as String,
+    hmacSecret: j['hmac_secret'] as String? ?? '',
+    config: DeviceConfig.fromJson(
+      (j['config'] as Map<String, dynamic>?) ?? const {},
+    ),
+  );
 
   /// Profil yang disimpan lokal — TANPA token dan secret, yang masuk ke
   /// secure storage terpisah.
   Map<String, dynamic> toProfileJson() => {
-        'device_id': deviceId,
-        'device_code': deviceCode,
-        'device_name': deviceName,
-        'school_id': schoolId,
-        'school_name': schoolName,
-        'classroom_id': classroomId,
-        'classroom_name': classroomName,
-        'mode': mode,
-        'placement': placement,
-        'model_version': config.modelVersion,
-        'embedding_dim': config.embeddingDim,
-      };
+    'device_id': deviceId,
+    'device_code': deviceCode,
+    'device_name': deviceName,
+    'school_id': schoolId,
+    'school_name': schoolName,
+    'classroom_id': classroomId,
+    'classroom_name': classroomName,
+    'mode': mode,
+    'placement': placement,
+    'model_version': config.modelVersion,
+    'embedding_dim': config.embeddingDim,
+  };
 }
 
 class DeviceConfig {
@@ -91,15 +91,14 @@ class DeviceConfig {
   final int heartbeatIntervalSeconds;
 
   factory DeviceConfig.fromJson(Map<String, dynamic> j) => DeviceConfig(
-        embeddingDim: (j['embedding_dim'] as num?)?.toInt() ?? 512,
-        modelVersion: j['model_version'] as String? ?? 'mobilefacenet-v1',
-        matchThreshold: (j['match_threshold'] as num?)?.toDouble() ?? 0.62,
-        minLiveness: (j['min_liveness'] as num?)?.toDouble() ?? 0.5,
-        scanCooldownSeconds:
-            (j['scan_cooldown_seconds'] as num?)?.toInt() ?? 60,
-        heartbeatIntervalSeconds:
-            (j['heartbeat_interval_seconds'] as num?)?.toInt() ?? 120,
-      );
+    embeddingDim: (j['embedding_dim'] as num?)?.toInt() ?? 512,
+    modelVersion: j['model_version'] as String? ?? 'mobilefacenet-v1',
+    matchThreshold: (j['match_threshold'] as num?)?.toDouble() ?? 0.62,
+    minLiveness: (j['min_liveness'] as num?)?.toDouble() ?? 0.5,
+    scanCooldownSeconds: (j['scan_cooldown_seconds'] as num?)?.toInt() ?? 60,
+    heartbeatIntervalSeconds:
+        (j['heartbeat_interval_seconds'] as num?)?.toInt() ?? 120,
+  );
 }
 
 /// Jendela jam absensi hari ini, dari balasan heartbeat.
@@ -125,15 +124,15 @@ class TodayWindows {
   final String? checkOutClosesAt;
 
   factory TodayWindows.fromJson(Map<String, dynamic> j) => TodayWindows(
-        isActiveDay: j['is_active_day'] as bool? ?? true,
-        isHoliday: j['is_holiday'] as bool? ?? false,
-        holidayName: j['holiday_name'] as String?,
-        checkInOpensAt: j['check_in_opens_at'] as String?,
-        checkInDueAt: j['check_in_due_at'] as String?,
-        checkInClosesAt: j['check_in_closes_at'] as String?,
-        checkOutOpensAt: j['check_out_opens_at'] as String?,
-        checkOutClosesAt: j['check_out_closes_at'] as String?,
-      );
+    isActiveDay: j['is_active_day'] as bool? ?? true,
+    isHoliday: j['is_holiday'] as bool? ?? false,
+    holidayName: j['holiday_name'] as String?,
+    checkInOpensAt: j['check_in_opens_at'] as String?,
+    checkInDueAt: j['check_in_due_at'] as String?,
+    checkInClosesAt: j['check_in_closes_at'] as String?,
+    checkOutOpensAt: j['check_out_opens_at'] as String?,
+    checkOutClosesAt: j['check_out_closes_at'] as String?,
+  );
 }
 
 class HeartbeatResult {
@@ -150,17 +149,17 @@ class HeartbeatResult {
   final TodayWindows? todayWindows;
 
   factory HeartbeatResult.fromJson(Map<String, dynamic> j) => HeartbeatResult(
-        rosterVersion: (j['roster_version'] as num?)?.toInt() ?? 0,
-        commands: (j['commands'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-        config: DeviceConfig.fromJson(
-          (j['config'] as Map<String, dynamic>?) ?? const {},
-        ),
-        todayWindows: j['today_windows'] is Map<String, dynamic>
-            ? TodayWindows.fromJson(j['today_windows'] as Map<String, dynamic>)
-            : null,
-      );
+    rosterVersion: (j['roster_version'] as num?)?.toInt() ?? 0,
+    commands: (j['commands'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+    config: DeviceConfig.fromJson(
+      (j['config'] as Map<String, dynamic>?) ?? const {},
+    ),
+    todayWindows: j['today_windows'] is Map<String, dynamic>
+        ? TodayWindows.fromJson(j['today_windows'] as Map<String, dynamic>)
+        : null,
+  );
 }
 
 // =====================================================================
@@ -180,13 +179,13 @@ enum RecognizeAction {
   queuedOffline;
 
   static RecognizeAction parse(String? raw) => switch (raw) {
-        'checked_in' => RecognizeAction.checkedIn,
-        'checked_out' => RecognizeAction.checkedOut,
-        'already_recorded' => RecognizeAction.alreadyRecorded,
-        'no_match' => RecognizeAction.noMatch,
-        'low_confidence' => RecognizeAction.lowConfidence,
-        _ => RecognizeAction.rejected,
-      };
+    'checked_in' => RecognizeAction.checkedIn,
+    'checked_out' => RecognizeAction.checkedOut,
+    'already_recorded' => RecognizeAction.alreadyRecorded,
+    'no_match' => RecognizeAction.noMatch,
+    'low_confidence' => RecognizeAction.lowConfidence,
+    _ => RecognizeAction.rejected,
+  };
 
   bool get isSuccess =>
       this == RecognizeAction.checkedIn || this == RecognizeAction.checkedOut;
@@ -271,17 +270,18 @@ class RecognizeResult {
 
   /// Hasil untuk pemindaian yang hanya masuk antrean lokal.
   factory RecognizeResult.queued() => const RecognizeResult(
-        matched: false,
-        action: RecognizeAction.queuedOffline,
-        message: 'Jaringan terputus. Absensi disimpan dan akan dikirim '
-            'otomatis saat jaringan kembali.',
-      );
+    matched: false,
+    action: RecognizeAction.queuedOffline,
+    message:
+        'Jaringan terputus. Absensi disimpan dan akan dikirim '
+        'otomatis saat jaringan kembali.',
+  );
 
   factory RecognizeResult.error(String message) => RecognizeResult(
-        matched: false,
-        action: RecognizeAction.rejected,
-        message: message,
-      );
+    matched: false,
+    action: RecognizeAction.rejected,
+    message: message,
+  );
 
   /// Ubah timestamp ISO-8601 UTC menjadi jam lokal `HH:mm`.
   static String? _hhmm(String? iso) {
@@ -314,12 +314,12 @@ class RosterEntry {
   final bool faceEnrolled;
 
   factory RosterEntry.fromJson(Map<String, dynamic> j) => RosterEntry(
-        studentId: j['student_id'] as String,
-        fullName: j['full_name'] as String? ?? '-',
-        nis: j['nis'] as String?,
-        classroomName: j['classroom_name'] as String?,
-        faceEnrolled: j['face_enrolled'] as bool? ?? false,
-      );
+    studentId: j['student_id'] as String,
+    fullName: j['full_name'] as String? ?? '-',
+    nis: j['nis'] as String?,
+    classroomName: j['classroom_name'] as String?,
+    faceEnrolled: j['face_enrolled'] as bool? ?? false,
+  );
 }
 
 /// Ringkasan absensi untuk layar monitoring guru / kepala sekolah.
@@ -387,26 +387,26 @@ class AttendanceRow {
   final int lateMinutes;
 
   factory AttendanceRow.fromJson(Map<String, dynamic> j) => AttendanceRow(
-        id: j['id'] as String,
-        studentId: j['student_id'] as String,
-        studentName: j['student_name'] as String? ?? '-',
-        studentNis: j['student_nis'] as String?,
-        classroomName: j['classroom_name'] as String?,
-        checkIn: RecognizeResult._hhmm(j['check_in_at'] as String?),
-        checkOut: RecognizeResult._hhmm(j['check_out_at'] as String?),
-        status: j['status'] as String? ?? 'alfa',
-        lateMinutes: (j['late_minutes'] as num?)?.toInt() ?? 0,
-      );
+    id: j['id'] as String,
+    studentId: j['student_id'] as String,
+    studentName: j['student_name'] as String? ?? '-',
+    studentNis: j['student_nis'] as String?,
+    classroomName: j['classroom_name'] as String?,
+    checkIn: RecognizeResult._hhmm(j['check_in_at'] as String?),
+    checkOut: RecognizeResult._hhmm(j['check_out_at'] as String?),
+    status: j['status'] as String? ?? 'alfa',
+    lateMinutes: (j['late_minutes'] as num?)?.toInt() ?? 0,
+  );
 
   String get statusLabel => switch (status) {
-        'hadir' => 'Hadir',
-        'terlambat' => 'Terlambat',
-        'izin' => 'Izin',
-        'sakit' => 'Sakit',
-        'alfa' => 'Tanpa Keterangan',
-        'dispensasi' => 'Dispensasi',
-        _ => status,
-      };
+    'hadir' => 'Hadir',
+    'terlambat' => 'Terlambat',
+    'izin' => 'Izin',
+    'sakit' => 'Sakit',
+    'alfa' => 'Tanpa Keterangan',
+    'dispensasi' => 'Dispensasi',
+    _ => status,
+  };
 }
 
 /// Siswa yang tertaut ke sebuah akun Jargon GO.
@@ -437,26 +437,26 @@ class LinkedStudent {
   final String relation;
 
   factory LinkedStudent.fromJson(Map<String, dynamic> j) => LinkedStudent(
-        id: j['id'] as String,
-        fullName: j['full_name'] as String? ?? '-',
-        nisn: j['nisn'] as String?,
-        nis: j['nis'] as String?,
-        schoolId: j['school_id'] as String? ?? '',
-        schoolName: j['school_name'] as String? ?? '-',
-        classroomName: j['classroom_name'] as String?,
-        relation: j['relation'] as String? ?? 'wali',
-      );
+    id: j['id'] as String,
+    fullName: j['full_name'] as String? ?? '-',
+    nisn: j['nisn'] as String?,
+    nis: j['nis'] as String?,
+    schoolId: j['school_id'] as String? ?? '',
+    schoolName: j['school_name'] as String? ?? '-',
+    classroomName: j['classroom_name'] as String?,
+    relation: j['relation'] as String? ?? 'wali',
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'full_name': fullName,
-        'nisn': nisn,
-        'nis': nis,
-        'school_id': schoolId,
-        'school_name': schoolName,
-        'classroom_name': classroomName,
-        'relation': relation,
-      };
+    'id': id,
+    'full_name': fullName,
+    'nisn': nisn,
+    'nis': nis,
+    'school_id': schoolId,
+    'school_name': schoolName,
+    'classroom_name': classroomName,
+    'relation': relation,
+  };
 }
 
 /// Profil pengguna Jargon GO.
@@ -505,43 +505,42 @@ class UserProfile {
   /// Akun yang cakupannya dibatasi pada siswa tertentu.
   bool get isStudentScoped => isStudent || isParent;
 
-  String get identityLabel =>
-      identityType == 'nisn' ? 'NISN' : 'NIK';
+  String get identityLabel => identityType == 'nisn' ? 'NISN' : 'NIK';
 
   factory UserProfile.fromJson(Map<String, dynamic> j) => UserProfile(
-        id: j['id'] as String,
-        name: j['name'] as String? ?? '-',
-        username: j['username'] as String? ?? '-',
-        identityNumber: j['identity_number'] as String?,
-        identityType: j['identity_type'] as String?,
-        schoolId: j['school_id'] as String?,
-        schoolName: j['school_name'] as String?,
-        roles: (j['roles'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-        roleLabel: j['role_label'] as String? ?? 'Pengguna',
-        permissions: (j['permissions'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-        students: (j['students'] as List<dynamic>? ?? const [])
-            .whereType<Map<String, dynamic>>()
-            .map(LinkedStudent.fromJson)
-            .toList(),
-        mustChangePassword: j['must_change_password'] as bool? ?? false,
-      );
+    id: j['id'] as String,
+    name: j['name'] as String? ?? '-',
+    username: j['username'] as String? ?? '-',
+    identityNumber: j['identity_number'] as String?,
+    identityType: j['identity_type'] as String?,
+    schoolId: j['school_id'] as String?,
+    schoolName: j['school_name'] as String?,
+    roles: (j['roles'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+    roleLabel: j['role_label'] as String? ?? 'Pengguna',
+    permissions: (j['permissions'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+    students: (j['students'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(LinkedStudent.fromJson)
+        .toList(),
+    mustChangePassword: j['must_change_password'] as bool? ?? false,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'username': username,
-        'identity_number': identityNumber,
-        'identity_type': identityType,
-        'school_id': schoolId,
-        'school_name': schoolName,
-        'roles': roles,
-        'role_label': roleLabel,
-        'permissions': permissions,
-        'students': students.map((s) => s.toJson()).toList(),
-        'must_change_password': mustChangePassword,
-      };
+    'id': id,
+    'name': name,
+    'username': username,
+    'identity_number': identityNumber,
+    'identity_type': identityType,
+    'school_id': schoolId,
+    'school_name': schoolName,
+    'roles': roles,
+    'role_label': roleLabel,
+    'permissions': permissions,
+    'students': students.map((s) => s.toJson()).toList(),
+    'must_change_password': mustChangePassword,
+  };
 }

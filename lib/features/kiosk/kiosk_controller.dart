@@ -258,10 +258,7 @@ class KioskController extends StateNotifier<KioskState> {
   }
 
   Future<void> _submit(FaceAnalysis analysis) async {
-    state = state.copyWith(
-      phase: KioskPhase.submitting,
-      hint: 'Memproses...',
-    );
+    state = state.copyWith(phase: KioskPhase.submitting, hint: 'Memproses...');
 
     final profile = _profileOrNull();
     final result = await _repo.recognize(
@@ -374,7 +371,7 @@ class KioskController extends StateNotifier<KioskState> {
 
 final kioskControllerProvider =
     StateNotifierProvider<KioskController, KioskState>((ref) {
-  final controller = KioskController(ref.watch(repositoryProvider));
-  controller.attachProfile(ref.watch(deviceProfileProvider));
-  return controller;
-});
+      final controller = KioskController(ref.watch(repositoryProvider));
+      controller.attachProfile(ref.watch(deviceProfileProvider));
+      return controller;
+    });

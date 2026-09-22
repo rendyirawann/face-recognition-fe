@@ -61,7 +61,8 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
       );
 
       Map<String, dynamic>? recap;
-      final targetId = _selectedStudentId ??
+      final targetId =
+          _selectedStudentId ??
           ref.read(currentUserProvider)?.students.firstOrNull?.id;
       if (targetId != null) {
         recap = await repo.myRecap(studentId: targetId, from: from);
@@ -125,7 +126,9 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
                   return ClaySurface(
                     radius: ClayTheme.radiusPill,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 18, vertical: 11),
+                      horizontal: 18,
+                      vertical: 11,
+                    ),
                     color: selected ? ClayTheme.primary : ClayTheme.surface,
                     depth: 0.7,
                     onTap: () {
@@ -135,8 +138,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
                     child: Text(
                       s.fullName.split(' ').first,
                       style: TextStyle(
-                        color:
-                            selected ? Colors.white : ClayTheme.textBody,
+                        color: selected ? Colors.white : ClayTheme.textBody,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                       ),
@@ -156,8 +158,10 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
                 padding: const EdgeInsets.only(right: 10),
                 child: ClaySurface(
                   radius: ClayTheme.radiusPill,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 9,
+                  ),
                   color: selected ? ClayTheme.primarySoft : ClayTheme.surface,
                   depth: 0.6,
                   onTap: () {
@@ -167,8 +171,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
                   child: Text(
                     '$days hari',
                     style: TextStyle(
-                      color:
-                          selected ? ClayTheme.primary : ClayTheme.textMuted,
+                      color: selected ? ClayTheme.primary : ClayTheme.textMuted,
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                     ),
@@ -203,13 +206,15 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
               message: 'Data akan muncul setelah absensi tercatat di sekolah.',
             )
           else
-            ..._rows.map((row) => Padding(
-                  padding: const EdgeInsets.only(bottom: 11),
-                  child: _AttendanceRowCard(
-                    row: row,
-                    showName: students.length != 1,
-                  ),
-                )),
+            ..._rows.map(
+              (row) => Padding(
+                padding: const EdgeInsets.only(bottom: 11),
+                child: _AttendanceRowCard(
+                  row: row,
+                  showName: students.length != 1,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -227,8 +232,8 @@ class _RecapCard extends StatelessWidget {
     final color = persen >= 90
         ? ClayTheme.success
         : persen >= 75
-            ? ClayTheme.warning
-            : ClayTheme.danger;
+        ? ClayTheme.warning
+        : ClayTheme.danger;
 
     int v(String k) => (recap[k] as num?)?.toInt() ?? 0;
 
@@ -312,34 +317,34 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
+    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '$value',
+          style: TextStyle(
+            color: color,
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '$value',
-              style: TextStyle(
-                color: color,
-                fontSize: 14,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class _AttendanceRowCard extends StatelessWidget {
@@ -387,16 +392,15 @@ class _AttendanceRowCard extends StatelessWidget {
                     if (row.checkIn == null && row.checkOut == null)
                       'tidak ada pemindaian',
                   ].join(' · '),
-                  style: TextStyle(
-                    color: ClayTheme.textMuted,
-                    fontSize: 11.5,
-                  ),
+                  style: TextStyle(color: ClayTheme.textMuted, fontSize: 11.5),
                 ),
               ],
             ),
           ),
           ClayBadge(
-            label: showName ? row.statusLabel : ClayTheme.statusLabel(row.status),
+            label: showName
+                ? row.statusLabel
+                : ClayTheme.statusLabel(row.status),
             color: color,
             background: ClayTheme.statusSoft(row.status),
           ),

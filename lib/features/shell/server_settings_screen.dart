@@ -27,8 +27,9 @@ class ServerSettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
-  late final TextEditingController _url =
-      TextEditingController(text: ApiConfig.baseUrl);
+  late final TextEditingController _url = TextEditingController(
+    text: ApiConfig.baseUrl,
+  );
 
   bool _busy = false;
   String? _error;
@@ -243,21 +244,24 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
                 _Hint(
                   where: 'Debug di browser',
                   value: 'http://127.0.0.1:8080',
-                  note: 'API berjalan di mesin yang sama. Samakan bentuknya '
+                  note:
+                      'API berjalan di mesin yang sama. Samakan bentuknya '
                       'dengan yang ada di address bar — bagi CORS, '
                       '127.0.0.1 dan localhost adalah origin yang berbeda.',
                 ),
                 _Hint(
                   where: 'Emulator Android',
                   value: 'http://10.0.2.2:8080',
-                  note: '10.0.2.2 adalah mesin pengembang dilihat dari '
+                  note:
+                      '10.0.2.2 adalah mesin pengembang dilihat dari '
                       'emulator; 127.0.0.1 di emulator menunjuk ke '
                       'emulatornya sendiri.',
                 ),
                 _Hint(
                   where: 'Ponsel/tablet fisik',
                   value: 'http://<IP laptop>:8080',
-                  note: 'Jalankan ipconfig di laptop, pakai IPv4-nya. '
+                  note:
+                      'Jalankan ipconfig di laptop, pakai IPv4-nya. '
                       'Perangkat harus di Wi-Fi yang sama, dan port 8080 '
                       'perlu diizinkan Windows Firewall.',
                 ),
@@ -276,7 +280,8 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
               icon: Icons.info_outline_rounded,
               color: ClayTheme.primary,
               background: ClayTheme.primarySoft,
-              text: 'Di browser, alamat ini juga harus tercantum pada '
+              text:
+                  'Di browser, alamat ini juga harus tercantum pada '
                   'CORS_ALLOWED_ORIGINS milik API — jika tidak, permintaan '
                   'diblokir browser sebelum sampai ke server.',
             ),
@@ -302,37 +307,33 @@ class _Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ClaySurface(
-        color: background,
-        radius: ClayTheme.radiusSmall,
-        depth: 0.6,
-        padding: const EdgeInsets.all(13),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 18, color: color),
-            const SizedBox(width: 11),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 11.5,
-                  height: 1.45,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+    color: background,
+    radius: ClayTheme.radiusSmall,
+    depth: 0.6,
+    padding: const EdgeInsets.all(13),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 11),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 11.5,
+              height: 1.45,
+              fontWeight: FontWeight.w600,
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 class _Hint extends StatelessWidget {
-  const _Hint({
-    required this.where,
-    required this.value,
-    required this.note,
-  });
+  const _Hint({required this.where, required this.value, required this.note});
 
   final String where;
   final String value;
@@ -340,37 +341,37 @@ class _Hint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              where,
-              style: TextStyle(
-                color: ClayTheme.textStrong,
-                fontSize: 12.5,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 3),
-            SelectableText(
-              value,
-              style: TextStyle(
-                color: ClayTheme.primary,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              note,
-              style: TextStyle(
-                color: ClayTheme.textMuted,
-                fontSize: 11,
-                height: 1.45,
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 14),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          where,
+          style: TextStyle(
+            color: ClayTheme.textStrong,
+            fontSize: 12.5,
+            fontWeight: FontWeight.w800,
+          ),
         ),
-      );
+        const SizedBox(height: 3),
+        SelectableText(
+          value,
+          style: TextStyle(
+            color: ClayTheme.primary,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          note,
+          style: TextStyle(
+            color: ClayTheme.textMuted,
+            fontSize: 11,
+            height: 1.45,
+          ),
+        ),
+      ],
+    ),
+  );
 }

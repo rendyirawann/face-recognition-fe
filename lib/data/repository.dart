@@ -36,12 +36,15 @@ class AbsensiRepository {
   Future<PairResult> pairDevice(String pairingCode) async {
     final info = await _deviceDescription();
 
-    final data = await _api.post(ApiRoutes.devicePair, body: {
-      'pairing_code': pairingCode.trim(),
-      'app_version': '1.0.0',
-      'os_version': info.$1,
-      'hardware_id': info.$2,
-    });
+    final data = await _api.post(
+      ApiRoutes.devicePair,
+      body: {
+        'pairing_code': pairingCode.trim(),
+        'app_version': '1.0.0',
+        'os_version': info.$1,
+        'hardware_id': info.$2,
+      },
+    );
 
     final result = PairResult.fromJson(data);
 
@@ -183,19 +186,19 @@ class AbsensiRepository {
   Future<int> pendingCount() => _queue.count();
 
   /// Kirim heartbeat dan ambil konfigurasi terkini.
-  Future<HeartbeatResult?> heartbeat({
-    int? batteryPct,
-    String? network,
-  }) async {
+  Future<HeartbeatResult?> heartbeat({int? batteryPct, String? network}) async {
     final pending = await _queue.count();
 
-    final data = await _api.tryPost(ApiRoutes.kioskHeartbeat, body: {
-      'battery_pct': ?batteryPct,
-      'queued_events': pending,
-      'app_version': '1.0.0',
-      'network': ?network,
-      'embedding_model_version': AppConfig.faceModelVersion,
-    });
+    final data = await _api.tryPost(
+      ApiRoutes.kioskHeartbeat,
+      body: {
+        'battery_pct': ?batteryPct,
+        'queued_events': pending,
+        'app_version': '1.0.0',
+        'network': ?network,
+        'embedding_model_version': AppConfig.faceModelVersion,
+      },
+    );
 
     if (data == null) return null;
     final result = HeartbeatResult.fromJson(data);
@@ -222,12 +225,15 @@ class AbsensiRepository {
     required Float32List embedding,
     required String pose,
   }) async {
-    final data = await _api.post(ApiRoutes.kioskEnrollFace(studentId), body: {
-      'image_base64': base64Encode(jpegBytes),
-      'embedding': embedding.toList(),
-      'model_version': AppConfig.faceModelVersion,
-      'pose': pose,
-    });
+    final data = await _api.post(
+      ApiRoutes.kioskEnrollFace(studentId),
+      body: {
+        'image_base64': base64Encode(jpegBytes),
+        'embedding': embedding.toList(),
+        'model_version': AppConfig.faceModelVersion,
+        'pose': pose,
+      },
+    );
 
     return data['message'] as String? ??
         'Sampel wajah tersimpan (${data['sample_count'] ?? '?'} total).';
@@ -238,19 +244,21 @@ class AbsensiRepository {
   // =================================================================
 
   Future<UserProfile> login(String identifier, String password) async {
-    final data = await _api.post(ApiRoutes.login, body: {
-      'identifier': identifier.trim(),
-      'password': password,
-      'device_name': 'Aplikasi Absensi Mobile',
-    });
+    final data = await _api.post(
+      ApiRoutes.login,
+      body: {
+        'identifier': identifier.trim(),
+        'password': password,
+        'device_name': 'Aplikasi Absensi Mobile',
+      },
+    );
 
     await _storage.saveUserTokens(
       accessToken: data['access_token'] as String,
       refreshToken: data['refresh_token'] as String,
     );
 
-    final profile =
-        UserProfile.fromJson(data['user'] as Map<String, dynamic>);
+    final profile = UserProfile.fromJson(data['user'] as Map<String, dynamic>);
     await _storage.saveUserProfile(profile.toJson());
     return profile;
   }
@@ -272,10 +280,10 @@ class AbsensiRepository {
   }
 
   Future<AttendanceSummary> summary({String? schoolId, DateTime? date}) async {
-    final data = await _api.getObject(ApiRoutes.attendanceSummary, query: {
-      'school_id': ?schoolId,
-      if (date != null) 'date': _ymd(date),
-    });
+    final data = await _api.getObject(
+      ApiRoutes.attendanceSummary,
+      query: {'school_id': ?schoolId, if (date != null) 'date': _ymd(date)},
+    );
     return AttendanceSummary.fromJson(data);
   }
 
@@ -286,14 +294,17 @@ class AbsensiRepository {
     String? status,
   }) async {
     final day = _ymd(date ?? DateTime.now());
-    final list = await _api.getList(ApiRoutes.attendances, query: {
-      'school_id': ?schoolId,
-      'classroom_id': ?classroomId,
-      'status': ?status,
-      'from': day,
-      'to': day,
-      'per_page': 200,
-    });
+    final list = await _api.getList(
+      ApiRoutes.attendances,
+      query: {
+        'school_id': ?schoolId,
+        'classroom_id': ?classroomId,
+        'status': ?status,
+        'from': day,
+        'to': day,
+        'per_page': 200,
+      },
+    );
 
     return list
         .whereType<Map<String, dynamic>>()
@@ -305,10 +316,10 @@ class AbsensiRepository {
     String? schoolId,
     DateTime? date,
   }) async {
-    final list = await _api.getList(ApiRoutes.attendanceByClassroom, query: {
-      'school_id': ?schoolId,
-      'date': _ymd(date ?? DateTime.now()),
-    });
+    final list = await _api.getList(
+      ApiRoutes.attendanceByClassroom,
+      query: {'school_id': ?schoolId, 'date': _ymd(date ?? DateTime.now())},
+    );
     return list.whereType<Map<String, dynamic>>().toList();
   }
 
@@ -321,14 +332,17 @@ class AbsensiRepository {
     DateTime? date,
     bool notifyGuardian = false,
   }) async {
-    final data = await _api.post(ApiRoutes.attendanceManual, body: {
-      'student_id': studentId,
-      'status': status,
-      'notes': notes,
-      'check_in_time': ?checkInTime,
-      if (date != null) 'attendance_date': _ymd(date),
-      'notify_guardian': notifyGuardian,
-    });
+    final data = await _api.post(
+      ApiRoutes.attendanceManual,
+      body: {
+        'student_id': studentId,
+        'status': status,
+        'notes': notes,
+        'check_in_time': ?checkInTime,
+        if (date != null) 'attendance_date': _ymd(date),
+        'notify_guardian': notifyGuardian,
+      },
+    );
     return data['status'] as String? ?? 'Absensi diperbarui.';
   }
 
@@ -359,11 +373,14 @@ class AbsensiRepository {
     DateTime? from,
     DateTime? to,
   }) async {
-    final list = await _api.getList(ApiRoutes.myAttendance, query: {
-      'student_id': ?studentId,
-      'from': _ymd(from ?? DateTime.now().subtract(const Duration(days: 29))),
-      'to': _ymd(to ?? DateTime.now()),
-    });
+    final list = await _api.getList(
+      ApiRoutes.myAttendance,
+      query: {
+        'student_id': ?studentId,
+        'from': _ymd(from ?? DateTime.now().subtract(const Duration(days: 29))),
+        'to': _ymd(to ?? DateTime.now()),
+      },
+    );
 
     return list
         .whereType<Map<String, dynamic>>()
@@ -376,10 +393,13 @@ class AbsensiRepository {
     DateTime? from,
     DateTime? to,
   }) async {
-    return _api.getObject(ApiRoutes.myRecap(studentId), query: {
-      'from': _ymd(from ?? DateTime.now().subtract(const Duration(days: 29))),
-      'to': _ymd(to ?? DateTime.now()),
-    });
+    return _api.getObject(
+      ApiRoutes.myRecap(studentId),
+      query: {
+        'from': _ymd(from ?? DateTime.now().subtract(const Duration(days: 29))),
+        'to': _ymd(to ?? DateTime.now()),
+      },
+    );
   }
 
   // =================================================================
@@ -400,13 +420,16 @@ class AbsensiRepository {
     String? severity,
     int page = 1,
   }) async {
-    final list = await _api.getList(ApiRoutes.panicReports, query: {
-      if (mineOnly) 'mine': true,
-      'category_code': ?categoryCode,
-      'severity': ?severity,
-      'page': page,
-      'per_page': 20,
-    });
+    final list = await _api.getList(
+      ApiRoutes.panicReports,
+      query: {
+        if (mineOnly) 'mine': true,
+        'category_code': ?categoryCode,
+        'severity': ?severity,
+        'page': page,
+        'per_page': 20,
+      },
+    );
 
     return list
         .whereType<Map<String, dynamic>>()
@@ -431,14 +454,17 @@ class AbsensiRepository {
     String visibility = 'publik',
     List<String> mediaBase64 = const [],
   }) async {
-    return _api.post(ApiRoutes.panicReports, body: {
-      'category_id': categoryId,
-      'title': title,
-      'body': body,
-      'severity': ?severity,
-      'visibility': visibility,
-      'media_base64': mediaBase64,
-    });
+    return _api.post(
+      ApiRoutes.panicReports,
+      body: {
+        'category_id': categoryId,
+        'title': title,
+        'body': body,
+        'severity': ?severity,
+        'visibility': visibility,
+        'media_base64': mediaBase64,
+      },
+    );
   }
 
   Future<bool> togglePanicSupport(String reportId) async {
@@ -451,10 +477,10 @@ class AbsensiRepository {
     required String body,
     bool asOfficial = false,
   }) async {
-    final data = await _api.post(ApiRoutes.panicComments(reportId), body: {
-      'body': body,
-      'as_official': asOfficial,
-    });
+    final data = await _api.post(
+      ApiRoutes.panicComments(reportId),
+      body: {'body': body, 'as_official': asOfficial},
+    );
     return PanicComment.fromJson(data);
   }
 
@@ -463,21 +489,24 @@ class AbsensiRepository {
   // =================================================================
 
   Future<List<DocumentType>> documentTypes(String purpose) async {
-    final list = await _api.getList(ApiRoutes.documentTypes, query: {
-      'purpose': purpose,
-    });
+    final list = await _api.getList(
+      ApiRoutes.documentTypes,
+      query: {'purpose': purpose},
+    );
     return list
         .whereType<Map<String, dynamic>>()
         .map(DocumentType.fromJson)
         .toList();
   }
 
-  Future<List<Submission>> submissions({bool mineOnly = true, String? status}) async {
-    final list = await _api.getList(ApiRoutes.submissions, query: {
-      'mine': mineOnly,
-      'status': ?status,
-      'per_page': 50,
-    });
+  Future<List<Submission>> submissions({
+    bool mineOnly = true,
+    String? status,
+  }) async {
+    final list = await _api.getList(
+      ApiRoutes.submissions,
+      query: {'mine': mineOnly, 'status': ?status, 'per_page': 50},
+    );
     return list
         .whereType<Map<String, dynamic>>()
         .map(Submission.fromJson)
@@ -495,12 +524,15 @@ class AbsensiRepository {
     String? period,
     String? note,
   }) async {
-    final data = await _api.post(ApiRoutes.submissions, body: {
-      'purpose': purpose,
-      'title': title,
-      'period': ?period,
-      'note': ?note,
-    });
+    final data = await _api.post(
+      ApiRoutes.submissions,
+      body: {
+        'purpose': purpose,
+        'title': title,
+        'period': ?period,
+        'note': ?note,
+      },
+    );
     return Submission.fromJson(data);
   }
 

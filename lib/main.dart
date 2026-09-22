@@ -24,12 +24,14 @@ Future<void> main() async {
 
   // Bilah status menyatu dengan latar clay; ikonnya digelapkan karena
   // latarnya terang.
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: ClayTheme.background,
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: ClayTheme.background,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
 
   // Storage dan antrean offline dibuka SEBELUM aplikasi berjalan, lalu
   // di-override ke dalam graf provider — tidak ada layar yang perlu
@@ -55,18 +57,10 @@ Future<void> main() async {
 
 /// Kunci navigator global, dipakai saat sesi berakhir.
 ///
-/// MENGAPA PERLU, PADAHAL SUDAH ADA `currentUserProvider`
-///
-/// Sesi bisa berakhir di kedalaman mana pun — di dalam Absensi, Pemberkasan,
-/// atau sebuah dialog — dan klien HTTP yang mendeteksinya tidak punya
+/// Menyetel `currentUserProvider` ke null saja tidak memindahkan layar: login
+/// memakai `pushReplacement`, sehingga rute yang memegang `home:` sudah tidak
+/// ada di stack. Klien HTTP yang mendeteksi sesi mati juga tidak punya
 /// BuildContext.
-///
-/// Menyetel `currentUserProvider` ke null saja TIDAK cukup: layar login
-/// memakai `pushReplacement` (login_screen.dart), sehingga rute yang memegang
-/// `home:` sudah tidak ada lagi di stack setelah login pertama. Mengubah nilai
-/// yang dibaca `home:` tidak memindahkan siapa pun — layarnya diam, hanya
-/// kartu galatnya yang tinggal. Tombol Keluar bekerja justru karena ia
-/// memanggil `pushAndRemoveUntil` sendiri; di sini hal yang sama diperlukan.
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class JargonApp extends ConsumerStatefulWidget {
@@ -81,21 +75,14 @@ class _JargonAppState extends ConsumerState<JargonApp> {
   void initState() {
     super.initState();
 
-    // Ketika penyegaran token gagal — refresh token dicabut, kedaluwarsa,
-    // atau akunnya dinonaktifkan — klien HTTP membersihkan sesi lokal lalu
-    // memanggil ini. Profil disetel ke null DAN stack navigasi dikosongkan —
-    // keduanya perlu, alasannya ada di doc `navigatorKey` di atas.
-    //
-    // Dipasang di initState, bukan di build: build berjalan setiap kali
-    // sesuatu berubah, dan menyetel callback di sana menaruh efek samping di
-    // tempat yang seharusnya murni.
+    // Dipanggil klien HTTP ketika penyegaran token gagal. Profil disetel ke
+    // null DAN stack dikosongkan — keduanya perlu, lihat doc `navigatorKey`.
     ref.read(apiClientProvider).onSessionExpired = () {
       if (!mounted) return;
       ref.read(currentUserProvider.notifier).state = null;
 
-      // Kosongkan seluruh stack, persis seperti tombol Keluar. Tanpa ini
-      // pengguna tertinggal di layar yang baru saja gagal memuat, dengan
-      // tombol "Coba Lagi" yang tidak mungkin berhasil lagi.
+      // Sama seperti tombol Keluar; tanpa ini pengguna tertinggal di layar
+      // yang gagal memuat.
       navigatorKey.currentState?.pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
         (_) => false,
@@ -109,64 +96,53 @@ class _JargonAppState extends ConsumerState<JargonApp> {
     // perlu login ulang setiap membuka aplikasi.
     final user = ref.watch(currentUserProvider);
 
-    // Tema dipasang ke state statis SEBELUM `ClayTheme.build()` di bawah
-    // membacanya.
-    //
-    // Ya, ini efek samping di dalam build — dan itu disengaja. Warna dibaca
-    // lewat getter statis oleh 298 tempat di aplikasi, jadi nilai statis itu
-    // harus sudah benar sebelum satu pun widget dibangun. Menaruhnya di
-    // initState tidak cukup: build inilah yang berjalan ulang ketika
-    // penggunanya mengganti tema.
+    // Efek samping di dalam build, disengaja: warna dibaca lewat getter
+    // statis di seluruh aplikasi, jadi nilainya harus benar sebelum widget
+    // mana pun dibangun — dan build inilah yang berjalan ulang saat tema
+    // diganti.
     final gelap = ref.watch(temaGelapProvider);
     ClayTheme.pakai(gelap: gelap);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      // Ikon bilah status harus BERLAWANAN dengan latar: terang di tema
-      // gelap, gelap di tema terang. Nilai yang dipasang sekali di `main()`
-      // menjadi salah begitu tema bisa diganti saat berjalan.
+      // Ikon bilah status berlawanan dengan latar. Nilai yang dipasang
+      // sekali di `main()` menjadi salah begitu tema bisa diganti.
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: gelap ? Brightness.light : Brightness.dark,
         systemNavigationBarColor: ClayTheme.background,
-        systemNavigationBarIconBrightness:
-            gelap ? Brightness.light : Brightness.dark,
+        systemNavigationBarIconBrightness: gelap
+            ? Brightness.light
+            : Brightness.dark,
       ),
       child: MaterialApp(
-      title: 'Jargon GO',
-      navigatorKey: navigatorKey,
+        title: 'Jargon GO',
+        navigatorKey: navigatorKey,
 
-      // Skala font sistem dibatasi 0,9-1,3.
-      //
-      // Android mengizinkan pengguna menyetelnya sampai 200%. Pada nilai itu
-      // kartu absensi, lencana, dan bilah navigasi meluap — dan meluapnya
-      // bukan sekadar jelek: angka jam masuk terpotong, yang justru satu-
-      // satunya hal yang dicari orang tua di layar itu.
-      //
-      // Batas bawah 0,9 mencegah teks mengecil sampai tidak terbaca di layar
-      // ponsel murah. Yang dibatasi hanya rentangnya; pengguna yang menyetel
-      // font besar tetap mendapat teks yang lebih besar.
-      builder: (context, child) {
-        final mq = MediaQuery.of(context);
-        return MediaQuery(
-          data: mq.copyWith(
-            textScaler: mq.textScaler.clamp(
-              minScaleFactor: 0.9,
-              maxScaleFactor: 1.3,
+        // Android mengizinkan skala font sampai 200%; pada nilai itu angka jam
+        // masuk terpotong. Yang dibatasi hanya rentangnya — font besar tetap
+        // tampil lebih besar.
+        builder: (context, child) {
+          final mq = MediaQuery.of(context);
+          return MediaQuery(
+            data: mq.copyWith(
+              textScaler: mq.textScaler.clamp(
+                minScaleFactor: 0.9,
+                maxScaleFactor: 1.3,
+              ),
             ),
-          ),
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
-      debugShowCheckedModeBanner: false,
-      locale: const Locale('id'),
-      supportedLocales: const [Locale('id'), Locale('en')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      theme: ClayTheme.build(),
-      home: user == null ? const LoginScreen() : const HomeShell(),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
+        debugShowCheckedModeBanner: false,
+        locale: const Locale('id'),
+        supportedLocales: const [Locale('id'), Locale('en')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: ClayTheme.build(),
+        home: user == null ? const LoginScreen() : const HomeShell(),
       ),
     );
   }

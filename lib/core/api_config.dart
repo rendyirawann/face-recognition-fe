@@ -5,28 +5,16 @@ import 'storage.dart';
 
 /// Alamat server API yang sedang dipakai.
 ///
-/// MENGAPA BISA DIUBAH SAAT BERJALAN
-///
-/// `--dart-define=API_BASE_URL=...` hanya berlaku saat build. Selama
-/// pengembangan, alamat server berubah berkali-kali dalam sehari: hari ini
-/// `localhost`, besok IP laptop di jaringan sekolah, lusa domain staging.
-/// Membangun ulang APK setiap kali alamatnya berganti membuat pengujian
-/// lapangan jauh lebih lambat daripada perlunya.
-///
-/// Karena itu nilai dari `--dart-define` diperlakukan sebagai **nilai awal**,
-/// dan pengguna dapat menimpanya lewat Profil → Alamat Server. Pilihan itu
-/// tersimpan di perangkat dan dipakai sampai diubah lagi atau dikembalikan ke
-/// bawaan.
-///
-/// Di rilis produksi, biarkan pengguna tidak pernah membuka layar itu:
-/// nilai `--dart-define` saat build sudah menunjuk ke server yang benar.
+/// Nilai `--dart-define` diperlakukan sebagai nilai AWAL dan dapat ditimpa
+/// lewat Profil → Alamat Server, lalu tersimpan di perangkat. Tanpa itu,
+/// setiap pergantian alamat saat pengujian lapangan menuntut build ulang APK.
 class ApiConfig {
   const ApiConfig._();
 
   static String _baseUrl = defaultBaseUrl;
 
-  /// Alamat yang sedang aktif. Dibaca ulang pada SETIAP request, sehingga
-  /// perubahan langsung berlaku tanpa perlu membangun ulang klien HTTP.
+  /// Alamat aktif. Dibaca ulang pada setiap request, sehingga perubahannya
+  /// langsung berlaku.
   static String get baseUrl => _baseUrl;
 
   /// True bila alamat aktif berbeda dari bawaan build.
@@ -52,23 +40,17 @@ class ApiConfig {
   /// memanggil `localhost:8080` adalah permintaan lintas origin.
   static String get defaultBaseUrl {
     // Build container: aplikasi dan API dilayani nginx yang sama, jadi
-    // alamat API adalah origin halaman itu sendiri. Ini yang membuat image
-    // bisa dijalankan di mesin mana pun — dibuka lewat localhost, IP LAN,
-    // atau nama domain, semuanya bekerja tanpa membangun ulang. Alamat yang
-    // dipaku saat build hanya benar di satu mesin.
+    // origin halaman itu sendiri sudah benar. Inilah yang membuat satu image
+    // bekerja di localhost, IP LAN, maupun nama domain tanpa build ulang.
     if (kIsWeb && sameOrigin) return Uri.base.origin;
 
     const fromBuild = AppConfig.apiBaseUrl;
     if (fromBuild.isNotEmpty) return fromBuild;
 
-    // Build release tanpa --dart-define menunjuk ke server produksi.
-    //
-    // Alasannya praktis: APK release yang bawaannya `10.0.2.2` sama sekali
-    // tidak berguna di tangan pengguna — alamat itu hanya berarti sesuatu
-    // di dalam emulator Android. Satu `--dart-define` yang terlupa cukup
-    // untuk menghasilkan APK yang tidak bisa login sama sekali, dan
-    // gejalanya ("tidak dapat menghubungi server") tidak menunjuk ke
-    // penyebabnya.
+    // Release tanpa --dart-define menunjuk ke produksi: bawaan `10.0.2.2`
+    // hanya berarti sesuatu di emulator, dan satu define yang terlupa
+    // menghasilkan APK yang tidak bisa login dengan gejala yang tidak
+    // menunjuk ke penyebabnya.
     if (kReleaseMode) return AppConfig.productionApiBaseUrl;
 
     return kIsWeb ? 'http://127.0.0.1:8080' : 'http://10.0.2.2:8080';

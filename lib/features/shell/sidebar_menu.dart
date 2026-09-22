@@ -23,15 +23,11 @@ class SidebarItem {
   final VoidCallback? onTap;
 }
 
-/// Layar menu di balik layar utama, ditampilkan `ZoomDrawer`.
+/// Layar menu di balik layar utama.
 ///
-/// MENGAPA LATARNYA LEBIH GELAP DARI HALAMAN
-///
-/// `ZoomDrawer` memiringkan dan mengecilkan layar utama, lalu meletakkannya
-/// DI ATAS layar ini. Bila keduanya sewarna, tidak ada yang menandai mana
-/// yang di depan — dan pada claymorphism gelap, bayangan saja tidak cukup
-/// karena seluruh paletnya sudah gelap. Latar sidebar dibuat satu tingkat
-/// lebih gelap dari `background` supaya kedalamannya terbaca.
+/// Latarnya satu tingkat lebih dalam dari `background`: ZoomDrawer meletakkan
+/// layar utama di atas layar ini, dan bila keduanya sewarna tidak ada yang
+/// menandai mana yang di depan.
 class SidebarMenu extends StatelessWidget {
   const SidebarMenu({
     super.key,
@@ -52,13 +48,9 @@ class SidebarMenu extends StatelessWidget {
   final int aktif;
   final ValueChanged<int> onPilihTab;
 
-  /// Menutup drawer. Diberikan pemanggil alih-alih memanggil
-  /// `ZoomDrawer.of(context)` dari sini.
-  ///
-  /// Alasannya bukan kerapian: `ZoomDrawer.of` mengembalikan null bila
-  /// context-nya bukan turunan ZoomDrawer, dan kegagalannya SUNYI — menu
-  /// tetap berpindah tab sementara drawer-nya menggantung terbuka. Callback
-  /// dari pemanggil tidak punya mode gagal itu.
+  /// Menutup drawer. Callback dari pemanggil, bukan `ZoomDrawer.of(context)`:
+  /// yang terakhir mengembalikan null secara sunyi bila contextnya bukan
+  /// turunan ZoomDrawer, dan menunya berpindah tab dengan drawer menggantung.
   final VoidCallback onTutup;
 
   final List<SidebarItem> lainnya;
@@ -71,17 +63,10 @@ class SidebarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MATERIAL WAJIB DI SINI, BUKAN HIASAN.
-    //
-    // `flutter_zoom_drawer` menempatkan `menuScreen` langsung di dalam Stack
-    // tanpa membungkusnya Material — sudah diperiksa di sumber paketnya
-    // (versi 3.2.0): tidak ada satu pun pemanggilan `Material(` di seluruh
-    // pustakanya.
-    //
-    // Akibatnya setiap `Text` di sini kehilangan gaya teks bawaan dan
-    // dirender dengan penanda debug Flutter: garis bawah ganda berwarna
-    // KUNING. Itu bukan salah warna tema — itu Flutter memberi tahu bahwa
-    // teksnya berada di luar Material.
+    // Material wajib: `flutter_zoom_drawer` menaruh menuScreen langsung di
+    // dalam Stack tanpa membungkusnya Material (diperiksa di sumber paket
+    // 3.2.0). Tanpa ini setiap Text dirender dengan garis bawah ganda kuning
+    // — penanda debug Flutter untuk teks di luar Material.
     return Material(
       color: ClayTheme.sidebarBg,
       child: SafeArea(
@@ -161,11 +146,11 @@ class _Identitas extends StatelessWidget {
     final inisial = nama.trim().isEmpty
         ? '?'
         : nama
-            .trim()
-            .split(RegExp(r'\s+'))
-            .take(2)
-            .map((w) => w[0].toUpperCase())
-            .join();
+              .trim()
+              .split(RegExp(r'\s+'))
+              .take(2)
+              .map((w) => w[0].toUpperCase())
+              .join();
 
     return Row(
       children: [
@@ -207,10 +192,7 @@ class _Identitas extends StatelessWidget {
                 peran,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  color: ClayTheme.textMuted,
-                ),
+                style: TextStyle(fontSize: 11.5, color: ClayTheme.textMuted),
               ),
             ],
           ),
@@ -227,17 +209,17 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 4, bottom: 10),
-        child: Text(
-          teks,
-          style: TextStyle(
-            fontSize: 10.5,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1,
-            color: ClayTheme.textMuted,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(left: 4, bottom: 10),
+    child: Text(
+      teks,
+      style: TextStyle(
+        fontSize: 10.5,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1,
+        color: ClayTheme.textMuted,
+      ),
+    ),
+  );
 }
 
 class _Baris extends StatelessWidget {
@@ -327,7 +309,6 @@ class _Baris extends StatelessWidget {
     );
   }
 }
-
 
 /// Pemilih tema: dua tombol, bukan satu switch.
 ///

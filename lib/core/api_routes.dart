@@ -1,19 +1,11 @@
-/// Daftar terpusat seluruh alamat API yang dipanggil aplikasi.
+/// Daftar terpusat alamat API.
 ///
-/// MENGAPA SEMUA DI SATU BERKAS
+/// Path dikumpulkan di sini supaya kenaikan versi atau perubahan endpoint
+/// cukup disunting di satu tempat; yang terlewat hanya ketahuan sebagai 404
+/// di tangan pengguna.
 ///
-/// Sebelumnya path ditulis langsung di tempat pemanggilan
-/// (`_api.post('/v1/panic/reports')`). Selama endpoint tidak pernah berubah
-/// itu terasa lebih ringkas — tetapi begitu server mengubah satu path atau
-/// menaikkan versi, perubahannya tersebar di puluhan baris di beberapa berkas,
-/// dan yang terlewat baru ketahuan sebagai galat 404 di tangan pengguna.
-///
-/// Di sini, satu perubahan cukup diedit di satu tempat. [prefix] bahkan
-/// membuat kenaikan versi API (`/v1` → `/v2`) menjadi satu baris.
-///
-/// Alamat SERVER-nya (protokol + host + port) tidak ada di sini — itu
-/// [ApiConfig.baseUrl], yang bisa diubah saat aplikasi berjalan lewat
-/// Profil → Alamat Server.
+/// Alamat servernya sendiri ada di [ApiConfig.baseUrl] dan dapat diubah saat
+/// aplikasi berjalan.
 library;
 
 class ApiRoutes {
@@ -56,7 +48,8 @@ class ApiRoutes {
 
   static const String attendances = '$prefix/attendances';
   static const String attendanceSummary = '$prefix/attendances/summary';
-  static const String attendanceByClassroom = '$prefix/attendances/by-classroom';
+  static const String attendanceByClassroom =
+      '$prefix/attendances/by-classroom';
   static const String attendanceManual = '$prefix/attendances/manual';
 
   // =================================================================
@@ -85,7 +78,8 @@ class ApiRoutes {
 
   static String submitSubmission(String id) => '$submissions/$id/submit';
 
-  static String documentFile(String fileId) => '$prefix/documents/files/$fileId';
+  static String documentFile(String fileId) =>
+      '$prefix/documents/files/$fileId';
 
   // =================================================================
   // Perangkat kios (tablet sekolah)
@@ -99,28 +93,19 @@ class ApiRoutes {
   static String kioskEnrollFace(String studentId) =>
       '$prefix/kiosk/students/$studentId/face';
 
-  // =================================================================
-  // Aturan kredensial per endpoint
+  // Aturan kredensial per endpoint.
   //
-  // Ditaruh di sini, bukan di ApiClient, supaya menambah endpoint baru
-  // berarti melihat aturan kredensialnya pada saat yang sama. Salah
-  // kredensial menghasilkan 401 yang membingungkan: token ADA, hanya
-  // jenisnya yang keliru.
-  // =================================================================
+  // Ditaruh bersama daftar path supaya menambah endpoint baru berarti
+  // menetapkan kredensialnya pada saat yang sama.
 
   /// Endpoint yang memakai `Authorization: Device <token>` (tablet kios).
   static bool needsDeviceToken(String path) => path.startsWith('$prefix/kiosk');
 
-  /// Endpoint yang tidak boleh membawa kredensial sama sekali.
+  /// Endpoint yang tidak boleh membawa kredensial.
   ///
-  /// `devices/pair` dan `auth/login` justru sedang MEMINTA kredensial, dan
-  /// `/health` dipanggil layar Alamat Server sebelum ada sesi.
-  ///
-  /// `auth/refresh` masuk ke sini karena satu-satunya kredensial yang
-  /// diperiksanya ada di dalam body — dan access token yang sedang dibawa
-  /// justru yang baru saja kedaluwarsa. Mengirimkannya tidak menolong, dan
-  /// membuat log server penuh penolakan yang menyesatkan saat menelusuri
-  /// masalah sungguhan.
+  /// `devices/pair` dan `auth/login` sedang meminta kredensial, `/health`
+  /// dipanggil sebelum ada sesi, dan `auth/refresh` memeriksa kredensialnya
+  /// dari body — access token yang dibawa justru yang baru kedaluwarsa.
   static bool needsNoCredential(String path) =>
       path.startsWith(devicePair) ||
       path.startsWith(login) ||

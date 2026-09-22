@@ -34,19 +34,22 @@ class AuthedImage extends ConsumerWidget {
       future: ref.watch(storageProvider).accessToken(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return _placeholder(const Center(
-            child: SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2),
+          return _placeholder(
+            const Center(
+              child: SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             ),
-          ));
+          );
         }
 
         final token = snapshot.data;
         if (token == null || token.isEmpty) {
-          return _placeholder(Icon(Icons.lock_outline,
-              color: ClayTheme.textMuted));
+          return _placeholder(
+            Icon(Icons.lock_outline, color: ClayTheme.textMuted),
+          );
         }
 
         return Image.network(
@@ -55,19 +58,18 @@ class AuthedImage extends ConsumerWidget {
           height: height,
           fit: fit,
           headers: {'Authorization': 'Bearer $token'},
-          errorBuilder: (_, _, _) => _placeholder(Icon(
-            Icons.broken_image_outlined,
-            color: ClayTheme.textMuted,
-          )),
+          errorBuilder: (_, _, _) => _placeholder(
+            Icon(Icons.broken_image_outlined, color: ClayTheme.textMuted),
+          ),
         );
       },
     );
   }
 
   Widget _placeholder(Widget child) => Container(
-        width: width,
-        height: height ?? 140,
-        color: ClayTheme.background,
-        child: child,
-      );
+    width: width,
+    height: height ?? 140,
+    color: ClayTheme.background,
+    child: child,
+  );
 }

@@ -26,11 +26,9 @@ class MemoryOfflineQueue implements OfflineQueue {
 
   @override
   Future<void> enqueue(Map<String, dynamic> payload) async {
-    _rows.add(_Row(
-      id: _nextId++,
-      payload: payload,
-      capturedAt: DateTime.now(),
-    ));
+    _rows.add(
+      _Row(id: _nextId++, payload: payload, capturedAt: DateTime.now()),
+    );
 
     if (_rows.length > OfflineQueue.maxRows) {
       _rows.sort((a, b) => a.capturedAt.compareTo(b.capturedAt));
@@ -45,12 +43,14 @@ class MemoryOfflineQueue implements OfflineQueue {
 
     return sorted
         .take(limit)
-        .map((r) => PendingScan(
-              id: r.id,
-              payload: r.payload,
-              capturedAt: r.capturedAt,
-              attempts: r.attempts,
-            ))
+        .map(
+          (r) => PendingScan(
+            id: r.id,
+            payload: r.payload,
+            capturedAt: r.capturedAt,
+            attempts: r.attempts,
+          ),
+        )
         .toList();
   }
 
@@ -79,11 +79,7 @@ class MemoryOfflineQueue implements OfflineQueue {
 }
 
 class _Row {
-  _Row({
-    required this.id,
-    required this.payload,
-    required this.capturedAt,
-  });
+  _Row({required this.id, required this.payload, required this.capturedAt});
 
   final int id;
   final Map<String, dynamic> payload;

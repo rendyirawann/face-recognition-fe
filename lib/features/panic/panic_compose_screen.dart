@@ -114,7 +114,9 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
         media.add(base64Encode(await photo.readAsBytes()));
       }
 
-      final result = await ref.read(repositoryProvider).createPanicReport(
+      final result = await ref
+          .read(repositoryProvider)
+          .createPanicReport(
             categoryId: _selected!.id,
             title: _title.text.trim(),
             body: _body.text.trim(),
@@ -164,8 +166,11 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.verified_user_rounded,
-                          color: ClayTheme.primary, size: 22),
+                      Icon(
+                        Icons.verified_user_rounded,
+                        color: ClayTheme.primary,
+                        size: 22,
+                      ),
                       const SizedBox(width: 13),
                       Expanded(
                         child: Text(
@@ -195,7 +200,9 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                     return ClaySurface(
                       radius: ClayTheme.radiusPill,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
                       color: selected ? ClayTheme.primary : ClayTheme.surface,
                       depth: 0.6,
                       onTap: () => setState(() => _selected = c),
@@ -239,7 +246,8 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                 ClayField(
                   controller: _body,
                   label: 'Ceritakan Kejadiannya',
-                  hint: 'Kapan, di mana, dan apa yang terjadi. '
+                  hint:
+                      'Kapan, di mana, dan apa yang terjadi. '
                       'Semakin jelas, semakin cepat ditindaklanjuti.',
                   maxLines: 7,
                   maxLength: 5000,
@@ -252,57 +260,68 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                 const _Label('Foto Bukti (opsional)'),
                 Row(
                   children: [
-                    ..._photos.asMap().entries.map((e) => Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    ClayTheme.radiusSmall),
-                                // Berkas lokal, bukan URL — Image.network akan
-                                // gagal senyap pada path filesystem.
-                                child: Image.file(
-                                  File(e.value.path),
+                    ..._photos.asMap().entries.map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                ClayTheme.radiusSmall,
+                              ),
+                              // Berkas lokal, bukan URL — Image.network akan
+                              // gagal senyap pada path filesystem.
+                              child: Image.file(
+                                File(e.value.path),
+                                width: 74,
+                                height: 74,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => Container(
                                   width: 74,
                                   height: 74,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => Container(
-                                    width: 74,
-                                    height: 74,
-                                    color: ClayTheme.primarySoft,
-                                    child: Icon(Icons.image_rounded,
-                                        color: ClayTheme.primary),
+                                  color: ClayTheme.primarySoft,
+                                  child: Icon(
+                                    Icons.image_rounded,
+                                    color: ClayTheme.primary,
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                right: 2,
-                                top: 2,
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      setState(() => _photos.removeAt(e.key)),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                      color: ClayTheme.danger,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(Icons.close_rounded,
-                                        size: 13, color: Colors.white),
+                            ),
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: GestureDetector(
+                                onTap: () =>
+                                    setState(() => _photos.removeAt(e.key)),
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: ClayTheme.danger,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.close_rounded,
+                                    size: 13,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     if (_photos.length < 4)
                       ClaySurface(
                         radius: ClayTheme.radiusSmall,
                         padding: const EdgeInsets.all(24),
                         depth: 0.6,
                         onTap: _busy ? null : _addPhoto,
-                        child: Icon(Icons.add_a_photo_outlined,
-                            size: 24, color: ClayTheme.textMuted),
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          size: 24,
+                          color: ClayTheme.textMuted,
+                        ),
                       ),
                   ],
                 ),
@@ -328,7 +347,8 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   group: _visibility,
                   icon: Icons.public_rounded,
                   title: 'Tampil di beranda',
-                  subtitle: 'Setelah diperiksa petugas, laporan tampil anonim '
+                  subtitle:
+                      'Setelah diperiksa petugas, laporan tampil anonim '
                       'agar orang lain tahu mereka tidak sendirian.',
                   onSelected: (v) => setState(() => _visibility = v),
                 ),
@@ -338,7 +358,8 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   group: _visibility,
                   icon: Icons.lock_rounded,
                   title: 'Hanya untuk Dinas Pendidikan',
-                  subtitle: 'Tidak pernah tampil di beranda. Pilih ini untuk '
+                  subtitle:
+                      'Tidak pernah tampil di beranda. Pilih ini untuk '
                       'kasus yang sangat sensitif.',
                   onSelected: (v) => setState(() => _visibility = v),
                 ),
@@ -394,16 +415,16 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 6, bottom: 11),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: ClayTheme.textBody,
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(left: 6, bottom: 11),
+    child: Text(
+      text,
+      style: TextStyle(
+        color: ClayTheme.textBody,
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 }
 
 class _VisibilityOption extends StatelessWidget {
@@ -499,8 +520,11 @@ class _SentDialog extends StatelessWidget {
               color: ClayTheme.successSoft,
               padding: const EdgeInsets.all(20),
               depth: 0.7,
-              child: Icon(Icons.check_rounded,
-                  size: 34, color: ClayTheme.success),
+              child: Icon(
+                Icons.check_rounded,
+                size: 34,
+                color: ClayTheme.success,
+              ),
             ),
             const SizedBox(height: 20),
             Text(

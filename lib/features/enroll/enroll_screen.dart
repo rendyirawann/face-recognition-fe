@@ -149,7 +149,8 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
       // Kamera depan menghasilkan citra tercermin. Wajah manusia tidak
       // simetris, jadi embedding dari citra tercermin berbeda dari aslinya —
       // harus dibalik agar konsisten dengan frame absensi harian.
-      final oriented = camera.description.lensDirection == CameraLensDirection.front
+      final oriented =
+          camera.description.lensDirection == CameraLensDirection.front
           ? img.flipHorizontal(decoded)
           : decoded;
 
@@ -163,7 +164,9 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
         ),
       );
 
-      final message = await ref.read(repositoryProvider).enrollFace(
+      final message = await ref
+          .read(repositoryProvider)
+          .enrollFace(
             studentId: widget.student.studentId,
             jpegBytes: jpeg,
             embedding: embedding,
@@ -183,7 +186,10 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: const Color(0xFF1B7F4E)),
+        SnackBar(
+          content: Text(message),
+          backgroundColor: const Color(0xFF1B7F4E),
+        ),
       );
     } on ApiFailure catch (e) {
       if (mounted) {
@@ -258,8 +264,11 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 64, color: Color(0xFFF1416C)),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Color(0xFFF1416C),
+                    ),
                     const SizedBox(height: 16),
                     Text(_hint, textAlign: TextAlign.center),
                   ],
@@ -283,8 +292,10 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
                               FittedBox(
                                 fit: BoxFit.cover,
                                 child: SizedBox(
-                                  width: camera.value.previewSize?.height ?? 480,
-                                  height: camera.value.previewSize?.width ?? 640,
+                                  width:
+                                      camera.value.previewSize?.height ?? 480,
+                                  height:
+                                      camera.value.previewSize?.width ?? 640,
                                   child: CameraPreview(camera),
                                 ),
                               ),
@@ -347,8 +358,9 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
                             ? const SizedBox(
                                 height: 18,
                                 width: 18,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Icon(Icons.camera_alt),
                         label: Text(_busy ? 'Memproses...' : 'Ambil Foto'),

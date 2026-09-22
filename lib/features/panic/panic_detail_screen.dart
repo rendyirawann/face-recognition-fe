@@ -43,8 +43,9 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
 
   Future<void> _load() async {
     try {
-      final detail =
-          await ref.read(repositoryProvider).panicDetail(widget.reportId);
+      final detail = await ref
+          .read(repositoryProvider)
+          .panicDetail(widget.reportId);
       if (!mounted) return;
       setState(() {
         _detail = detail;
@@ -66,10 +67,9 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
 
     setState(() => _sending = true);
     try {
-      await ref.read(repositoryProvider).addPanicComment(
-            reportId: widget.reportId,
-            body: text,
-          );
+      await ref
+          .read(repositoryProvider)
+          .addPanicComment(reportId: widget.reportId, body: text);
       _comment.clear();
       await _load();
     } on ApiFailure catch (e) {
@@ -88,111 +88,116 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : detail == null
-              ? ClayEmpty(
-                  icon: Icons.search_off_rounded,
-                  title: 'Laporan tidak tersedia',
-                  message: _error ??
-                      'Laporan ini tidak ada atau berada di luar cakupan akun Anda.',
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                        children: [
-                          if (detail.isPendingModeration)
-                            _Notice(
-                              icon: Icons.hourglass_top_rounded,
-                              color: ClayTheme.warning,
-                              background: ClayTheme.warningSoft,
-                              text: 'Laporan Anda sedang diperiksa petugas '
-                                  'sebelum tampil di beranda. Penanganannya '
-                                  'tetap berjalan.',
-                            ),
-
-                          _ReportBody(report: detail.report),
-
-                          if (detail.resolution != null) ...[
-                            const SizedBox(height: 16),
-                            _Notice(
-                              icon: Icons.task_alt_rounded,
-                              color: ClayTheme.success,
-                              background: ClayTheme.successSoft,
-                              text: detail.resolution!,
-                              title: 'Hasil Penanganan',
-                            ),
-                          ],
-
-                          const SizedBox(height: 22),
-                          const _SectionTitle('Lini Masa Penanganan'),
-                          _Timeline(entries: detail.timeline),
-
-                          const SizedBox(height: 22),
-                          _SectionTitle(
-                            'Komentar (${detail.comments.length})',
-                          ),
-                          if (detail.comments.isEmpty)
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20),
-                              child: Text(
-                                'Belum ada komentar.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: ClayTheme.textMuted,
-                                  fontSize: 12.5,
-                                ),
-                              ),
-                            )
-                          else
-                            ...detail.comments.map((c) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 11),
-                                  child: _CommentCard(comment: c),
-                                )),
-                        ],
-                      ),
-                    ),
-
-                    // --- Kotak komentar ---
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
-                      color: ClayTheme.background,
-                      child: SafeArea(
-                        top: false,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: ClayField(
-                                controller: _comment,
-                                hint: 'Tulis komentar anonim...',
-                                enabled: !_sending,
-                                maxLength: 2000,
-                                onSubmitted: (_) => _sendComment(),
-                              ),
-                            ),
-                            const SizedBox(width: 11),
-                            ClaySurface(
-                              radius: ClayTheme.radiusPill,
-                              color: ClayTheme.primary,
-                              padding: const EdgeInsets.all(15),
-                              onTap: _sending ? null : _sendComment,
-                              child: _sending
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Icon(Icons.send_rounded,
-                                      size: 18, color: Colors.white),
-                            ),
-                          ],
+          ? ClayEmpty(
+              icon: Icons.search_off_rounded,
+              title: 'Laporan tidak tersedia',
+              message:
+                  _error ??
+                  'Laporan ini tidak ada atau berada di luar cakupan akun Anda.',
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                    children: [
+                      if (detail.isPendingModeration)
+                        _Notice(
+                          icon: Icons.hourglass_top_rounded,
+                          color: ClayTheme.warning,
+                          background: ClayTheme.warningSoft,
+                          text:
+                              'Laporan Anda sedang diperiksa petugas '
+                              'sebelum tampil di beranda. Penanganannya '
+                              'tetap berjalan.',
                         ),
-                      ),
-                    ),
-                  ],
+
+                      _ReportBody(report: detail.report),
+
+                      if (detail.resolution != null) ...[
+                        const SizedBox(height: 16),
+                        _Notice(
+                          icon: Icons.task_alt_rounded,
+                          color: ClayTheme.success,
+                          background: ClayTheme.successSoft,
+                          text: detail.resolution!,
+                          title: 'Hasil Penanganan',
+                        ),
+                      ],
+
+                      const SizedBox(height: 22),
+                      const _SectionTitle('Lini Masa Penanganan'),
+                      _Timeline(entries: detail.timeline),
+
+                      const SizedBox(height: 22),
+                      _SectionTitle('Komentar (${detail.comments.length})'),
+                      if (detail.comments.isEmpty)
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            'Belum ada komentar.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: ClayTheme.textMuted,
+                              fontSize: 12.5,
+                            ),
+                          ),
+                        )
+                      else
+                        ...detail.comments.map(
+                          (c) => Padding(
+                            padding: const EdgeInsets.only(bottom: 11),
+                            child: _CommentCard(comment: c),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
+
+                // --- Kotak komentar ---
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+                  color: ClayTheme.background,
+                  child: SafeArea(
+                    top: false,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ClayField(
+                            controller: _comment,
+                            hint: 'Tulis komentar anonim...',
+                            enabled: !_sending,
+                            maxLength: 2000,
+                            onSubmitted: (_) => _sendComment(),
+                          ),
+                        ),
+                        const SizedBox(width: 11),
+                        ClaySurface(
+                          radius: ClayTheme.radiusPill,
+                          color: ClayTheme.primary,
+                          padding: const EdgeInsets.all(15),
+                          onTap: _sending ? null : _sendComment,
+                          child: _sending
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.send_rounded,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
@@ -246,26 +251,28 @@ class _ReportBody extends StatelessWidget {
           ),
           if (report.media.isNotEmpty) ...[
             const SizedBox(height: 16),
-            ...report.media.map((url) => Padding(
-                  padding: const EdgeInsets.only(bottom: 11),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
-                    child: AuthedImage(url),
-                  ),
-                )),
+            ...report.media.map(
+              (url) => Padding(
+                padding: const EdgeInsets.only(bottom: 11),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
+                  child: AuthedImage(url),
+                ),
+              ),
+            ),
           ],
           const SizedBox(height: 16),
           Row(
             children: [
-              Icon(Icons.front_hand_rounded,
-                  size: 16, color: ClayTheme.primary),
+              Icon(
+                Icons.front_hand_rounded,
+                size: 16,
+                color: ClayTheme.primary,
+              ),
               const SizedBox(width: 7),
               Text(
                 '${report.supportCount} orang menyatakan mengalami hal serupa',
-                style: TextStyle(
-                  color: ClayTheme.textMuted,
-                  fontSize: 11.5,
-                ),
+                style: TextStyle(color: ClayTheme.textMuted, fontSize: 11.5),
               ),
             ],
           ),
@@ -372,13 +379,13 @@ class _Timeline extends StatelessWidget {
   }
 
   static String _statusLabel(String s) => switch (s) {
-        'baru' => 'Laporan Diterima',
-        'diverifikasi' => 'Diverifikasi Petugas',
-        'ditindaklanjuti' => 'Sedang Ditindaklanjuti',
-        'selesai' => 'Selesai Ditangani',
-        'ditolak' => 'Laporan Ditolak',
-        _ => s,
-      };
+    'baru' => 'Laporan Diterima',
+    'diverifikasi' => 'Diverifikasi Petugas',
+    'ditindaklanjuti' => 'Sedang Ditindaklanjuti',
+    'selesai' => 'Selesai Ditangani',
+    'ditolak' => 'Laporan Ditolak',
+    _ => s,
+  };
 }
 
 class _CommentCard extends StatelessWidget {
@@ -404,8 +411,9 @@ class _CommentCard extends StatelessWidget {
                     ? Icons.verified_rounded
                     : Icons.person_off_rounded,
                 size: 15,
-                color:
-                    comment.isOfficial ? ClayTheme.info : ClayTheme.textMuted,
+                color: comment.isOfficial
+                    ? ClayTheme.info
+                    : ClayTheme.textMuted,
               ),
               const SizedBox(width: 7),
               Text(
@@ -422,10 +430,7 @@ class _CommentCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   '· ${comment.officialTitle}',
-                  style: TextStyle(
-                    color: ClayTheme.textMuted,
-                    fontSize: 11,
-                  ),
+                  style: TextStyle(color: ClayTheme.textMuted, fontSize: 11),
                 ),
               ],
               if (comment.isMine) ...[
@@ -456,17 +461,17 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 6, bottom: 12),
-        child: Text(
-          text.toUpperCase(),
-          style: TextStyle(
-            color: ClayTheme.textMuted,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.1,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(left: 6, bottom: 12),
+    child: Text(
+      text.toUpperCase(),
+      style: TextStyle(
+        color: ClayTheme.textMuted,
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.1,
+      ),
+    ),
+  );
 }
 
 class _Notice extends StatelessWidget {
@@ -486,43 +491,43 @@ class _Notice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ClaySurface(
-        color: background,
-        depth: 0.6,
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 19, color: color),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (title != null) ...[
-                    Text(
-                      title!,
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                  ],
-                  Text(
-                    text,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 12,
-                      height: 1.5,
-                      fontWeight: FontWeight.w600,
-                    ),
+    color: background,
+    depth: 0.6,
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(15),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 19, color: color),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (title != null) ...[
+                Text(
+                  title!,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
                   ),
-                ],
+                ),
+                const SizedBox(height: 5),
+              ],
+              Text(
+                text,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 12,
+                  height: 1.5,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }

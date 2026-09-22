@@ -62,14 +62,16 @@ class SqfliteOfflineQueue implements OfflineQueue {
     );
 
     return rows
-        .map((r) => PendingScan(
-              id: r['id'] as int,
-              payload: jsonDecode(r['payload'] as String) as Map<String, dynamic>,
-              capturedAt: DateTime.fromMillisecondsSinceEpoch(
-                r['captured_at'] as int,
-              ),
-              attempts: r['attempts'] as int,
-            ))
+        .map(
+          (r) => PendingScan(
+            id: r['id'] as int,
+            payload: jsonDecode(r['payload'] as String) as Map<String, dynamic>,
+            capturedAt: DateTime.fromMillisecondsSinceEpoch(
+              r['captured_at'] as int,
+            ),
+            attempts: r['attempts'] as int,
+          ),
+        )
         .toList();
   }
 
@@ -94,8 +96,9 @@ class SqfliteOfflineQueue implements OfflineQueue {
 
   @override
   Future<int> purgeStale() async {
-    final cutoff =
-        DateTime.now().subtract(OfflineQueue.maxAge).millisecondsSinceEpoch;
+    final cutoff = DateTime.now()
+        .subtract(OfflineQueue.maxAge)
+        .millisecondsSinceEpoch;
     return _db.delete(
       'pending_scans',
       where: 'captured_at < ?',
@@ -110,10 +113,13 @@ class SqfliteOfflineQueue implements OfflineQueue {
     // Buang yang tertua: absensi lama sudah kehilangan makna sebagai jam
     // kedatangan, sedangkan yang baru masih relevan.
     final excess = total - OfflineQueue.maxRows;
-    await _db.rawDelete('''
+    await _db.rawDelete(
+      '''
       DELETE FROM pending_scans WHERE id IN (
         SELECT id FROM pending_scans ORDER BY captured_at ASC LIMIT ?
       )
-    ''', [excess]);
+    ''',
+      [excess],
+    );
   }
 }

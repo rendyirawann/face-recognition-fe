@@ -19,8 +19,7 @@ class BerkasDetailScreen extends ConsumerStatefulWidget {
   final String submissionId;
 
   @override
-  ConsumerState<BerkasDetailScreen> createState() =>
-      _BerkasDetailScreenState();
+  ConsumerState<BerkasDetailScreen> createState() => _BerkasDetailScreenState();
 }
 
 class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
@@ -71,7 +70,9 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
     setState(() => _uploadingTypeId = item.documentTypeId);
     try {
       final bytes = await file.readAsBytes();
-      final message = await ref.read(repositoryProvider).uploadDocument(
+      final message = await ref
+          .read(repositoryProvider)
+          .uploadDocument(
             submissionId: widget.submissionId,
             originalName: file.name,
             content: bytes,
@@ -132,189 +133,195 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : detail == null
-              ? ClayEmpty(
-                  icon: Icons.search_off_rounded,
-                  title: 'Pengajuan tidak tersedia',
-                  message: _error,
-                )
-              : ListView(
-                  // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
-                  // menutupi isi terakhir bila paddingnya dipatok tetap.
-                  padding: EdgeInsets.fromLTRB(
-                    20,
-                    12,
-                    20,
-                    32 + MediaQuery.viewPaddingOf(context).bottom,
-                  ),
-                  children: [
-                    _HeaderCard(detail: detail),
+          ? ClayEmpty(
+              icon: Icons.search_off_rounded,
+              title: 'Pengajuan tidak tersedia',
+              message: _error,
+            )
+          : ListView(
+              // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
+              // menutupi isi terakhir bila paddingnya dipatok tetap.
+              padding: EdgeInsets.fromLTRB(
+                20,
+                12,
+                20,
+                32 + MediaQuery.viewPaddingOf(context).bottom,
+              ),
+              children: [
+                _HeaderCard(detail: detail),
 
-                    if (detail.reviewNote != null) ...[
-                      const SizedBox(height: 16),
-                      ClaySurface(
-                        color: detail.submission.status == 'revisi'
-                            ? ClayTheme.warningSoft
-                            : ClayTheme.infoSoft,
-                        depth: 0.6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                if (detail.reviewNote != null) ...[
+                  const SizedBox(height: 16),
+                  ClaySurface(
+                    color: detail.submission.status == 'revisi'
+                        ? ClayTheme.warningSoft
+                        : ClayTheme.infoSoft,
+                    depth: 0.6,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.rate_review_rounded,
-                                  size: 17,
-                                  color: detail.submission.status == 'revisi'
-                                      ? ClayTheme.warning
-                                      : ClayTheme.info,
-                                ),
-                                const SizedBox(width: 9),
-                                Text(
-                                  'Catatan Verifikator'
-                                  '${detail.reviewerName != null ? ' · ${detail.reviewerName}' : ''}',
-                                  style: TextStyle(
-                                    color: detail.submission.status == 'revisi'
-                                        ? ClayTheme.warning
-                                        : ClayTheme.info,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ],
+                            Icon(
+                              Icons.rate_review_rounded,
+                              size: 17,
+                              color: detail.submission.status == 'revisi'
+                                  ? ClayTheme.warning
+                                  : ClayTheme.info,
                             ),
-                            const SizedBox(height: 9),
+                            const SizedBox(width: 9),
                             Text(
-                              detail.reviewNote!,
+                              'Catatan Verifikator'
+                              '${detail.reviewerName != null ? ' · ${detail.reviewerName}' : ''}',
                               style: TextStyle(
-                                color: ClayTheme.textBody,
-                                fontSize: 12.5,
-                                height: 1.5,
+                                color: detail.submission.status == 'revisi'
+                                    ? ClayTheme.warning
+                                    : ClayTheme.info,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-
-                    const SizedBox(height: 22),
-                    const _SectionTitle('Daftar Berkas'),
-
-                    ...detail.checklist.map((item) => Padding(
-                          padding: const EdgeInsets.only(bottom: 11),
-                          child: _ChecklistCard(
-                            item: item,
-                            editable: detail.isEditable,
-                            uploading: _uploadingTypeId == item.documentTypeId,
-                            onUpload: () => _upload(item),
-                          ),
-                        )),
-
-                    if (detail.isEditable) ...[
-                      const SizedBox(height: 20),
-                      if (detail.missingRequired.isNotEmpty)
-                        ClaySurface(
-                          sunken: true,
-                          radius: ClayTheme.radiusSmall,
-                          padding: const EdgeInsets.all(15),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(Icons.info_outline_rounded,
-                                  size: 18, color: ClayTheme.warning),
-                              const SizedBox(width: 11),
-                              Expanded(
-                                child: Text(
-                                  'Masih kurang ${detail.missingRequired.length} '
-                                  'dokumen wajib: '
-                                  '${detail.missingRequired.map((c) => c.name).join(', ')}.',
-                                  style: TextStyle(
-                                    color: ClayTheme.textBody,
-                                    fontSize: 11.5,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: 18),
-                      ClayButton(
-                        label: 'Ajukan untuk Diperiksa',
-                        icon: Icons.send_rounded,
-                        onPressed: detail.canSubmit ? _submit : null,
-                      ),
-                      if (!detail.canSubmit) ...[
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 9),
                         Text(
-                          'Lengkapi seluruh dokumen wajib untuk dapat mengajukan.',
-                          textAlign: TextAlign.center,
+                          detail.reviewNote!,
                           style: TextStyle(
-                            color: ClayTheme.textMuted,
-                            fontSize: 11.5,
+                            color: ClayTheme.textBody,
+                            fontSize: 12.5,
+                            height: 1.5,
                           ),
                         ),
                       ],
-                    ],
+                    ),
+                  ),
+                ],
 
-                    if (detail.timeline.isNotEmpty) ...[
-                      const SizedBox(height: 26),
-                      const _SectionTitle('Riwayat'),
-                      ClaySurface(
-                        child: Column(
-                          children: detail.timeline
-                              .map((e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 14),
-                                    child: Row(
+                const SizedBox(height: 22),
+                const _SectionTitle('Daftar Berkas'),
+
+                ...detail.checklist.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 11),
+                    child: _ChecklistCard(
+                      item: item,
+                      editable: detail.isEditable,
+                      uploading: _uploadingTypeId == item.documentTypeId,
+                      onUpload: () => _upload(item),
+                    ),
+                  ),
+                ),
+
+                if (detail.isEditable) ...[
+                  const SizedBox(height: 20),
+                  if (detail.missingRequired.isNotEmpty)
+                    ClaySurface(
+                      sunken: true,
+                      radius: ClayTheme.radiusSmall,
+                      padding: const EdgeInsets.all(15),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 18,
+                            color: ClayTheme.warning,
+                          ),
+                          const SizedBox(width: 11),
+                          Expanded(
+                            child: Text(
+                              'Masih kurang ${detail.missingRequired.length} '
+                              'dokumen wajib: '
+                              '${detail.missingRequired.map((c) => c.name).join(', ')}.',
+                              style: TextStyle(
+                                color: ClayTheme.textBody,
+                                fontSize: 11.5,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 18),
+                  ClayButton(
+                    label: 'Ajukan untuk Diperiksa',
+                    icon: Icons.send_rounded,
+                    onPressed: detail.canSubmit ? _submit : null,
+                  ),
+                  if (!detail.canSubmit) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      'Lengkapi seluruh dokumen wajib untuk dapat mengajukan.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: ClayTheme.textMuted,
+                        fontSize: 11.5,
+                      ),
+                    ),
+                  ],
+                ],
+
+                if (detail.timeline.isNotEmpty) ...[
+                  const SizedBox(height: 26),
+                  const _SectionTitle('Riwayat'),
+                  ClaySurface(
+                    child: Column(
+                      children: detail.timeline
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    margin: const EdgeInsets.only(top: 5),
+                                    decoration: BoxDecoration(
+                                      color: ClayTheme.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 8,
-                                          height: 8,
-                                          margin: const EdgeInsets.only(top: 5),
-                                          decoration: BoxDecoration(
-                                            color: ClayTheme.primary,
-                                            shape: BoxShape.circle,
+                                        Text(
+                                          e.note ?? e.status,
+                                          style: TextStyle(
+                                            color: ClayTheme.textBody,
+                                            fontSize: 12.5,
+                                            height: 1.45,
                                           ),
                                         ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                e.note ?? e.status,
-                                                style: TextStyle(
-                                                  color: ClayTheme.textBody,
-                                                  fontSize: 12.5,
-                                                  height: 1.45,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 3),
-                                              Text(
-                                                [
-                                                  if (e.actorLabel != null)
-                                                    e.actorLabel!,
-                                                  '${e.createdAt.day}/${e.createdAt.month}/${e.createdAt.year}',
-                                                ].join(' · '),
-                                                style: TextStyle(
-                                                  color: ClayTheme.textMuted,
-                                                  fontSize: 10.5,
-                                                ),
-                                              ),
-                                            ],
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          [
+                                            if (e.actorLabel != null)
+                                              e.actorLabel!,
+                                            '${e.createdAt.day}/${e.createdAt.month}/${e.createdAt.year}',
+                                          ].join(' · '),
+                                          style: TextStyle(
+                                            color: ClayTheme.textMuted,
+                                            fontSize: 10.5,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ))
-                              .toList(),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ],
+            ),
     );
   }
 }
@@ -328,8 +335,9 @@ class _HeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = detail.submission;
     final total = detail.checklist.where((c) => c.isRequired).length;
-    final done =
-        detail.checklist.where((c) => c.isRequired && c.uploaded).length;
+    final done = detail.checklist
+        .where((c) => c.isRequired && c.uploaded)
+        .length;
     final progress = total == 0 ? 1.0 : done / total;
 
     return ClaySurface(
@@ -413,14 +421,14 @@ class _ChecklistCard extends StatelessWidget {
     final (color, background, icon) = item.isRejected
         ? (ClayTheme.danger, ClayTheme.dangerSoft, Icons.close_rounded)
         : item.isApproved
-            ? (ClayTheme.success, ClayTheme.successSoft, Icons.check_rounded)
-            : item.uploaded
-                ? (ClayTheme.info, ClayTheme.infoSoft, Icons.schedule_rounded)
-                : (
-                    ClayTheme.textMuted,
-                    ClayTheme.background,
-                    Icons.upload_file_rounded
-                  );
+        ? (ClayTheme.success, ClayTheme.successSoft, Icons.check_rounded)
+        : item.uploaded
+        ? (ClayTheme.info, ClayTheme.infoSoft, Icons.schedule_rounded)
+        : (
+            ClayTheme.textMuted,
+            ClayTheme.background,
+            Icons.upload_file_rounded,
+          );
 
     return ClaySurface(
       padding: const EdgeInsets.all(15),
@@ -509,8 +517,11 @@ class _ChecklistCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.error_outline_rounded,
-                      size: 15, color: ClayTheme.danger),
+                  Icon(
+                    Icons.error_outline_rounded,
+                    size: 15,
+                    color: ClayTheme.danger,
+                  ),
                   const SizedBox(width: 9),
                   Expanded(
                     child: Text(
@@ -540,15 +551,15 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 6, bottom: 12),
-        child: Text(
-          text.toUpperCase(),
-          style: TextStyle(
-            color: ClayTheme.textMuted,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.1,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.only(left: 6, bottom: 12),
+    child: Text(
+      text.toUpperCase(),
+      style: TextStyle(
+        color: ClayTheme.textMuted,
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 1.1,
+      ),
+    ),
+  );
 }

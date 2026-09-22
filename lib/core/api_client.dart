@@ -42,27 +42,29 @@ class ApiClient {
       ..headers['Accept'] = 'application/json';
 
     _dio.interceptors.add(
-      InterceptorsWrapper(onRequest: (options, handler) async {
-        options.baseUrl = ApiConfig.baseUrl;
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          options.baseUrl = ApiConfig.baseUrl;
 
-        final needsDevice = ApiRoutes.needsDeviceToken(options.path);
-        final needsNone = ApiRoutes.needsNoCredential(options.path);
+          final needsDevice = ApiRoutes.needsDeviceToken(options.path);
+          final needsNone = ApiRoutes.needsNoCredential(options.path);
 
-        if (!needsNone) {
-          if (needsDevice) {
-            final token = await _storage.deviceToken();
-            if (token != null) {
-              options.headers['Authorization'] = 'Device $token';
-            }
-          } else {
-            final token = await _storage.accessToken();
-            if (token != null) {
-              options.headers['Authorization'] = 'Bearer $token';
+          if (!needsNone) {
+            if (needsDevice) {
+              final token = await _storage.deviceToken();
+              if (token != null) {
+                options.headers['Authorization'] = 'Device $token';
+              }
+            } else {
+              final token = await _storage.accessToken();
+              if (token != null) {
+                options.headers['Authorization'] = 'Bearer $token';
+              }
             }
           }
-        }
-        handler.next(options);
-      }),
+          handler.next(options);
+        },
+      ),
     );
   }
 
@@ -107,10 +109,7 @@ class ApiClient {
     throw ApiFailure('Format respons tidak sesuai untuk $path');
   }
 
-  Future<Map<String, dynamic>> post(
-    String path, {
-    Object? body,
-  }) async {
+  Future<Map<String, dynamic>> post(String path, {Object? body}) async {
     final res = await _send(() => _dio.post(path, data: body));
     return _asObject(res);
   }
@@ -150,12 +149,14 @@ class ApiClient {
   ///
   /// Mengembalikan `null` bila alamat baik, atau alasan kegagalannya.
   static Future<String?> ping(String baseUrl) async {
-    final probe = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 4),
-      receiveTimeout: const Duration(seconds: 4),
-      validateStatus: (_) => true,
-    ));
+    final probe = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 4),
+        receiveTimeout: const Duration(seconds: 4),
+        validateStatus: (_) => true,
+      ),
+    );
 
     try {
       final res = await probe.get<dynamic>(ApiRoutes.health);
@@ -171,12 +172,10 @@ class ApiClient {
       return 'Server menjawab dengan kode $status.';
     } on DioException catch (e) {
       return switch (e.type) {
-        DioExceptionType.connectionTimeout ||
-        DioExceptionType.receiveTimeout =>
+        DioExceptionType.connectionTimeout || DioExceptionType.receiveTimeout =>
           'Server tidak merespons. Pastikan API berjalan dan perangkat berada '
               'di jaringan yang sama.',
-        DioExceptionType.connectionError =>
-          'Tidak dapat menghubungi $baseUrl.',
+        DioExceptionType.connectionError => 'Tidak dapat menghubungi $baseUrl.',
         DioExceptionType.badCertificate =>
           'Sertifikat HTTPS server tidak valid.',
         _ => 'Gagal menghubungi server: ${e.message ?? 'tidak diketahui'}',
@@ -330,7 +329,8 @@ class ApiClient {
       return map.containsKey('data') ? map['data'] : map;
     }
 
-    final message = map?['message'] as String? ??
+    final message =
+        map?['message'] as String? ??
         _statusMessage(status, res.requestOptions.path);
     final fields = <String, String>{};
     for (final err in (map?['errors'] as List<dynamic>? ?? const [])) {
@@ -354,29 +354,30 @@ class ApiClient {
   /// yang berakhir. Satu pesan untuk keduanya akan menyuruh guru memasangkan
   /// ulang tablet padahal ia hanya perlu masuk kembali.
   String _statusMessage(int status, String path) => switch (status) {
-        401 => ApiRoutes.needsDeviceToken(path)
-            ? 'Sesi perangkat tidak berlaku. Perangkat perlu dipasangkan ulang.'
-            : 'Sesi Anda sudah berakhir. Silakan masuk kembali.',
-        403 => 'Akses ditolak untuk perangkat/akun ini.',
-        404 => 'Data tidak ditemukan di server.',
-        409 => 'Data bertentangan dengan yang sudah ada.',
-        422 => 'Data yang dikirim tidak valid.',
-        429 => 'Terlalu banyak permintaan. Tunggu sebentar.',
-        >= 500 => 'Server sedang bermasalah. Coba beberapa saat lagi.',
-        _ => 'Permintaan gagal (kode $status).',
-      };
+    401 =>
+      ApiRoutes.needsDeviceToken(path)
+          ? 'Sesi perangkat tidak berlaku. Perangkat perlu dipasangkan ulang.'
+          : 'Sesi Anda sudah berakhir. Silakan masuk kembali.',
+    403 => 'Akses ditolak untuk perangkat/akun ini.',
+    404 => 'Data tidak ditemukan di server.',
+    409 => 'Data bertentangan dengan yang sudah ada.',
+    422 => 'Data yang dikirim tidak valid.',
+    429 => 'Terlalu banyak permintaan. Tunggu sebentar.',
+    >= 500 => 'Server sedang bermasalah. Coba beberapa saat lagi.',
+    _ => 'Permintaan gagal (kode $status).',
+  };
 
   String _describe(DioException e) => switch (e.type) {
-        DioExceptionType.connectionTimeout =>
-          'Server tidak merespons. Periksa koneksi jaringan sekolah.',
-        DioExceptionType.sendTimeout || DioExceptionType.receiveTimeout =>
-          'Koneksi terlalu lambat. Data disimpan sementara di perangkat.',
-        DioExceptionType.connectionError =>
-          'Tidak dapat menghubungi server. Absensi akan disinkronkan otomatis '
-              'setelah jaringan kembali.',
-        DioExceptionType.badCertificate =>
-          'Sertifikat server tidak valid. Hubungi administrator.',
-        DioExceptionType.cancel => 'Permintaan dibatalkan.',
-        _ => 'Gangguan jaringan: ${e.message ?? 'tidak diketahui'}',
-      };
+    DioExceptionType.connectionTimeout =>
+      'Server tidak merespons. Periksa koneksi jaringan sekolah.',
+    DioExceptionType.sendTimeout || DioExceptionType.receiveTimeout =>
+      'Koneksi terlalu lambat. Data disimpan sementara di perangkat.',
+    DioExceptionType.connectionError =>
+      'Tidak dapat menghubungi server. Absensi akan disinkronkan otomatis '
+          'setelah jaringan kembali.',
+    DioExceptionType.badCertificate =>
+      'Sertifikat server tidak valid. Hubungi administrator.',
+    DioExceptionType.cancel => 'Permintaan dibatalkan.',
+    _ => 'Gangguan jaringan: ${e.message ?? 'tidak diketahui'}',
+  };
 }

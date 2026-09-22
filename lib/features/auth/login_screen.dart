@@ -64,8 +64,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      final profile =
-          await ref.read(repositoryProvider).login(_identity.text, _password.text);
+      final profile = await ref
+          .read(repositoryProvider)
+          .login(_identity.text, _password.text);
 
       if (!mounted) return;
       ref.read(currentUserProvider.notifier).state = profile;
@@ -78,9 +79,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
 
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeShell()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeShell()));
     } on ApiFailure catch (e) {
       if (mounted) setState(() => _error = e.message);
     } catch (e) {
@@ -164,7 +165,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       _identityHint,
                       style: TextStyle(
                         fontSize: 11.5,
-                        color: _identity.text.trim().length == 10 ||
+                        color:
+                            _identity.text.trim().length == 10 ||
                                 _identity.text.trim().length == 16
                             ? ClayTheme.success
                             : ClayTheme.textMuted,
@@ -204,8 +206,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.error_outline_rounded,
-                              color: ClayTheme.danger, size: 19),
+                          Icon(
+                            Icons.error_outline_rounded,
+                            color: ClayTheme.danger,
+                            size: 19,
+                          ),
                           const SizedBox(width: 11),
                           Expanded(
                             child: Text(
@@ -241,8 +246,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.info_outline_rounded,
-                            size: 18, color: ClayTheme.textMuted),
+                        Icon(
+                          Icons.info_outline_rounded,
+                          size: 18,
+                          color: ClayTheme.textMuted,
+                        ),
                         const SizedBox(width: 11),
                         Expanded(
                           child: Text(
@@ -273,7 +281,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       icon: Icons.dns_rounded,
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                            builder: (_) => const ServerSettingsScreen()),
+                          builder: (_) => const ServerSettingsScreen(),
+                        ),
                       ),
                     ),
                   ),

@@ -39,21 +39,21 @@ class HomeSummary {
   bool hasMenu(String key) => availableMenus.contains(key);
 
   factory HomeSummary.fromJson(Map<String, dynamic> j) => HomeSummary(
-        greeting: j['greeting'] as String? ?? 'Selamat datang',
-        roleLabel: j['role_label'] as String? ?? 'Pengguna',
-        students: (j['students'] as List<dynamic>? ?? const [])
-            .whereType<Map<String, dynamic>>()
-            .map(StudentTodayCard.fromJson)
-            .toList(),
-        school: j['school'] is Map<String, dynamic>
-            ? SchoolTodayCard.fromJson(j['school'] as Map<String, dynamic>)
-            : null,
-        panicUpdates: (j['panic_updates'] as num?)?.toInt() ?? 0,
-        documentActions: (j['document_actions'] as num?)?.toInt() ?? 0,
-        availableMenus: (j['available_menus'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-      );
+    greeting: j['greeting'] as String? ?? 'Selamat datang',
+    roleLabel: j['role_label'] as String? ?? 'Pengguna',
+    students: (j['students'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(StudentTodayCard.fromJson)
+        .toList(),
+    school: j['school'] is Map<String, dynamic>
+        ? SchoolTodayCard.fromJson(j['school'] as Map<String, dynamic>)
+        : null,
+    panicUpdates: (j['panic_updates'] as num?)?.toInt() ?? 0,
+    documentActions: (j['document_actions'] as num?)?.toInt() ?? 0,
+    availableMenus: (j['available_menus'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+  );
 }
 
 class StudentTodayCard {
@@ -94,19 +94,19 @@ class StudentTodayCard {
   bool get isSelf => relation == 'diri_sendiri';
 
   factory StudentTodayCard.fromJson(Map<String, dynamic> j) => StudentTodayCard(
-        studentId: j['student_id'] as String,
-        fullName: j['full_name'] as String? ?? '-',
-        classroomName: j['classroom_name'] as String?,
-        schoolName: j['school_name'] as String? ?? '-',
-        relation: j['relation'] as String? ?? 'diri_sendiri',
-        todayStatus: j['today_status'] as String? ?? 'belum_absen',
-        checkInTime: j['check_in_time'] as String?,
-        checkOutTime: j['check_out_time'] as String?,
-        lateMinutes: (j['late_minutes'] as num?)?.toInt() ?? 0,
-        monthPresent: (j['month_present'] as num?)?.toInt() ?? 0,
-        monthLate: (j['month_late'] as num?)?.toInt() ?? 0,
-        monthAbsent: (j['month_absent'] as num?)?.toInt() ?? 0,
-      );
+    studentId: j['student_id'] as String,
+    fullName: j['full_name'] as String? ?? '-',
+    classroomName: j['classroom_name'] as String?,
+    schoolName: j['school_name'] as String? ?? '-',
+    relation: j['relation'] as String? ?? 'diri_sendiri',
+    todayStatus: j['today_status'] as String? ?? 'belum_absen',
+    checkInTime: j['check_in_time'] as String?,
+    checkOutTime: j['check_out_time'] as String?,
+    lateMinutes: (j['late_minutes'] as num?)?.toInt() ?? 0,
+    monthPresent: (j['month_present'] as num?)?.toInt() ?? 0,
+    monthLate: (j['month_late'] as num?)?.toInt() ?? 0,
+    monthAbsent: (j['month_absent'] as num?)?.toInt() ?? 0,
+  );
 }
 
 class SchoolTodayCard {
@@ -129,14 +129,14 @@ class SchoolTodayCard {
   final double rate;
 
   factory SchoolTodayCard.fromJson(Map<String, dynamic> j) => SchoolTodayCard(
-        schoolId: j['school_id'] as String,
-        schoolName: j['school_name'] as String? ?? '-',
-        totalStudents: (j['total_students'] as num?)?.toInt() ?? 0,
-        hadir: (j['hadir'] as num?)?.toInt() ?? 0,
-        terlambat: (j['terlambat'] as num?)?.toInt() ?? 0,
-        belumAbsen: (j['belum_absen'] as num?)?.toInt() ?? 0,
-        rate: (j['rate'] as num?)?.toDouble() ?? 0,
-      );
+    schoolId: j['school_id'] as String,
+    schoolName: j['school_name'] as String? ?? '-',
+    totalStudents: (j['total_students'] as num?)?.toInt() ?? 0,
+    hadir: (j['hadir'] as num?)?.toInt() ?? 0,
+    terlambat: (j['terlambat'] as num?)?.toInt() ?? 0,
+    belumAbsen: (j['belum_absen'] as num?)?.toInt() ?? 0,
+    rate: (j['rate'] as num?)?.toDouble() ?? 0,
+  );
 }
 
 // =====================================================================
@@ -161,13 +161,13 @@ class PanicCategory {
   final String defaultSeverity;
 
   factory PanicCategory.fromJson(Map<String, dynamic> j) => PanicCategory(
-        id: j['id'] as String,
-        code: j['code'] as String? ?? '',
-        name: j['name'] as String? ?? '-',
-        description: j['description'] as String?,
-        icon: j['icon'] as String?,
-        defaultSeverity: j['default_severity'] as String? ?? 'sedang',
-      );
+    id: j['id'] as String,
+    code: j['code'] as String? ?? '',
+    name: j['name'] as String? ?? '-',
+    description: j['description'] as String?,
+    icon: j['icon'] as String?,
+    defaultSeverity: j['default_severity'] as String? ?? 'sedang',
+  );
 }
 
 class PanicReport {
@@ -221,37 +221,38 @@ class PanicReport {
   bool get isResolved => resolvedAt != null;
 
   String get statusLabel => switch (status) {
-        'baru' => 'Menunggu Diproses',
-        'diverifikasi' => 'Sudah Diverifikasi',
-        'ditindaklanjuti' => 'Sedang Ditindaklanjuti',
-        'selesai' => 'Selesai',
-        'ditolak' => 'Ditolak',
-        _ => status,
-      };
+    'baru' => 'Menunggu Diproses',
+    'diverifikasi' => 'Sudah Diverifikasi',
+    'ditindaklanjuti' => 'Sedang Ditindaklanjuti',
+    'selesai' => 'Selesai',
+    'ditolak' => 'Ditolak',
+    _ => status,
+  };
 
   factory PanicReport.fromJson(Map<String, dynamic> j) => PanicReport(
-        id: j['id'] as String,
-        createdAt: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
-            DateTime.now(),
-        categoryCode: j['category_code'] as String? ?? '',
-        categoryName: j['category_name'] as String? ?? '-',
-        anonymousHandle: j['anonymous_handle'] as String? ?? 'Anonim',
-        authorRole: j['author_role'] as String? ?? 'warga',
-        schoolLabel: j['school_label'] as String? ?? '-',
-        title: j['title'] as String? ?? '',
-        body: j['body'] as String? ?? '',
-        severity: j['severity'] as String? ?? 'sedang',
-        status: j['status'] as String? ?? 'baru',
-        supportCount: (j['support_count'] as num?)?.toInt() ?? 0,
-        commentCount: (j['comment_count'] as num?)?.toInt() ?? 0,
-        isMine: j['is_mine'] as bool? ?? false,
-        isSupported: j['is_supported'] as bool? ?? false,
-        media: (j['media'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-        handledAt: DateTime.tryParse(j['handled_at'] as String? ?? '')?.toLocal(),
-        resolvedAt: DateTime.tryParse(j['resolved_at'] as String? ?? '')?.toLocal(),
-      );
+    id: j['id'] as String,
+    createdAt:
+        DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        DateTime.now(),
+    categoryCode: j['category_code'] as String? ?? '',
+    categoryName: j['category_name'] as String? ?? '-',
+    anonymousHandle: j['anonymous_handle'] as String? ?? 'Anonim',
+    authorRole: j['author_role'] as String? ?? 'warga',
+    schoolLabel: j['school_label'] as String? ?? '-',
+    title: j['title'] as String? ?? '',
+    body: j['body'] as String? ?? '',
+    severity: j['severity'] as String? ?? 'sedang',
+    status: j['status'] as String? ?? 'baru',
+    supportCount: (j['support_count'] as num?)?.toInt() ?? 0,
+    commentCount: (j['comment_count'] as num?)?.toInt() ?? 0,
+    isMine: j['is_mine'] as bool? ?? false,
+    isSupported: j['is_supported'] as bool? ?? false,
+    media: (j['media'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+    handledAt: DateTime.tryParse(j['handled_at'] as String? ?? '')?.toLocal(),
+    resolvedAt: DateTime.tryParse(j['resolved_at'] as String? ?? '')?.toLocal(),
+  );
 }
 
 class PanicReportDetail {
@@ -274,7 +275,8 @@ class PanicReportDetail {
   /// `true` bila laporan masih menunggu diperiksa petugas sebelum tampil.
   bool get isPendingModeration => moderationStatus == 'pending';
 
-  factory PanicReportDetail.fromJson(Map<String, dynamic> j) => PanicReportDetail(
+  factory PanicReportDetail.fromJson(Map<String, dynamic> j) =>
+      PanicReportDetail(
         report: PanicReport.fromJson(j),
         timeline: (j['timeline'] as List<dynamic>? ?? const [])
             .whereType<Map<String, dynamic>>()
@@ -308,7 +310,8 @@ class PanicTimelineEntry {
         status: j['status'] as String? ?? '',
         note: j['note'] as String?,
         actorLabel: j['actor_label'] as String?,
-        createdAt: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        createdAt:
+            DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
             DateTime.now(),
       );
 }
@@ -337,21 +340,21 @@ class PanicComment {
   final bool isMine;
   final DateTime createdAt;
 
-  String get displayName => isOfficial
-      ? (officialName ?? 'Petugas')
-      : (anonymousHandle ?? 'Anonim');
+  String get displayName =>
+      isOfficial ? (officialName ?? 'Petugas') : (anonymousHandle ?? 'Anonim');
 
   factory PanicComment.fromJson(Map<String, dynamic> j) => PanicComment(
-        id: j['id'] as String,
-        anonymousHandle: j['anonymous_handle'] as String?,
-        isOfficial: j['is_official'] as bool? ?? false,
-        officialName: j['official_name'] as String?,
-        officialTitle: j['official_title'] as String?,
-        body: j['body'] as String? ?? '',
-        isMine: j['is_mine'] as bool? ?? false,
-        createdAt: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
-            DateTime.now(),
-      );
+    id: j['id'] as String,
+    anonymousHandle: j['anonymous_handle'] as String?,
+    isOfficial: j['is_official'] as bool? ?? false,
+    officialName: j['official_name'] as String?,
+    officialTitle: j['official_title'] as String?,
+    body: j['body'] as String? ?? '',
+    isMine: j['is_mine'] as bool? ?? false,
+    createdAt:
+        DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        DateTime.now(),
+  );
 }
 
 // =====================================================================
@@ -380,17 +383,17 @@ class DocumentType {
   final List<String> allowedMime;
 
   factory DocumentType.fromJson(Map<String, dynamic> j) => DocumentType(
-        id: j['id'] as String,
-        code: j['code'] as String? ?? '',
-        name: j['name'] as String? ?? '-',
-        description: j['description'] as String?,
-        purpose: j['purpose'] as String? ?? 'umum',
-        isRequired: j['is_required'] as bool? ?? false,
-        maxBytes: (j['max_bytes'] as num?)?.toInt() ?? 5242880,
-        allowedMime: (j['allowed_mime'] as List<dynamic>? ?? const [])
-            .map((e) => e.toString())
-            .toList(),
-      );
+    id: j['id'] as String,
+    code: j['code'] as String? ?? '',
+    name: j['name'] as String? ?? '-',
+    description: j['description'] as String?,
+    purpose: j['purpose'] as String? ?? 'umum',
+    isRequired: j['is_required'] as bool? ?? false,
+    maxBytes: (j['max_bytes'] as num?)?.toInt() ?? 5242880,
+    allowedMime: (j['allowed_mime'] as List<dynamic>? ?? const [])
+        .map((e) => e.toString())
+        .toList(),
+  );
 }
 
 class Submission {
@@ -427,40 +430,43 @@ class Submission {
   bool get isEditable => status == 'draft' || status == 'revisi';
 
   String get statusLabel => switch (status) {
-        'draft' => 'Draft',
-        'diajukan' => 'Menunggu Diperiksa',
-        'diperiksa' => 'Sedang Diperiksa',
-        'revisi' => 'Perlu Perbaikan',
-        'disetujui' => 'Disetujui',
-        'ditolak' => 'Ditolak',
-        _ => status,
-      };
+    'draft' => 'Draft',
+    'diajukan' => 'Menunggu Diperiksa',
+    'diperiksa' => 'Sedang Diperiksa',
+    'revisi' => 'Perlu Perbaikan',
+    'disetujui' => 'Disetujui',
+    'ditolak' => 'Ditolak',
+    _ => status,
+  };
 
   static String purposeLabel(String purpose) => switch (purpose) {
-        'kenaikan_pangkat' => 'Kenaikan Pangkat',
-        'sertifikasi' => 'Sertifikasi',
-        'tunjangan' => 'Tunjangan',
-        'mutasi' => 'Mutasi',
-        'pensiun' => 'Pensiun',
-        _ => 'Umum',
-      };
+    'kenaikan_pangkat' => 'Kenaikan Pangkat',
+    'sertifikasi' => 'Sertifikasi',
+    'tunjangan' => 'Tunjangan',
+    'mutasi' => 'Mutasi',
+    'pensiun' => 'Pensiun',
+    _ => 'Umum',
+  };
 
   factory Submission.fromJson(Map<String, dynamic> j) => Submission(
-        id: j['id'] as String,
-        ownerName: j['owner_name'] as String? ?? '-',
-        schoolName: j['school_name'] as String?,
-        purpose: j['purpose'] as String? ?? 'umum',
-        period: j['period'] as String?,
-        title: j['title'] as String? ?? '-',
-        status: j['status'] as String? ?? 'draft',
-        fileCount: (j['file_count'] as num?)?.toInt() ?? 0,
-        approvedFileCount: (j['approved_file_count'] as num?)?.toInt() ?? 0,
-        rejectedFileCount: (j['rejected_file_count'] as num?)?.toInt() ?? 0,
-        submittedAt: DateTime.tryParse(j['submitted_at'] as String? ?? '')?.toLocal(),
-        reviewedAt: DateTime.tryParse(j['reviewed_at'] as String? ?? '')?.toLocal(),
-        createdAt: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
-            DateTime.now(),
-      );
+    id: j['id'] as String,
+    ownerName: j['owner_name'] as String? ?? '-',
+    schoolName: j['school_name'] as String?,
+    purpose: j['purpose'] as String? ?? 'umum',
+    period: j['period'] as String?,
+    title: j['title'] as String? ?? '-',
+    status: j['status'] as String? ?? 'draft',
+    fileCount: (j['file_count'] as num?)?.toInt() ?? 0,
+    approvedFileCount: (j['approved_file_count'] as num?)?.toInt() ?? 0,
+    rejectedFileCount: (j['rejected_file_count'] as num?)?.toInt() ?? 0,
+    submittedAt: DateTime.tryParse(
+      j['submitted_at'] as String? ?? '',
+    )?.toLocal(),
+    reviewedAt: DateTime.tryParse(j['reviewed_at'] as String? ?? '')?.toLocal(),
+    createdAt:
+        DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        DateTime.now(),
+  );
 }
 
 class SubmissionDetail {
@@ -491,24 +497,24 @@ class SubmissionDetail {
   bool get canSubmit => isEditable && missingRequired.isEmpty;
 
   factory SubmissionDetail.fromJson(Map<String, dynamic> j) => SubmissionDetail(
-        submission: Submission.fromJson(j),
-        note: j['note'] as String?,
-        reviewNote: j['review_note'] as String?,
-        reviewerName: j['reviewer_name'] as String?,
-        files: (j['files'] as List<dynamic>? ?? const [])
-            .whereType<Map<String, dynamic>>()
-            .map(SubmissionFile.fromJson)
-            .toList(),
-        checklist: (j['checklist'] as List<dynamic>? ?? const [])
-            .whereType<Map<String, dynamic>>()
-            .map(ChecklistItem.fromJson)
-            .toList(),
-        timeline: (j['timeline'] as List<dynamic>? ?? const [])
-            .whereType<Map<String, dynamic>>()
-            .map(SubmissionEvent.fromJson)
-            .toList(),
-        isEditable: j['is_editable'] as bool? ?? false,
-      );
+    submission: Submission.fromJson(j),
+    note: j['note'] as String?,
+    reviewNote: j['review_note'] as String?,
+    reviewerName: j['reviewer_name'] as String?,
+    files: (j['files'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(SubmissionFile.fromJson)
+        .toList(),
+    checklist: (j['checklist'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(ChecklistItem.fromJson)
+        .toList(),
+    timeline: (j['timeline'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(SubmissionEvent.fromJson)
+        .toList(),
+    isEditable: j['is_editable'] as bool? ?? false,
+  );
 }
 
 class SubmissionFile {
@@ -539,16 +545,16 @@ class SubmissionFile {
       : '${(bytes / 1048576).toStringAsFixed(1)} MB';
 
   factory SubmissionFile.fromJson(Map<String, dynamic> j) => SubmissionFile(
-        id: j['id'] as String,
-        documentTypeId: j['document_type_id'] as String?,
-        documentTypeName: j['document_type_name'] as String?,
-        originalName: j['original_name'] as String? ?? '-',
-        mimeType: j['mime_type'] as String? ?? '',
-        bytes: (j['bytes'] as num?)?.toInt() ?? 0,
-        status: j['status'] as String? ?? 'menunggu',
-        rejectReason: j['reject_reason'] as String?,
-        fileUrl: j['file_url'] as String? ?? '',
-      );
+    id: j['id'] as String,
+    documentTypeId: j['document_type_id'] as String?,
+    documentTypeName: j['document_type_name'] as String?,
+    originalName: j['original_name'] as String? ?? '-',
+    mimeType: j['mime_type'] as String? ?? '',
+    bytes: (j['bytes'] as num?)?.toInt() ?? 0,
+    status: j['status'] as String? ?? 'menunggu',
+    rejectReason: j['reject_reason'] as String?,
+    fileUrl: j['file_url'] as String? ?? '',
+  );
 }
 
 class ChecklistItem {
@@ -576,15 +582,15 @@ class ChecklistItem {
   bool get isApproved => status == 'disetujui';
 
   factory ChecklistItem.fromJson(Map<String, dynamic> j) => ChecklistItem(
-        documentTypeId: j['document_type_id'] as String,
-        code: j['code'] as String? ?? '',
-        name: j['name'] as String? ?? '-',
-        description: j['description'] as String?,
-        isRequired: j['is_required'] as bool? ?? false,
-        uploaded: j['uploaded'] as bool? ?? false,
-        status: j['status'] as String?,
-        rejectReason: j['reject_reason'] as String?,
-      );
+    documentTypeId: j['document_type_id'] as String,
+    code: j['code'] as String? ?? '',
+    name: j['name'] as String? ?? '-',
+    description: j['description'] as String?,
+    isRequired: j['is_required'] as bool? ?? false,
+    uploaded: j['uploaded'] as bool? ?? false,
+    status: j['status'] as String?,
+    rejectReason: j['reject_reason'] as String?,
+  );
 }
 
 class SubmissionEvent {
@@ -601,12 +607,13 @@ class SubmissionEvent {
   final DateTime createdAt;
 
   factory SubmissionEvent.fromJson(Map<String, dynamic> j) => SubmissionEvent(
-        status: j['status'] as String? ?? '',
-        note: j['note'] as String?,
-        actorLabel: j['actor_label'] as String?,
-        createdAt: DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
-            DateTime.now(),
-      );
+    status: j['status'] as String? ?? '',
+    note: j['note'] as String?,
+    actorLabel: j['actor_label'] as String?,
+    createdAt:
+        DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        DateTime.now(),
+  );
 }
 
 /// Satu notifikasi di kotak masuk aplikasi.
@@ -628,15 +635,15 @@ class AppNotification {
   final DateTime createdAt;
 
   static AppNotification fromJson(Map<String, dynamic> j) => AppNotification(
-        id: j['id'] as String? ?? '',
-        kind: j['kind'] as String? ?? '',
-        title: j['title'] as String? ?? '',
-        body: j['body'] as String? ?? '',
-        isRead: j['is_read'] as bool? ?? false,
-        createdAt:
-            DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
-                DateTime.now(),
-      );
+    id: j['id'] as String? ?? '',
+    kind: j['kind'] as String? ?? '',
+    title: j['title'] as String? ?? '',
+    body: j['body'] as String? ?? '',
+    isRead: j['is_read'] as bool? ?? false,
+    createdAt:
+        DateTime.tryParse(j['created_at'] as String? ?? '')?.toLocal() ??
+        DateTime.now(),
+  );
 }
 
 class NotificationList {
@@ -646,9 +653,9 @@ class NotificationList {
   final List<AppNotification> items;
 
   static NotificationList fromJson(Map<String, dynamic> j) => NotificationList(
-        unread: (j['unread'] as num?)?.toInt() ?? 0,
-        items: ((j['items'] as List<dynamic>?) ?? const [])
-            .map((e) => AppNotification.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    unread: (j['unread'] as num?)?.toInt() ?? 0,
+    items: ((j['items'] as List<dynamic>?) ?? const [])
+        .map((e) => AppNotification.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }

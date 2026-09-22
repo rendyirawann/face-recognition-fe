@@ -49,33 +49,25 @@ final currentUserProvider = StateProvider<UserProfile?>((ref) {
   return ref.watch(repositoryProvider).cachedUser();
 });
 
-/// Tema gelap aktif atau tidak.
-///
-/// Nilai awalnya dibaca dari penyimpanan, dan bawaannya GELAP — itu tema yang
-/// dirancang lebih dulu, dan membuka aplikasi dengan tema yang belum dipoles
-/// memberi kesan pertama yang salah.
+/// Tema gelap aktif atau tidak. Bawaannya gelap.
 ///
 /// `ClayTheme.pakai` dipanggil di sini juga, bukan hanya di UI: warna dibaca
-/// lewat getter statis, jadi nilai statis itu harus sudah benar sebelum widget
-/// mana pun dibangun.
+/// lewat getter statis dan harus sudah benar sebelum widget dibangun.
 final temaGelapProvider = StateProvider<bool>((ref) {
   final tersimpan = ref.watch(storageProvider).temaGelap() ?? true;
   ClayTheme.pakai(gelap: tersimpan);
   return tersimpan;
 });
 
-/// Jumlah notifikasi yang belum dibaca, untuk lencana di ikon lonceng.
+/// Jumlah notifikasi belum dibaca, untuk lencana ikon lonceng.
 ///
-/// FutureProvider, bukan Stream: notifikasi keterlambatan dibuat sekali
-/// sehari oleh pekerja server, sehingga menariknya berulang kali hanya
-/// membebani jaringan sekolah tanpa menampilkan apa pun yang baru.
+/// Future, bukan Stream: notifikasi dibuat sekali sehari oleh pekerja server.
 /// Disegarkan saat beranda dimuat ulang dan setelah kotak masuk dibuka.
 final unreadNotificationProvider = FutureProvider<int>((ref) async {
   try {
     return (await ref.watch(repositoryProvider).notifications()).unread;
   } catch (_) {
-    // Lencana bukan informasi kritis; kegagalan jaringan tidak boleh
-    // memunculkan galat di beranda.
+    // Gagal-diam: lencana tidak layak memunculkan galat di beranda.
     return 0;
   }
 });

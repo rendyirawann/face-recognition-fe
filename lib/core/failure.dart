@@ -30,19 +30,18 @@ class ApiFailure implements Exception {
   /// Layak dicoba lagi nanti. Galat validasi tidak akan berubah walau
   /// dikirim ulang, jadi tidak termasuk.
   bool get isRetryable =>
-      isNetwork || statusCode == null || statusCode! >= 500 || statusCode == 429;
+      isNetwork ||
+      statusCode == null ||
+      statusCode! >= 500 ||
+      statusCode == 429;
 
-  /// Gagal karena KREDENSIAL, bukan karena isi payload.
+  /// Gagal karena kredensial, bukan karena isi payload.
   ///
-  /// Dipisahkan dari [isRetryable] karena keduanya menuntut perlakuan yang
-  /// berbeda terhadap antrean absensi: payload yang ditolak aturan memang
-  /// tidak berguna disimpan, tetapi payload yang ditolak karena token
-  /// perangkat mati **masih sah** dan akan diterima begitu perangkat
-  /// dipasangkan ulang.
-  ///
-  /// Menyamakan keduanya berarti satu token perangkat yang kedaluwarsa
-  /// menghapus seluruh absensi pagi yang belum terkirim — data milik sekolah,
-  /// hilang tanpa jejak di layar mana pun.
+  /// Dipisahkan dari [isRetryable]: payload yang ditolak aturan tidak berguna
+  /// disimpan, tetapi yang ditolak karena token perangkat mati masih sah dan
+  /// akan diterima setelah perangkat dipasangkan ulang. Menyamakan keduanya
+  /// membuat satu token kedaluwarsa menghapus absensi pagi yang belum
+  /// terkirim.
   bool get isCredentialProblem => statusCode == 401 || statusCode == 403;
 
   @override

@@ -159,13 +159,13 @@ class FaceEngine {
   /// Hitung embedding dari satu gambar wajah yang sudah di-crop.
   /// Dipakai alur pendaftaran, yang bekerja dari foto still, bukan aliran video.
   Float32List embedCropped(img.Image cropped) => _embed(
-        img.copyResize(
-          cropped,
-          width: AppConfig.modelInputSize,
-          height: AppConfig.modelInputSize,
-          interpolation: img.Interpolation.linear,
-        ),
-      );
+    img.copyResize(
+      cropped,
+      width: AppConfig.modelInputSize,
+      height: AppConfig.modelInputSize,
+      interpolation: img.Interpolation.linear,
+    ),
+  );
 
   // =================================================================
   // Inferensi
@@ -196,9 +196,9 @@ class FaceEngine {
 
     _interpreter.run(input, output);
 
-    return l2Normalize(Float32List.fromList(
-      output.first.map((e) => e.toDouble()).toList(),
-    ));
+    return l2Normalize(
+      Float32List.fromList(output.first.map((e) => e.toDouble()).toList()),
+    );
   }
 
   /// Normalisasi L2. Server menyimpan dan membandingkan vektor ternormalisasi;
@@ -222,13 +222,15 @@ class FaceEngine {
   // =================================================================
 
   void _pushCue(Face face) {
-    _cues.add(_FaceCue(
-      leftEye: face.leftEyeOpenProbability,
-      rightEye: face.rightEyeOpenProbability,
-      yaw: face.headEulerAngleY ?? 0,
-      pitch: face.headEulerAngleX ?? 0,
-      width: face.boundingBox.width,
-    ));
+    _cues.add(
+      _FaceCue(
+        leftEye: face.leftEyeOpenProbability,
+        rightEye: face.rightEyeOpenProbability,
+        yaw: face.headEulerAngleY ?? 0,
+        pitch: face.headEulerAngleX ?? 0,
+        width: face.boundingBox.width,
+      ),
+    );
     if (_cues.length > _cueWindow) {
       _cues.removeAt(0);
     }
@@ -282,7 +284,7 @@ class FaceEngine {
     final mean = values.reduce((a, b) => a + b) / values.length;
     final variance =
         values.map((v) => (v - mean) * (v - mean)).reduce((a, b) => a + b) /
-            values.length;
+        values.length;
     return math.sqrt(variance);
   }
 
@@ -480,13 +482,12 @@ class FaceAnalysis {
     required double liveness,
     required img.Image cropped,
     required double faceWidthRatio,
-  }) =>
-      FaceAnalysis._(
-        isReady: true,
-        hint: 'Wajah terdeteksi',
-        embedding: embedding,
-        liveness: liveness,
-        cropped: cropped,
-        faceWidthRatio: faceWidthRatio,
-      );
+  }) => FaceAnalysis._(
+    isReady: true,
+    hint: 'Wajah terdeteksi',
+    embedding: embedding,
+    liveness: liveness,
+    cropped: cropped,
+    faceWidthRatio: faceWidthRatio,
+  );
 }

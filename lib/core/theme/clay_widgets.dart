@@ -57,13 +57,19 @@ class ClaySurface extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.alphaBlend(ClayTheme.shadowDark.withValues(alpha: 0.10), surface),
+                Color.alphaBlend(
+                  ClayTheme.shadowDark.withValues(alpha: 0.10),
+                  surface,
+                ),
                 surface,
               ],
             )
           : null,
       border: sunken
-          ? Border.all(color: ClayTheme.shadowDark.withValues(alpha: 0.28), width: 1)
+          ? Border.all(
+              color: ClayTheme.shadowDark.withValues(alpha: 0.28),
+              width: 1,
+            )
           : null,
     );
 
@@ -448,7 +454,8 @@ class ClayField extends StatelessWidget {
                   // terang, dan warna teks tema gelap di atasnya berarti
                   // teks terang di atas latar terang — isian yang tampak
                   // kosong padahal sudah diisi.
-                  style: style ??
+                  style:
+                      style ??
                       const TextStyle(
                         color: ClayTheme.fieldText,
                         fontSize: 14.5,
@@ -581,7 +588,9 @@ class ClayNavBar extends StatelessWidget {
                     curve: Curves.easeOut,
                     padding: const EdgeInsets.symmetric(vertical: 11),
                     decoration: BoxDecoration(
-                      color: selected ? ClayTheme.primarySoft : Colors.transparent,
+                      color: selected
+                          ? ClayTheme.primarySoft
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
                     ),
                     child: Column(
@@ -629,8 +638,9 @@ class ClayNavBar extends StatelessWidget {
                           item.label,
                           style: TextStyle(
                             fontSize: 10.5,
-                            fontWeight:
-                                selected ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: selected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
                             color: selected
                                 ? ClayTheme.primary
                                 : ClayTheme.textMuted,

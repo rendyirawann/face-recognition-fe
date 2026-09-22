@@ -90,8 +90,8 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                   'Masukkan Kode Pairing',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -132,8 +132,11 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.error_outline,
-                            color: Color(0xFFF1416C), size: 20),
+                        const Icon(
+                          Icons.error_outline,
+                          color: Color(0xFFF1416C),
+                          size: 20,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -168,7 +171,9 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
@@ -182,12 +187,18 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                         ),
                       ),
                       const SizedBox(height: 6),
-                      Text('Server: ${AppConfig.apiBaseUrl}',
-                          style: const TextStyle(fontSize: 11)),
-                      Text('Model: ${AppConfig.faceModelVersion}',
-                          style: const TextStyle(fontSize: 11)),
-                      Text('Dimensi embedding: ${AppConfig.embeddingDim}',
-                          style: const TextStyle(fontSize: 11)),
+                      Text(
+                        'Server: ${AppConfig.apiBaseUrl}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      Text(
+                        'Model: ${AppConfig.faceModelVersion}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      Text(
+                        'Dimensi embedding: ${AppConfig.embeddingDim}',
+                        style: const TextStyle(fontSize: 11),
+                      ),
                     ],
                   ),
                 ),

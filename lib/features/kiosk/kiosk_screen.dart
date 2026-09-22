@@ -209,7 +209,11 @@ class _TopBar extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.cloud_off, color: Color(0xFFFFC700), size: 16),
+                  const Icon(
+                    Icons.cloud_off,
+                    color: Color(0xFFFFC700),
+                    size: 16,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     '$pending menunggu kirim',
@@ -337,7 +341,8 @@ class _ResultOverlay extends StatelessWidget {
                   height: 1.4,
                 ),
               ),
-              if (result.checkInTime != null || result.checkOutTime != null) ...[
+              if (result.checkInTime != null ||
+                  result.checkOutTime != null) ...[
                 const SizedBox(height: 18),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -352,7 +357,7 @@ class _ResultOverlay extends StatelessWidget {
                     result.checkOutTime != null
                         ? 'Jam pulang ${result.checkOutTime}'
                         : 'Jam masuk ${result.checkInTime}'
-                            '${result.lateMinutes > 0 ? ' · terlambat ${result.lateMinutes} menit' : ''}',
+                              '${result.lateMinutes > 0 ? ' · terlambat ${result.lateMinutes} menit' : ''}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -387,42 +392,42 @@ class _ResultOverlay extends StatelessWidget {
   (Color, IconData, String) _appearance(RecognizeResult r) =>
       switch (r.action) {
         RecognizeAction.checkedIn => (
-            r.status == 'terlambat'
-                ? const Color(0xFFE08700)
-                : const Color(0xFF1B7F4E),
-            r.status == 'terlambat' ? Icons.schedule : Icons.check_circle,
-            r.status == 'terlambat' ? 'Terlambat' : 'Absen Masuk Berhasil',
-          ),
+          r.status == 'terlambat'
+              ? const Color(0xFFE08700)
+              : const Color(0xFF1B7F4E),
+          r.status == 'terlambat' ? Icons.schedule : Icons.check_circle,
+          r.status == 'terlambat' ? 'Terlambat' : 'Absen Masuk Berhasil',
+        ),
         RecognizeAction.checkedOut => (
-            const Color(0xFF15607A),
-            Icons.logout,
-            'Absen Pulang Berhasil',
-          ),
+          const Color(0xFF15607A),
+          Icons.logout,
+          'Absen Pulang Berhasil',
+        ),
         RecognizeAction.alreadyRecorded => (
-            const Color(0xFF3F4A63),
-            Icons.info,
-            'Sudah Tercatat',
-          ),
+          const Color(0xFF3F4A63),
+          Icons.info,
+          'Sudah Tercatat',
+        ),
         RecognizeAction.queuedOffline => (
-            const Color(0xFF7A5B15),
-            Icons.cloud_upload,
-            'Tersimpan di Perangkat',
-          ),
+          const Color(0xFF7A5B15),
+          Icons.cloud_upload,
+          'Tersimpan di Perangkat',
+        ),
         RecognizeAction.noMatch => (
-            const Color(0xFF8A2233),
-            Icons.person_search,
-            'Wajah Tidak Dikenali',
-          ),
+          const Color(0xFF8A2233),
+          Icons.person_search,
+          'Wajah Tidak Dikenali',
+        ),
         RecognizeAction.lowConfidence => (
-            const Color(0xFF8A5A22),
-            Icons.help_outline,
-            'Perlu Verifikasi Petugas',
-          ),
+          const Color(0xFF8A5A22),
+          Icons.help_outline,
+          'Perlu Verifikasi Petugas',
+        ),
         RecognizeAction.rejected => (
-            const Color(0xFF8A2233),
-            Icons.block,
-            'Tidak Dapat Diproses',
-          ),
+          const Color(0xFF8A2233),
+          Icons.block,
+          'Tidak Dapat Diproses',
+        ),
       };
 }
 

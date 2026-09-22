@@ -44,8 +44,11 @@ class ProfileScreen extends ConsumerWidget {
                   color: ClayTheme.primarySoft,
                   padding: const EdgeInsets.all(22),
                   depth: 0.8,
-                  child: Icon(Icons.person_rounded,
-                      size: 38, color: ClayTheme.primary),
+                  child: Icon(
+                    Icons.person_rounded,
+                    size: 38,
+                    color: ClayTheme.primary,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -98,52 +101,53 @@ class ProfileScreen extends ConsumerWidget {
               title: user!.isStudent ? 'Data Siswa' : 'Anak yang Tertaut',
               child: Column(
                 children: user.students
-                    .map((s) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Row(
-                            children: [
-                              const ClayIcon(
-                                icon: Icons.school_rounded,
-                                size: 17,
-                                padding: 10,
-                              ),
-                              const SizedBox(width: 13),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      s.fullName,
-                                      style: TextStyle(
-                                        color: ClayTheme.textStrong,
-                                        fontSize: 13.5,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                    .map(
+                      (s) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          children: [
+                            const ClayIcon(
+                              icon: Icons.school_rounded,
+                              size: 17,
+                              padding: 10,
+                            ),
+                            const SizedBox(width: 13),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    s.fullName,
+                                    style: TextStyle(
+                                      color: ClayTheme.textStrong,
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w700,
                                     ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      [
-                                        s.classroomName ?? 'Tanpa kelas',
-                                        s.schoolName,
-                                        if (s.nisn != null) 'NISN ${s.nisn}',
-                                      ].join(' · '),
-                                      style: TextStyle(
-                                        color: ClayTheme.textMuted,
-                                        fontSize: 11,
-                                      ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    [
+                                      s.classroomName ?? 'Tanpa kelas',
+                                      s.schoolName,
+                                      if (s.nisn != null) 'NISN ${s.nisn}',
+                                    ].join(' · '),
+                                    style: TextStyle(
+                                      color: ClayTheme.textMuted,
+                                      fontSize: 11,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              if (s.relation != 'diri_sendiri')
-                                ClayBadge(
-                                  label: s.relation,
-                                  color: ClayTheme.secondary,
-                                ),
-                            ],
-                          ),
-                        ))
+                            ),
+                            if (s.relation != 'diri_sendiri')
+                              ClayBadge(
+                                label: s.relation,
+                                color: ClayTheme.secondary,
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
             ),
@@ -159,10 +163,10 @@ class ProfileScreen extends ConsumerWidget {
                 Text(
                   deviceProfile == null
                       ? 'Perangkat ini belum dipasangkan sebagai tablet absensi. '
-                          'Absensi wajah hanya dilakukan pada tablet yang '
-                          'terpasang di sekolah.'
+                            'Absensi wajah hanya dilakukan pada tablet yang '
+                            'terpasang di sekolah.'
                       : 'Terpasang di ${deviceProfile['school_name']} '
-                          '(${deviceProfile['device_code']}).',
+                            '(${deviceProfile['device_code']}).',
                   style: TextStyle(
                     color: ClayTheme.textMuted,
                     fontSize: 12,
@@ -176,8 +180,7 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.link_rounded,
                     compact: false,
                     onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (_) => const PairingScreen()),
+                      MaterialPageRoute(builder: (_) => const PairingScreen()),
                     ),
                   )
                 else
@@ -224,7 +227,8 @@ class ProfileScreen extends ConsumerWidget {
                   compact: false,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                        builder: (_) => const ServerSettingsScreen()),
+                      builder: (_) => const ServerSettingsScreen(),
+                    ),
                   ),
                 ),
               ],
@@ -261,31 +265,28 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 11),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 118,
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: ClayTheme.textMuted,
-                  fontSize: 12.5,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                value,
-                style: TextStyle(
-                  color: ClayTheme.textStrong,
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 11),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 118,
+          child: Text(
+            label,
+            style: TextStyle(color: ClayTheme.textMuted, fontSize: 12.5),
+          ),
         ),
-      );
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              color: ClayTheme.textStrong,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

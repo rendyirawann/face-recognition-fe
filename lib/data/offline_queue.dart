@@ -3,36 +3,18 @@ import 'offline_queue_memory.dart'
 
 /// Antrean absensi lokal untuk saat jaringan sekolah terputus.
 ///
-/// MENGAPA INI ADA
+/// Tanpa ini, siswa yang sudah datang tercatat alfa dan orang tuanya menerima
+/// notifikasi yang salah ketika jaringan mati.
 ///
-/// Banyak sekolah di Sumatera Utara berada di daerah dengan jaringan yang
-/// tidak stabil. Kalau tablet menolak absen ketika jaringan mati, siswa yang
-/// sudah datang akan tercatat alfa dan orang tuanya menerima notifikasi yang
-/// salah. Karena itu pemindaian yang gagal terkirim disimpan di sini dan
-/// dikirim ulang otomatis.
+/// Yang disimpan hanya embedding, waktu tangkap, dan skor liveness — tidak
+/// ada gambar, dan barisnya dihapus segera setelah server menerimanya.
 ///
-/// APA YANG DISIMPAN
-///
-/// Hanya embedding (vektor), waktu tangkap, dan skor liveness — tidak ada
-/// gambar. Baris dihapus segera setelah server menerimanya, sehingga vektor
-/// biometrik tidak menumpuk di perangkat yang dipasang di ruang publik.
-///
-/// DUA IMPLEMENTASI
-///
-/// Di Android/iOS antreannya SQLite lewat `sqflite`, sehingga bertahan meski
-/// tablet dimatikan semalaman. `sqflite` tidak berjalan di web, sedangkan
-/// debug di browser tetap perlu bisa dijalankan — jadi versi web memakai
-/// penyimpanan dalam memori yang hilang saat halaman dimuat ulang.
-///
-/// Kehilangan itu tidak menjadi masalah, karena absensi wajah memang tidak
-/// dijalankan dari browser: mode kios butuh kamera, TFLite, dan ML Kit yang
-/// semuanya hanya ada di perangkat. Debug web dipakai untuk menu Jargon GO
-/// (absensi pantau, Panic Button, pemberkasan), yang tidak menyentuh antrean
-/// ini sama sekali.
+/// Dua implementasi: SQLite di perangkat, dalam memori di web. Versi web
+/// hilang saat halaman dimuat ulang, dan itu tidak masalah — mode kios butuh
+/// kamera dan TFLite yang tidak ada di browser.
 abstract class OfflineQueue {
-  /// Batas umur antrean. Absensi yang tertahan lebih lama dari ini tidak lagi
-  /// bisa dipertanggungjawabkan sebagai jam kedatangan, jadi lebih baik
-  /// dibuang dan dikoreksi manual oleh guru.
+  /// Batas umur antrean. Lebih lama dari ini, jam kedatangannya tidak lagi
+  /// bisa dipertanggungjawabkan — lebih baik dikoreksi manual oleh guru.
   static const Duration maxAge = Duration(hours: 18);
 
   /// Batas jumlah baris agar penyimpanan tablet tidak habis bila jaringan
