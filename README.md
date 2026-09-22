@@ -15,6 +15,118 @@ sama dengan yang dipakai memantau.
 
 ---
 
+---
+
+## Mulai cepat
+
+Bagian ini untuk yang baru pertama kali membuka repositori ini. Penjelasan
+rancangannya ada di bawah.
+
+### 1. Yang perlu terpasang
+
+| | Versi | Memeriksanya |
+|---|---|---|
+| Flutter SDK | 3.44 atau lebih baru (Dart 3.12+) | `flutter --version` |
+| JDK | 17 | `java -version` |
+| Android Studio | untuk Android SDK & emulator | `flutter doctor` |
+
+```bash
+flutter doctor
+```
+
+Baris **Android toolchain** dan **Flutter** harus hijau. Baris Chrome boleh
+merah bila tidak menguji di browser.
+
+### 2. Ambil kode dan dependensinya
+
+```bash
+git clone https://github.com/rendyirawann/jargon-fe.git
+cd jargon-fe
+flutter pub get
+```
+
+### 3. Jalankan
+
+Aplikasi perlu backend yang hidup. Nyalakan
+[`jargon-be`](https://github.com/rendyirawann/jargon-be) lebih dulu — panduannya
+ada di README repositori itu.
+
+```bash
+# Paling cepat: di browser, tanpa emulator
+run-web.bat                      # Windows
+flutter run -d chrome --web-port 5000    # lain-lain
+
+# Emulator Android — 10.0.2.2 adalah localhost mesin host
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
+
+# HP fisik — pakai IP laptop di jaringan yang sama
+flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8080
+```
+
+> Alamat API **tidak perlu** dipaku saat build. Buka **Profil → Alamat Server**
+> di dalam aplikasi untuk menggantinya kapan saja; pilihannya tersimpan di
+> perangkat.
+
+### 4. Masuk
+
+Akun uji dibuat oleh migrasi dan seeder di `jargon-be`:
+
+| Peran | Akun | Sandi |
+|---|---|---|
+| Superadmin | `superadmin` | `Superadmin#2026` |
+| Siswa | `siswa9000000001` | `Siswa#2026` |
+
+Daftar lengkapnya ada di README `jargon-be`.
+
+### 5. Membangun APK
+
+```bash
+flutter build apk --release   --dart-define=API_BASE_URL=https://beoulve-dev.biz.id/jargon-be
+```
+
+Hasilnya di `build/app/outputs/flutter-apk/app-release.apk` — satu berkas
+universal untuk arm64, armeabi-v7a, dan x86_64.
+
+`--dart-define` boleh dilewati: build release tanpa itu otomatis menunjuk ke
+server produksi. Yang dipaku hanya alamat AWAL — pengguna tetap bisa
+menggantinya dari dalam aplikasi.
+
+### Yang bisa dan tidak bisa diuji di browser
+
+| Bisa | Tidak bisa |
+|---|---|
+| Login, Beranda, Absensi | **Mode kios absensi wajah** |
+| Panic Button, Pemberkasan | Kamera, ML Kit, model TFLite |
+| Tema terang/gelap, sidebar | Notifikasi lokasi |
+
+Membuka menu Kios di browser menampilkan halaman penjelasan, bukan layar
+kamera. Itu disengaja — `tflite_flutter` berdiri di atas `dart:ffi` yang tidak
+bisa dikompilasi ke web sama sekali.
+
+### Kalau macet
+
+**`flutter pub get` gagal soal versi Dart**
+`pubspec.yaml` menuntut Dart 3.12+. Jalankan `flutter upgrade`.
+
+**Build Android gagal: `this and base files have different roots`**
+Terjadi di Windows bila pub-cache berada di drive berbeda dari proyek.
+`android/gradle.properties` sudah memuat `kotlin.incremental=false` untuk
+mengatasinya — jangan dihapus.
+
+**Gradle kehabisan memori**
+Turunkan `org.gradle.jvmargs=-Xmx8G` menjadi `-Xmx4G` di
+`android/gradle.properties` bila RAM mesin 8 GB atau kurang.
+
+**Aplikasi terbuka tapi "tidak dapat menghubungi server"**
+Alamat API salah. Buka **Profil → Alamat Server**, isi alamat yang benar, dan
+gunakan tombol ujinya sebelum menyimpan.
+
+**Sesi berakhir terus setelah sejam**
+Itu memang umur access token. Aplikasi menyegarkannya otomatis; bila tetap
+terjadi, pastikan `jargon-be` yang dipakai sudah versi terbaru.
+
+---
+
 ## Tiga menu Jargon GO
 
 | Menu | Siswa | Orang Tua | Guru / Kepala Sekolah |
