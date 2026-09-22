@@ -151,11 +151,28 @@ class ClayTheme {
   // Ukuran
   // ---------------------------------------------------------------
 
-  /// Radius besar adalah ciri claymorphism. Nilai di bawah ~20 membuat bentuk
-  /// terlihat seperti kartu biasa dengan bayangan aneh.
+  /// Skala radius, mengikuti proyek rujukan: 8 / 12 / 16 / 20 / pill.
+  ///
+  /// Dipakai untuk elemen kecil — chip, lencana, kotak isian. Radius besar
+  /// claymorphism di bawah tetap dipertahankan untuk kartu dan permukaan:
+  /// nilai 16 membuat kartu clay kehilangan bentuk lunaknya dan terlihat
+  /// seperti kartu Material biasa dengan bayangan aneh.
+  static const double rSm = 8;
+  static const double rMd = 12;
+  static const double rLg = 16;
+  static const double rXl = 20;
+
   static const double radius = 26;
   static const double radiusSmall = 18;
   static const double radiusPill = 999;
+
+  /// Skala jarak, dipakai agar padding antar-layar konsisten.
+  static const double sXs = 4;
+  static const double sSm = 8;
+  static const double sMd = 12;
+  static const double sLg = 16;
+  static const double sXl = 20;
+  static const double sXxl = 24;
 
   /// Ukuran ikon baku.
   ///
@@ -201,6 +218,13 @@ class ClayTheme {
   // ThemeData
   // ---------------------------------------------------------------
 
+  /// Keluarga font aplikasi.
+  ///
+  /// Dibundel sebagai aset, bukan diambil paket `google_fonts` saat berjalan:
+  /// CSP aplikasi web mengunci `font-src` ke 'self', dan jaringan sekolah
+  /// tidak selalu punya akses keluar.
+  static const String fontFamily = 'PlusJakartaSans';
+
   static ThemeData build() {
     // ColorScheme.dark, bukan .light dengan warna gelap: banyak widget
     // Material memilih warna turunannya sendiri berdasarkan `brightness`.
@@ -222,7 +246,8 @@ class ClayTheme {
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: _gelap ? Brightness.dark : Brightness.light,
+      fontFamily: fontFamily,
       colorScheme: scheme,
       scaffoldBackgroundColor: background,
       canvasColor: background,
@@ -291,21 +316,64 @@ class ClayTheme {
         hintStyle: TextStyle(color: textMuted, fontSize: 14),
       ),
 
+      // Skala tipografi mengikuti proyek rujukan o-mobile.
+      //
+      // Yang penting bukan angka ukurannya melainkan TINGGI BARIS: judul
+      // rapat (1.15-1.3) supaya tetap padat, teks isi longgar (1.4-1.45)
+      // supaya paragraf berbahasa Indonesia yang katanya panjang tetap
+      // nyaman dibaca di layar sempit.
       textTheme: TextTheme(
+        displaySmall: TextStyle(
+          color: textStrong,
+          fontSize: 30,
+          fontWeight: FontWeight.w800,
+          height: 1.15,
+          letterSpacing: -0.6,
+        ),
+        headlineMedium: TextStyle(
+          color: textStrong,
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
+          height: 1.2,
+          letterSpacing: -0.4,
+        ),
         headlineSmall: TextStyle(
           color: textStrong,
           fontSize: 22,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -0.4,
+          fontWeight: FontWeight.w700,
+          height: 1.25,
+          letterSpacing: -0.3,
+        ),
+        titleLarge: TextStyle(
+          color: textStrong,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          height: 1.3,
         ),
         titleMedium: TextStyle(
           color: textStrong,
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
+        titleSmall: TextStyle(
+          color: textStrong,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyLarge: TextStyle(color: textBody, fontSize: 15, height: 1.45),
         bodyMedium: TextStyle(color: textBody, fontSize: 14, height: 1.45),
         bodySmall: TextStyle(color: textMuted, fontSize: 12.5, height: 1.4),
-        labelLarge: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+        labelLarge: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          letterSpacing: 0.1,
+        ),
+        labelMedium: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+        labelSmall: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+          letterSpacing: 0.4,
+        ),
       ),
 
       dividerTheme: const DividerThemeData(

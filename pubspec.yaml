@@ -135,6 +135,30 @@ flutter:
   assets:
     - assets/models/
 
+  # Plus Jakarta Sans, DIBUNDEL bukan diunduh paket google_fonts saat
+  # berjalan. Dua alasan:
+  #
+  # 1. CSP aplikasi web mengunci font-src ke 'self'; unduhan runtime dari
+  #    fonts.gstatic.com akan diblokir browser dan teksnya jatuh ke font
+  #    bawaan tanpa pesan apa pun.
+  # 2. Jaringan sekolah tidak selalu punya akses keluar. Font yang dibundel
+  #    tampil sama di mana pun.
+  #
+  # Biayanya ~310 KB pada APK. Itu di bawah 0,3% dari ukurannya sekarang.
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-400.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-500.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-600.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-700.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-800.ttf
+          weight: 800
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
