@@ -5,6 +5,7 @@ import '../../core/authed_image.dart';
 import '../../core/failure.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
+import '../../core/theme/clay_motion.dart';
 import '../../data/jargon_models.dart';
 import '../../providers.dart';
 import 'panic_compose_screen.dart';
@@ -202,23 +203,29 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
                 : RefreshIndicator(
                     onRefresh: _load,
                     color: ClayTheme.primary,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
-                      itemCount: _reports.length,
-                      itemBuilder: (context, i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 14),
-                        child: PanicReportCard(
-                          report: _reports[i],
-                          onSupport: () => _toggleSupport(_reports[i]),
-                          onTap: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    PanicDetailScreen(reportId: _reports[i].id),
-                              ),
-                            );
-                            if (mounted) await _load();
-                          },
+                    child: ClayAnimatedList(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
+                        itemCount: _reports.length,
+                        itemBuilder: (context, i) => ClayStaggered(
+                          index: i,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: PanicReportCard(
+                              report: _reports[i],
+                              onSupport: () => _toggleSupport(_reports[i]),
+                              onTap: () async {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => PanicDetailScreen(
+                                      reportId: _reports[i].id,
+                                    ),
+                                  ),
+                                );
+                                if (mounted) await _load();
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),

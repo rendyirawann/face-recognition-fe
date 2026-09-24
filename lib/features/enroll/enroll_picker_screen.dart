@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
+import '../../core/theme/clay_motion.dart';
 import '../../data/models.dart';
 import '../../providers.dart';
 import 'enroll_screen.dart';
@@ -151,48 +152,55 @@ class _EnrollPickerScreenState extends ConsumerState<EnrollPickerScreen> {
                             ),
                           ),
                         )
-                      : ListView.separated(
-                          itemCount: items.length,
-                          separatorBuilder: (_, _) => const Divider(height: 1),
-                          itemBuilder: (context, i) {
-                            final s = items[i];
-                            return ListTile(
-                              leading: Icon(
-                                s.faceEnrolled
-                                    ? Icons.verified_user
-                                    : Icons.person_outline,
-                                color: s.faceEnrolled
-                                    ? const Color(0xFF50CD89)
-                                    : Colors.grey,
-                              ),
-                              title: Text(
-                                s.fullName,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              subtitle: Text(
-                                [
-                                  s.classroomName ?? 'Tanpa kelas',
-                                  s.nis ?? '-',
-                                ].join(' · '),
-                                style: const TextStyle(fontSize: 11.5),
-                              ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () async {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => EnrollScreen(student: s),
+                      : ClayAnimatedList(
+                          child: ListView.separated(
+                            itemCount: items.length,
+                            separatorBuilder: (_, _) =>
+                                const Divider(height: 1),
+                            itemBuilder: (context, i) {
+                              final s = items[i];
+                              return ClayStaggered(
+                                index: i,
+                                child: ListTile(
+                                  leading: Icon(
+                                    s.faceEnrolled
+                                        ? Icons.verified_user
+                                        : Icons.person_outline,
+                                    color: s.faceEnrolled
+                                        ? const Color(0xFF50CD89)
+                                        : Colors.grey,
                                   ),
-                                );
-                                // Status terdaftar berubah setelah
-                                // pendaftaran; muat ulang agar daftar
-                                // "belum" tetap akurat.
-                                if (mounted) await _load();
-                              },
-                            );
-                          },
+                                  title: Text(
+                                    s.fullName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    [
+                                      s.classroomName ?? 'Tanpa kelas',
+                                      s.nis ?? '-',
+                                    ].join(' · '),
+                                    style: const TextStyle(fontSize: 11.5),
+                                  ),
+                                  trailing: const Icon(Icons.chevron_right),
+                                  onTap: () async {
+                                    await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            EnrollScreen(student: s),
+                                      ),
+                                    );
+                                    // Status terdaftar berubah setelah
+                                    // pendaftaran; muat ulang agar daftar
+                                    // "belum" tetap akurat.
+                                    if (mounted) await _load();
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                 ),
               ],

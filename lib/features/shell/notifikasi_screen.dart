@@ -5,6 +5,7 @@ import '../../core/failure.dart';
 import '../../core/theme/clay_loading.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
+import '../../core/theme/clay_motion.dart';
 import '../../data/jargon_models.dart';
 import '../../providers.dart';
 
@@ -101,17 +102,22 @@ class _NotifikasiScreenState extends ConsumerState<NotifikasiScreen> {
           : ClayRefresh(
               onRefresh: _muat,
               child: ClayConstrained(
-                child: ListView.builder(
-                  padding: EdgeInsets.fromLTRB(
-                    20,
-                    12,
-                    20,
-                    32 + MediaQuery.viewPaddingOf(context).bottom,
-                  ),
-                  itemCount: _data!.items.length,
-                  itemBuilder: (_, i) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _Kartu(item: _data!.items[i]),
+                child: ClayAnimatedList(
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(
+                      20,
+                      12,
+                      20,
+                      32 + MediaQuery.viewPaddingOf(context).bottom,
+                    ),
+                    itemCount: _data!.items.length,
+                    itemBuilder: (_, i) => ClayStaggered(
+                      index: i,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _Kartu(item: _data!.items[i]),
+                      ),
+                    ),
                   ),
                 ),
               ),

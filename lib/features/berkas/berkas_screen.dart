@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/failure.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
+import '../../core/theme/clay_motion.dart';
 import '../../data/jargon_models.dart';
 import '../../providers.dart';
 import 'berkas_detail_screen.dart';
@@ -147,22 +148,28 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
           : RefreshIndicator(
               onRefresh: _load,
               color: ClayTheme.primary,
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
-                itemCount: _items.length,
-                itemBuilder: (context, i) => Padding(
-                  padding: const EdgeInsets.only(bottom: 13),
-                  child: _SubmissionCard(
-                    item: _items[i],
-                    onTap: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              BerkasDetailScreen(submissionId: _items[i].id),
-                        ),
-                      );
-                      if (mounted) await _load();
-                    },
+              child: ClayAnimatedList(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
+                  itemCount: _items.length,
+                  itemBuilder: (context, i) => ClayStaggered(
+                    index: i,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 13),
+                      child: _SubmissionCard(
+                        item: _items[i],
+                        onTap: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => BerkasDetailScreen(
+                                submissionId: _items[i].id,
+                              ),
+                            ),
+                          );
+                          if (mounted) await _load();
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),

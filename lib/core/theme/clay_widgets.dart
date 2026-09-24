@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show TextInputFormatter;
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'clay_theme.dart';
 
@@ -553,6 +554,17 @@ class ClayEmpty extends StatelessWidget {
 }
 
 /// Bilah navigasi bawah bergaya clay.
+/// Navigasi bawah bergaya pil.
+///
+/// Dibangun di atas `GNav` (paket google_nav_bar), sama dengan aplikasi
+/// rujukan. Yang membedakan rasanya dari navigasi biasa adalah label yang
+/// disembunyikan pada tab tidak terpilih lalu MELEBAR saat dipilih, dengan
+/// kurva easeOutCubic 420 ms dan getar halus. Versi buatan sendiri
+/// sebelumnya menampilkan seluruh label sekaligus dan beranimasi 180 ms,
+/// sehingga terasa jauh lebih kaku.
+///
+/// Wadahnya tetap `ClaySurface` supaya batangnya mengambang sebagai
+/// permukaan tanah liat; hanya isi batangnya yang berasal dari paket.
 class ClayNavBar extends StatelessWidget {
   const ClayNavBar({
     super.key,
@@ -574,86 +586,74 @@ class ClayNavBar extends StatelessWidget {
         child: ClaySurface(
           radius: ClayTheme.radiusPill,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Row(
-            children: List.generate(items.length, (i) {
-              final selected = i == currentIndex;
-              final item = items[i];
-
-              return Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onSelected(i),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    curve: Curves.easeOut,
-                    padding: const EdgeInsets.symmetric(vertical: 11),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? ClayTheme.primarySoft
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(
-                              selected ? item.activeIcon : item.icon,
-                              size: 21,
-                              color: selected
-                                  ? ClayTheme.primary
-                                  : ClayTheme.textMuted,
-                            ),
-                            // Lencana jumlah: satu-satunya cara pengguna tahu
-                            // ada tindak lanjut baru tanpa membuka tabnya.
-                            if (item.badge > 0)
-                              Positioned(
-                                right: -7,
-                                top: -4,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 1,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: ClayTheme.danger,
-                                    borderRadius: BorderRadius.circular(9),
-                                  ),
-                                  child: Text(
-                                    item.badge > 9 ? '9+' : '${item.badge}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          item.label,
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: selected
-                                ? FontWeight.w800
-                                : FontWeight.w600,
-                            color: selected
-                                ? ClayTheme.primary
-                                : ClayTheme.textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
+          child: GNav(
+            selectedIndex: currentIndex,
+            onTabChange: onSelected,
+            gap: 7,
+            haptic: true,
+            curve: Curves.easeOutCubic,
+            duration: const Duration(milliseconds: 420),
+            tabBorderRadius: ClayTheme.radiusPill,
+            backgroundColor: Colors.transparent,
+            color: ClayTheme.textMuted,
+            activeColor: ClayTheme.primary,
+            tabBackgroundColor: ClayTheme.primarySoft,
+            iconSize: 21,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            textStyle: TextStyle(
+              color: ClayTheme.primary,
+              fontFamily: ClayTheme.fontFamily,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+            tabs: [
+              for (var i = 0; i < items.length; i++)
+                _tombol(items[i], selected: i == currentIndex),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// GNav tidak mengenal lencana maupun ikon versi terpilih, jadi keduanya
+  /// digambar lewat `leading` — satu-satunya celah yang disediakan paket
+  /// untuk mengganti ikon bawaannya.
+  GButton _tombol(ClayNavItem item, {required bool selected}) {
+    return GButton(
+      icon: item.icon,
+      text: item.label,
+      leading: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Icon(
+            selected ? item.activeIcon : item.icon,
+            size: 21,
+            color: selected ? ClayTheme.primary : ClayTheme.textMuted,
+          ),
+          // Lencana jumlah: satu-satunya cara pengguna tahu ada tindak
+          // lanjut baru tanpa membuka tabnya.
+          if (item.badge > 0)
+            Positioned(
+              right: -7,
+              top: -4,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: ClayTheme.danger,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: Text(
+                  item.badge > 9 ? '9+' : '${item.badge}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

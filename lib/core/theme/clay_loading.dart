@@ -1,6 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'clay_theme.dart';
 
@@ -40,11 +40,17 @@ class ClaySkeleton extends StatelessWidget {
   }
 }
 
-/// Pembungkus kilau dengan warna tema gelap.
+/// Pembungkus kerangka dengan warna tema.
 ///
-/// `baseColor` diambil dari `surface`, bukan warna abu-abu bawaan paket:
-/// kerangka abu-abu di atas latar biru malam terlihat seperti elemen dari
-/// aplikasi lain.
+/// Memakai `Skeletonizer`, sama dengan aplikasi rujukan. Kelebihannya atas
+/// `shimmer`: ia dapat membungkus widget yang SUDAH ada dan menggambarnya
+/// sebagai kerangka, sehingga tidak perlu memelihara dua tata letak yang
+/// harus tetap mirip. `ClaySkeleton` di bawah tetap disediakan untuk
+/// tempat yang memang lebih jelas bila bentuknya ditulis sendiri.
+///
+/// Warnanya diambil dari `surface`, bukan abu-abu bawaan paket: kerangka
+/// abu-abu di atas latar biru malam terlihat seperti elemen dari aplikasi
+/// lain.
 class ClayShimmer extends StatelessWidget {
   const ClayShimmer({super.key, required this.child});
 
@@ -52,10 +58,13 @@ class ClayShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: ClayTheme.surface,
-      highlightColor: ClayTheme.shimmerHighlight,
-      period: const Duration(milliseconds: 1400),
+    return Skeletonizer(
+      enabled: true,
+      effect: ShimmerEffect(
+        baseColor: ClayTheme.surface,
+        highlightColor: ClayTheme.shimmerHighlight,
+        duration: const Duration(milliseconds: 1400),
+      ),
       child: child,
     );
   }
