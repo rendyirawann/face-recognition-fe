@@ -31,17 +31,105 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
   bool _loading = true;
   String? _error;
   String? _selectedStudentId;
-  int _rangeDays = 30;
+
+  /// Rentang disimpan sebagai dua TANGGAL, bukan jumlah hari.
+  ///
+  /// Pilihan pintas (7/30/90 hari) hanyalah cara cepat mengisi keduanya.
+  /// Menyimpan jumlah hari akan membuat rentang yang dipilih sendiri
+  /// — misalnya 3–17 Agustus — mustahil dinyatakan.
+  late DateTime _dari;
+  late DateTime _sampai;
 
   @override
   void initState() {
     super.initState();
+    _sampai = _hariIni();
+    _dari = _sampai.subtract(const Duration(days: 29));
     final user = ref.read(currentUserProvider);
     // Orang tua dengan beberapa anak: pilih anak pertama sebagai tampilan awal
     // agar layar tidak menyajikan campuran data yang membingungkan.
     if ((user?.students.length ?? 0) > 1) {
       _selectedStudentId = user!.students.first.id;
     }
+    _load();
+  }
+
+  /// Tengah malam hari ini. Rentang dibandingkan per HARI, bukan per detik;
+  /// tanpa memangkas jamnya, "7 hari" yang dipilih pukul 14.00 akan
+  /// memotong separuh hari pertama.
+  DateTime _hariIni() {
+    final n = DateTime.now();
+    return DateTime(n.year, n.month, n.day);
+  }
+
+  /// Pintasan mana yang sedang berlaku, atau null bila rentangnya dipilih
+  /// sendiri lewat kalender.
+  int? get _pintasanAktif {
+    if (_sampai != _hariIni()) return null;
+    final hari = _sampai.difference(_dari).inDays + 1;
+    return const [7, 30, 90].contains(hari) ? hari : null;
+  }
+
+  String _labelRentang() {
+    const bulan = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+    String f(DateTime d, {bool tahun = true}) =>
+        '${d.day} ${bulan[d.month - 1]}${tahun ? ' ${d.year}' : ''}';
+    // Tahun ditulis sekali saja bila keduanya di tahun yang sama.
+    return _dari.year == _sampai.year
+        ? '${f(_dari, tahun: false)} – ${f(_sampai)}'
+        : '${f(_dari)} – ${f(_sampai)}';
+  }
+
+  Future<void> _pilihTanggal() async {
+    final kini = _hariIni();
+    final hasil = await showDateRangePicker(
+      context: context,
+      // Batas bawah dibuat lima tahun: riwayat absensi seorang siswa tidak
+      // pernah melampaui masa sekolahnya.
+      firstDate: DateTime(kini.year - 5),
+      lastDate: kini,
+      initialDateRange: DateTimeRange(start: _dari, end: _sampai),
+      helpText: 'Pilih rentang tanggal',
+      saveText: 'Terapkan',
+      builder: (context, anak) {
+        // Pemilih tanggal bawaan Material mengambil warnanya dari
+        // ColorScheme, yang pada tema ini dipakai untuk permukaan tanah
+        // liat. Tanpa penyesuaian di sini, kalendernya tampil sebagai
+        // kotak putih terang di tengah tema biru gelap.
+        final t = Theme.of(context);
+        return Theme(
+          data: t.copyWith(
+            colorScheme: t.colorScheme.copyWith(
+              primary: ClayTheme.primary,
+              onPrimary: Colors.white,
+              surface: ClayTheme.surface,
+              onSurface: ClayTheme.textStrong,
+            ),
+            scaffoldBackgroundColor: ClayTheme.background,
+          ),
+          child: anak!,
+        );
+      },
+    );
+
+    if (hasil == null || !mounted) return;
+    setState(() {
+      _dari = DateTime(hasil.start.year, hasil.start.month, hasil.start.day);
+      _sampai = DateTime(hasil.end.year, hasil.end.month, hasil.end.day);
+    });
     _load();
   }
 
@@ -53,11 +141,11 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
 
     try {
       final repo = ref.read(repositoryProvider);
-      final from = DateTime.now().subtract(Duration(days: _rangeDays - 1));
 
       final rows = await repo.myAttendance(
         studentId: _selectedStudentId,
-        from: from,
+        from: _dari,
+        to: _sampai,
       );
 
       Map<String, dynamic>? recap;
@@ -65,7 +153,11 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
           _selectedStudentId ??
           ref.read(currentUserProvider)?.students.firstOrNull?.id;
       if (targetId != null) {
-        recap = await repo.myRecap(studentId: targetId, from: from);
+        recap = await repo.myRecap(
+          studentId: targetId,
+          from: _dari,
+          to: _sampai,
+        );
       }
 
       if (!mounted) return;
@@ -151,34 +243,60 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
           ],
 
           // --- Rentang waktu ---
-          Row(
-            children: [7, 30, 90].map((days) {
-              final selected = _rangeDays == days;
-              return Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: ClaySurface(
-                  radius: ClayTheme.radiusPill,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  color: selected ? ClayTheme.primarySoft : ClayTheme.surface,
-                  depth: 0.6,
-                  onTap: () {
-                    setState(() => _rangeDays = days);
-                    _load();
-                  },
-                  child: Text(
-                    '$days hari',
-                    style: TextStyle(
-                      color: selected ? ClayTheme.primary : ClayTheme.textMuted,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+          //
+          // Pintasan dan pemilih tanggal berdiri berdampingan: pintasan
+          // menutup kebutuhan sehari-hari dengan satu ketukan, sedangkan
+          // pemilih tanggal menjawab pertanyaan yang tidak bisa dinyatakan
+          // sebagai "sekian hari terakhir" — misalnya satu bulan rapor,
+          // atau minggu ujian.
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (final hari in const [7, 30, 90])
+                  Padding(
+                    padding: const EdgeInsets.only(right: ClayTheme.sMd),
+                    child: _PilRentang(
+                      label: '$hari hari',
+                      terpilih: _pintasanAktif == hari,
+                      onTap: () {
+                        setState(() {
+                          _sampai = _hariIni();
+                          _dari = _sampai.subtract(Duration(days: hari - 1));
+                        });
+                        _load();
+                      },
                     ),
                   ),
+                _PilRentang(
+                  label: _pintasanAktif == null
+                      ? _labelRentang()
+                      : 'Pilih tanggal',
+                  ikon: Icons.event_rounded,
+                  terpilih: _pintasanAktif == null,
+                  onTap: _pilihTanggal,
                 ),
-              );
-            }).toList(),
+              ],
+            ),
+          ),
+
+          // Rentang yang sedang berlaku selalu ditulis, termasuk saat
+          // memakai pintasan: "30 hari" tidak memberi tahu tanggal berapa
+          // saja yang sebenarnya dihitung.
+          Padding(
+            padding: const EdgeInsets.only(
+              top: ClayTheme.sSm,
+              left: ClayTheme.sSm,
+            ),
+            child: Text(
+              _labelRentang(),
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                color: ClayTheme.textMuted,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
 
@@ -403,6 +521,54 @@ class _AttendanceRowCard extends StatelessWidget {
                 : ClayTheme.statusLabel(row.status),
             color: color,
             background: ClayTheme.statusSoft(row.status),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Satu pil pemilih rentang.
+class _PilRentang extends StatelessWidget {
+  const _PilRentang({
+    required this.label,
+    required this.terpilih,
+    required this.onTap,
+    this.ikon,
+  });
+
+  final String label;
+  final bool terpilih;
+  final VoidCallback onTap;
+  final IconData? ikon;
+
+  @override
+  Widget build(BuildContext context) {
+    final warna = terpilih ? ClayTheme.primary : ClayTheme.textMuted;
+
+    return ClaySurface(
+      radius: ClayTheme.radiusPill,
+      padding: const EdgeInsets.symmetric(
+        horizontal: ClayTheme.sLg,
+        vertical: ClayTheme.sSm,
+      ),
+      color: terpilih ? ClayTheme.primarySoft : ClayTheme.surface,
+      depth: 0.6,
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (ikon != null) ...[
+            Icon(ikon, size: 14, color: warna),
+            const SizedBox(width: ClayTheme.sXs + 2),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              color: warna,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),

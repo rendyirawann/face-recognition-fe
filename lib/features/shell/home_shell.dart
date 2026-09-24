@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 import '../../core/failure.dart';
+import '../../core/theme/clay_backdrop.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -203,100 +204,110 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ),
         ],
       ),
-      mainScreen: Scaffold(
-        appBar: AppBar(
-          // Tombol sidebar di ATAS, pada posisi leading — tempat yang memang
-          // dicari orang untuk menu. Sebelumnya ditaruh di bilah bawah agar
-          // tetap terlihat saat digulir, tetapi itu menempatkannya di tempat
-          // yang tidak lazim: bilah bawah dibaca sebagai perpindahan tab,
-          // bukan sebagai pembuka menu.
-          leadingWidth: 62,
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: ClaySurface(
-              radius: ClayTheme.radiusPill,
-              padding: const EdgeInsets.all(12),
-              depth: 0.7,
-              onTap: () => _drawer.toggle?.call(),
-              child: Icon(
-                Icons.menu_rounded,
-                size: ClayTheme.icon,
-                color: ClayTheme.primary,
-              ),
-            ),
-          ),
-          titleSpacing: 8,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                _summary?.greeting ?? 'Jargon GO',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w800,
-                  color: ClayTheme.textStrong,
+      mainScreen: ClayBackdrop(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            // Tombol sidebar di ATAS, pada posisi leading — tempat yang memang
+            // dicari orang untuk menu. Sebelumnya ditaruh di bilah bawah agar
+            // tetap terlihat saat digulir, tetapi itu menempatkannya di tempat
+            // yang tidak lazim: bilah bawah dibaca sebagai perpindahan tab,
+            // bukan sebagai pembuka menu.
+            leadingWidth: 60,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: ClayTheme.sLg),
+              // `Center` WAJIB di sini. AppBar memberi slot `leading` tinggi
+              // penuh toolbar, dan ClaySurface tanpa tinggi sendiri akan
+              // meregang mengisinya — tombolnya jadi lonjong memanjang ke
+              // bawah alih-alih bulat.
+              child: Center(
+                child: ClaySurface(
+                  radius: ClayTheme.radiusPill,
+                  padding: const EdgeInsets.all(ClayTheme.sSm + 2),
+                  depth: 0.7,
+                  onTap: () => _drawer.toggle?.call(),
+                  child: Icon(
+                    Icons.menu_rounded,
+                    size: ClayTheme.icon,
+                    color: ClayTheme.primary,
+                  ),
                 ),
               ),
-              Text(
-                _summary?.roleLabel ?? user?.roleLabel ?? '',
-                style: TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w600,
-                  color: ClayTheme.textMuted,
+            ),
+            titleSpacing: 8,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _summary?.greeting ?? 'Jargon GO',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: ClayTheme.textStrong,
+                  ),
+                ),
+                Text(
+                  _summary?.roleLabel ?? user?.roleLabel ?? '',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w600,
+                    color: ClayTheme.textMuted,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              _LonengNotifikasi(
+                onTap: () async {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const NotifikasiScreen()),
+                  );
+                  if (mounted) ref.invalidate(unreadNotificationProvider);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: ClaySurface(
+                  radius: ClayTheme.radiusPill,
+                  padding: const EdgeInsets.all(12),
+                  depth: 0.7,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  ),
+                  child: Icon(
+                    Icons.person_outline_rounded,
+                    size: 20,
+                    color: ClayTheme.primary,
+                  ),
                 ),
               ),
             ],
           ),
-          actions: [
-            _LonengNotifikasi(
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const NotifikasiScreen()),
-                );
-                if (mounted) ref.invalidate(unreadNotificationProvider);
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: ClaySurface(
-                radius: ClayTheme.radiusPill,
-                padding: const EdgeInsets.all(12),
-                depth: 0.7,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+          body: _loading
+              ? const Center(child: CircularProgressIndicator())
+              : _error != null
+              ? ClayEmpty(
+                  icon: Icons.cloud_off_rounded,
+                  title: 'Tidak dapat memuat data',
+                  message: _error,
+                  action: ClayButton(
+                    label: 'Coba Lagi',
+                    icon: Icons.refresh_rounded,
+                    expanded: false,
+                    onPressed: _load,
+                  ),
+                )
+              : IndexedStack(index: index, children: tabs.pages),
+          bottomNavigationBar:
+              _loading || _error != null || tabs.items.length < 2
+              ? null
+              : ClayNavBar(
+                  items: tabs.items,
+                  currentIndex: index,
+                  onSelected: (i) => setState(() => _index = i),
                 ),
-                child: Icon(
-                  Icons.person_outline_rounded,
-                  size: 20,
-                  color: ClayTheme.primary,
-                ),
-              ),
-            ),
-          ],
         ),
-        body: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-            ? ClayEmpty(
-                icon: Icons.cloud_off_rounded,
-                title: 'Tidak dapat memuat data',
-                message: _error,
-                action: ClayButton(
-                  label: 'Coba Lagi',
-                  icon: Icons.refresh_rounded,
-                  expanded: false,
-                  onPressed: _load,
-                ),
-              )
-            : IndexedStack(index: index, children: tabs.pages),
-        bottomNavigationBar: _loading || _error != null || tabs.items.length < 2
-            ? null
-            : ClayNavBar(
-                items: tabs.items,
-                currentIndex: index,
-                onSelected: (i) => setState(() => _index = i),
-              ),
       ),
     );
   }

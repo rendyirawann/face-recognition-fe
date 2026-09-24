@@ -230,7 +230,11 @@ class ClayTheme {
       // Semua elevasi Material dimatikan: kedalaman pada claymorphism datang
       // dari bayangan ganda yang digambar sendiri, bukan dari elevation.
       appBarTheme: AppBarTheme(
-        backgroundColor: background,
+        // Tembus pandang, bukan warna latar. Layar dibungkus ClayBackdrop
+        // yang melukis sapuan warna di belakangnya; bilah judul berwarna
+        // solid akan memotong sapuan itu tepat di bagian atas layar,
+        // persis tempat sapuannya paling terlihat.
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
