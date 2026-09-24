@@ -352,7 +352,7 @@ class _EnrollScreenState extends ConsumerState<EnrollScreen> {
                       FilledButton.icon(
                         onPressed: _busy ? null : _capture,
                         style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         icon: _busy
                             ? const SizedBox(

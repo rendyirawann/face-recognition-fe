@@ -125,11 +125,11 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
                         ),
                       ],
 
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 24),
                       const _SectionTitle('Lini Masa Penanganan'),
                       _Timeline(entries: detail.timeline),
 
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 24),
                       _SectionTitle('Komentar (${detail.comments.length})'),
                       if (detail.comments.isEmpty)
                         Padding(
@@ -146,7 +146,7 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
                       else
                         ...detail.comments.map(
                           (c) => Padding(
-                            padding: const EdgeInsets.only(bottom: 11),
+                            padding: const EdgeInsets.only(bottom: 12),
                             child: _CommentCard(comment: c),
                           ),
                         ),
@@ -156,7 +156,7 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
 
                 // --- Kotak komentar ---
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
                   color: ClayTheme.background,
                   child: SafeArea(
                     top: false,
@@ -171,11 +171,11 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
                             onSubmitted: (_) => _sendComment(),
                           ),
                         ),
-                        const SizedBox(width: 11),
+                        const SizedBox(width: 12),
                         ClaySurface(
                           radius: ClayTheme.radiusPill,
                           color: ClayTheme.primary,
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(16),
                           onTap: _sending ? null : _sendComment,
                           child: _sending
                               ? const SizedBox(
@@ -225,7 +225,7 @@ class _ReportBody extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Text(
             report.title,
             style: TextStyle(
@@ -253,7 +253,7 @@ class _ReportBody extends StatelessWidget {
             const SizedBox(height: 16),
             ...report.media.map(
               (url) => Padding(
-                padding: const EdgeInsets.only(bottom: 11),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
                   child: AuthedImage(url),
@@ -269,7 +269,7 @@ class _ReportBody extends StatelessWidget {
                 size: 16,
                 color: ClayTheme.primary,
               ),
-              const SizedBox(width: 7),
+              const SizedBox(width: 8),
               Text(
                 '${report.supportCount} orang menyatakan mengalami hal serupa',
                 style: TextStyle(color: ClayTheme.textMuted, fontSize: 11.5),
@@ -329,10 +329,10 @@ class _Timeline extends StatelessWidget {
                       ),
                   ],
                 ),
-                const SizedBox(width: 14),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: last ? 0 : 18),
+                    padding: EdgeInsets.only(bottom: last ? 0 : 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -355,7 +355,7 @@ class _Timeline extends StatelessWidget {
                             ),
                           ),
                         ],
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 4),
                         Text(
                           [
                             if (e.actorLabel != null) e.actorLabel!,
@@ -396,7 +396,7 @@ class _CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClaySurface(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       depth: 0.6,
       // Komentar resmi diberi latar berbeda: pelapor harus bisa membedakan
       // sekilas antara sesama warga dan jawaban pihak berwenang.
@@ -415,7 +415,7 @@ class _CommentCard extends StatelessWidget {
                     ? ClayTheme.info
                     : ClayTheme.textMuted,
               ),
-              const SizedBox(width: 7),
+              const SizedBox(width: 8),
               Text(
                 comment.displayName,
                 style: TextStyle(
@@ -427,14 +427,14 @@ class _CommentCard extends StatelessWidget {
                 ),
               ),
               if (comment.officialTitle != null) ...[
-                const SizedBox(width: 6),
+                const SizedBox(width: 8),
                 Text(
                   '· ${comment.officialTitle}',
                   style: TextStyle(color: ClayTheme.textMuted, fontSize: 11),
                 ),
               ],
               if (comment.isMine) ...[
-                const SizedBox(width: 7),
+                const SizedBox(width: 8),
                 ClayBadge(label: 'Anda', color: ClayTheme.primary),
               ],
             ],
@@ -461,7 +461,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 6, bottom: 12),
+    padding: const EdgeInsets.only(left: 8, bottom: 12),
     child: Text(
       text.toUpperCase(),
       style: TextStyle(
@@ -494,7 +494,7 @@ class _Notice extends StatelessWidget {
     color: background,
     depth: 0.6,
     margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(15),
+    padding: const EdgeInsets.all(16),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -513,7 +513,7 @@ class _Notice extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 4),
               ],
               Text(
                 text,

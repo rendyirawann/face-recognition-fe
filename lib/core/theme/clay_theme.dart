@@ -144,6 +144,15 @@ class ClayTheme {
   static const double sLg = 16;
   static const double sXl = 20;
   static const double sXxl = 24;
+  static const double sXxxl = 32;
+
+  /// Tinggi minimum tombol utama.
+  ///
+  /// Disamakan dengan aplikasi lain di lingkungan yang sama. Nilainya juga
+  /// di atas 48dp, batas sasaran sentuh yang disarankan Material — tombol
+  /// yang lebih pendek sering meleset pada tablet yang dipasang di gerbang.
+  static const double tinggiTombol = 52;
+  static const double tinggiTombolKecil = 40;
 
   /// Ukuran ikon baku.
   ///
@@ -275,7 +284,7 @@ class ClayTheme {
         focusedBorder: InputBorder.none,
         enabledBorder: InputBorder.none,
         errorBorder: InputBorder.none,
-        contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         hintStyle: TextStyle(color: textMuted, fontSize: 14),
       ),
 

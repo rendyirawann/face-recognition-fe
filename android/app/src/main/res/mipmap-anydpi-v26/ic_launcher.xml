@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Ikon adaptif (Android 8 ke atas).
+
+    Peluncur memotong ikon ini menjadi bentuk pilihannya sendiri — lingkaran,
+    kotak membulat, tetesan — sehingga bentuk luarnya TIDAK boleh digambar di
+    sini. Latar cukup warna solid, dan seluruh isi lambang berada jauh di
+    dalam zona aman pada lapisan depan.
+
+    Android 7 ke bawah memakai `ic_launcher.png` di mipmap-<kepadatan>, yang
+    memang menggambar persegi membulatnya sendiri.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

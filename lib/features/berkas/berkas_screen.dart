@@ -99,12 +99,12 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 74),
+        padding: const EdgeInsets.only(bottom: 76),
         child: ClaySurface(
           radius: ClayTheme.radiusPill,
           color: ClayTheme.primary,
           depth: 1.1,
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           onTap: _createSubmission,
           child: const Row(
             mainAxisSize: MainAxisSize.min,
@@ -150,12 +150,12 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
               color: ClayTheme.primary,
               child: ClayAnimatedList(
                 child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 110),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 112),
                   itemCount: _items.length,
                   itemBuilder: (context, i) => ClayStaggered(
                     index: i,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 13),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: _SubmissionCard(
                         item: _items[i],
                         onTap: () async {
@@ -208,7 +208,7 @@ class _SubmissionCard extends StatelessWidget {
                 size: 19,
                 padding: 11,
               ),
-              const SizedBox(width: 13),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,7 +240,7 @@ class _SubmissionCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Row(
             children: [
               ClayBadge(
@@ -258,7 +258,7 @@ class _SubmissionCard extends StatelessWidget {
                 ),
               ),
               if (item.rejectedFileCount > 0) ...[
-                const SizedBox(width: 9),
+                const SizedBox(width: 8),
                 ClayBadge(
                   label: '${item.rejectedFileCount} ditolak',
                   color: ClayTheme.danger,
@@ -315,7 +315,7 @@ class _NewSubmissionSheetState extends State<_NewSubmissionSheet> {
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.only(left: 6, bottom: 11),
+            padding: EdgeInsets.only(left: 8, bottom: 12),
             child: Text(
               'Keperluan',
               style: TextStyle(
@@ -333,8 +333,8 @@ class _NewSubmissionSheetState extends State<_NewSubmissionSheet> {
               return ClaySurface(
                 radius: ClayTheme.radiusPill,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 10,
+                  horizontal: 16,
+                  vertical: 12,
                 ),
                 color: selected ? ClayTheme.primary : ClayTheme.surface,
                 depth: 0.6,

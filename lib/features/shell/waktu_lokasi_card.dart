@@ -195,7 +195,7 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
   @override
   Widget build(BuildContext context) {
     return ClaySurface(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,7 +226,7 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             _tanggal,
             style: TextStyle(
@@ -235,7 +235,7 @@ class _WaktuLokasiCardState extends State<WaktuLokasiCard> {
               color: ClayTheme.textBody,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           const Divider(height: 1),
           const SizedBox(height: 12),
           _barisLokasi(),
@@ -336,7 +336,7 @@ class _AksiKecil extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: ClayTheme.primarySoft,
           borderRadius: BorderRadius.circular(ClayTheme.radiusPill),

@@ -13,7 +13,7 @@ class ClaySurface extends StatelessWidget {
   const ClaySurface({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = const EdgeInsets.all(20),
     this.margin,
     this.radius = ClayTheme.radius,
     this.color,
@@ -140,7 +140,7 @@ class ClayCard extends StatelessWidget {
     required this.child,
     this.title,
     this.trailing,
-    this.padding = const EdgeInsets.all(18),
+    this.padding = const EdgeInsets.all(20),
     this.margin,
     this.onTap,
   });
@@ -178,7 +178,7 @@ class ClayCard extends StatelessWidget {
                 ?trailing,
               ],
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
           ],
           child,
         ],
@@ -228,7 +228,7 @@ class ClayButton extends StatelessWidget {
           )
         else if (icon != null) ...[
           Icon(icon, size: compact ? 17 : 19, color: fg),
-          const SizedBox(width: 9),
+          const SizedBox(width: 8),
         ],
         if (!busy)
           Text(
@@ -253,10 +253,25 @@ class ClayButton extends StatelessWidget {
         radius: ClayTheme.radiusPill,
         depth: 0.85,
         padding: EdgeInsets.symmetric(
-          horizontal: compact ? 18 : 24,
-          vertical: compact ? 11 : 15,
+          horizontal: compact ? ClayTheme.sLg : ClayTheme.sXxl,
+          vertical: compact ? ClayTheme.sMd : ClayTheme.sLg,
         ),
-        child: content,
+        // Tinggi minimum dipasang di sini, bukan diserahkan pada isi
+        // tombolnya. Tombol berisi ikon saja dan tombol berisi teks panjang
+        // menghasilkan tinggi berbeda, dan dua tombol bersebelahan yang
+        // tingginya tidak sama langsung terlihat.
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: compact
+                ? ClayTheme.tinggiTombolKecil - ClayTheme.sMd * 2
+                : ClayTheme.tinggiTombol - ClayTheme.sLg * 2,
+          ),
+          child: Center(
+            heightFactor: 1,
+            widthFactor: expanded ? null : 1,
+            child: content,
+          ),
+        ),
       ),
     );
   }
@@ -311,7 +326,7 @@ class ClayBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: background ?? color.withValues(alpha: 0.13),
         borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
@@ -321,7 +336,7 @@ class ClayBadge extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(icon, size: 13, color: color),
-            const SizedBox(width: 5),
+            const SizedBox(width: 4),
           ],
           Text(
             label,
@@ -411,7 +426,7 @@ class ClayField extends StatelessWidget {
       children: [
         if (label != null) ...[
           Padding(
-            padding: const EdgeInsets.only(left: 6, bottom: 8),
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
             child: Text(
               label!,
               style: TextStyle(
@@ -476,8 +491,8 @@ class ClayField extends StatelessWidget {
                     counterText: '',
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
-                      horizontal: icon == null ? 18 : 12,
-                      vertical: maxLines > 1 ? 16 : 15,
+                      horizontal: icon == null ? 20 : 12,
+                      vertical: maxLines > 1 ? 16 : 16,
                     ),
                   ),
                 ),
@@ -514,16 +529,16 @@ class ClayEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 34, vertical: 48),
+        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 48),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ClaySurface(
               radius: ClayTheme.radiusPill,
-              padding: const EdgeInsets.all(26),
+              padding: const EdgeInsets.all(28),
               child: Icon(icon, size: 40, color: ClayTheme.textMuted),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
             Text(
               title,
               textAlign: TextAlign.center,
@@ -545,7 +560,7 @@ class ClayEmpty extends StatelessWidget {
                 ),
               ),
             ],
-            if (action != null) ...[const SizedBox(height: 22), action!],
+            if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
       ),
@@ -582,7 +597,7 @@ class ClayNavBar extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: ClaySurface(
           radius: ClayTheme.radiusPill,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -599,7 +614,7 @@ class ClayNavBar extends StatelessWidget {
             activeColor: ClayTheme.primary,
             tabBackgroundColor: ClayTheme.primarySoft,
             iconSize: 21,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             textStyle: TextStyle(
               color: ClayTheme.primary,
               fontFamily: ClayTheme.fontFamily,
@@ -638,7 +653,7 @@ class ClayNavBar extends StatelessWidget {
               right: -7,
               top: -4,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                 decoration: BoxDecoration(
                   color: ClayTheme.danger,
                   borderRadius: BorderRadius.circular(9),

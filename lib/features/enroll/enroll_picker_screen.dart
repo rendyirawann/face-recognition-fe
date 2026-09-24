@@ -88,9 +88,9 @@ class _EnrollPickerScreenState extends ConsumerState<EnrollPickerScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.cloud_off, size: 56, color: Colors.grey),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 16),
                     Text(_error!, textAlign: TextAlign.center),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 20),
                     FilledButton(
                       onPressed: _load,
                       child: const Text('Coba Lagi'),

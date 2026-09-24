@@ -202,7 +202,7 @@ class _TopBar extends StatelessWidget {
           // bahwa ada absensi yang belum sampai ke server.
           if (pending > 0)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFC700).withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(20),
@@ -214,7 +214,7 @@ class _TopBar extends StatelessWidget {
                     color: Color(0xFFFFC700),
                     size: 16,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   Text(
                     '$pending menunggu kirim',
                     style: const TextStyle(
@@ -241,7 +241,7 @@ class _BottomHint extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       color: const Color(0xFF111C33),
       child: Column(
         children: [
@@ -309,7 +309,7 @@ class _ResultOverlay extends StatelessWidget {
                 ),
               ),
               if (result.student != null) ...[
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Text(
                   result.student!.fullName,
                   textAlign: TextAlign.center,
@@ -319,7 +319,7 @@ class _ResultOverlay extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 Text(
                   [
                     result.student!.classroomName ?? '-',
@@ -343,10 +343,10 @@ class _ResultOverlay extends StatelessWidget {
               ),
               if (result.checkInTime != null ||
                   result.checkOutTime != null) ...[
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 22,
+                    horizontal: 24,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
@@ -373,8 +373,8 @@ class _ResultOverlay extends StatelessWidget {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 34,
-                    vertical: 14,
+                    horizontal: 36,
+                    vertical: 16,
                   ),
                 ),
                 child: const Text(

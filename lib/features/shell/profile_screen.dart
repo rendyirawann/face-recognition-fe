@@ -42,7 +42,7 @@ class ProfileScreen extends ConsumerWidget {
                 ClaySurface(
                   radius: ClayTheme.radiusPill,
                   color: ClayTheme.primarySoft,
-                  padding: const EdgeInsets.all(22),
+                  padding: const EdgeInsets.all(24),
                   depth: 0.8,
                   child: Icon(
                     Icons.person_rounded,
@@ -60,13 +60,13 @@ class ProfileScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 ClayBadge(
                   label: user?.roleLabel ?? 'Pengguna',
                   color: ClayTheme.primary,
                 ),
                 if (user?.schoolName != null) ...[
-                  const SizedBox(height: 9),
+                  const SizedBox(height: 8),
                   Text(
                     user!.schoolName!,
                     textAlign: TextAlign.center,
@@ -111,7 +111,7 @@ class ProfileScreen extends ConsumerWidget {
                               size: 17,
                               padding: 10,
                             ),
-                            const SizedBox(width: 13),
+                            const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +173,7 @@ class ProfileScreen extends ConsumerWidget {
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 if (deviceProfile == null)
                   ClayGhostButton(
                     label: 'Pasangkan Perangkat',
@@ -194,7 +194,7 @@ class ProfileScreen extends ConsumerWidget {
                           onPressed: () => openKiosk(context),
                         ),
                       ),
-                      const SizedBox(width: 11),
+                      const SizedBox(width: 12),
                       ClayGhostButton(
                         label: 'Lepas',
                         icon: Icons.link_off_rounded,
@@ -235,7 +235,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 22),
+          const SizedBox(height: 24),
           ClayButton(
             label: 'Keluar',
             icon: Icons.logout_rounded,
@@ -265,7 +265,7 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 11),
+    padding: const EdgeInsets.only(bottom: 12),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

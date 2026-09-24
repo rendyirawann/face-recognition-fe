@@ -160,6 +160,7 @@ flutter:
   # kegagalannya muncul saat aplikasi dipakai, bukan saat dibangun.
   assets:
     - assets/models/
+    - assets/brand/
 
   # Plus Jakarta Sans, DIBUNDEL bukan diunduh paket google_fonts saat
   # berjalan. Dua alasan:

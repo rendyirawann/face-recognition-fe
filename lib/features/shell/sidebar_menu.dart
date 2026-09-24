@@ -78,7 +78,7 @@ class SidebarMenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Identitas(nama: nama, peran: peran),
-              const SizedBox(height: 22),
+              const SizedBox(height: 24),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -98,7 +98,7 @@ class SidebarMenu extends StatelessWidget {
                         },
                       ),
                     if (lainnya.isNotEmpty) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 20),
                       const _Label('LAINNYA'),
                       for (final item in lainnya)
                         _Baris(
@@ -209,7 +209,7 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 4, bottom: 10),
+    padding: const EdgeInsets.only(left: 4, bottom: 12),
     child: Text(
       teks,
       style: TextStyle(
@@ -245,7 +245,7 @@ class _Baris extends StatelessWidget {
         depth: terpilih ? 0.7 : 0.5,
         radius: ClayTheme.radiusSmall,
         color: terpilih ? ClayTheme.surface : ClayTheme.sidebarRow,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         onTap: onTap,
         child: Row(
           children: [
@@ -289,7 +289,7 @@ class _Baris extends StatelessWidget {
             ),
             if (item.badge > 0)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: ClayTheme.danger,
                   borderRadius: BorderRadius.circular(99),
@@ -367,7 +367,7 @@ class _Tombol extends StatelessWidget {
       depth: 0.5,
       radius: ClayTheme.radiusSmall,
       color: aktif ? ClayTheme.primarySoft : ClayTheme.sidebarRow,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       onTap: aktif ? null : onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,

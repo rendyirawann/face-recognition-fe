@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #1B2540 — sama dengan ClayTheme.surface pada mode gelap, sehingga
+         ikonnya terbaca sebagai bagian dari aplikasi yang sama. -->
+    <color name="ic_launcher_background">#1B2540</color>
+</resources>

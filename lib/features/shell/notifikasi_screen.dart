@@ -145,7 +145,7 @@ class _Kartu extends StatelessWidget {
     return ClaySurface(
       radius: ClayTheme.radiusSmall,
       depth: item.isRead ? 0.5 : 0.9,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -181,7 +181,7 @@ class _Kartu extends StatelessWidget {
                     color: ClayTheme.textBody,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 Text(
                   _relatif(item.createdAt),
                   style: TextStyle(fontSize: 11, color: ClayTheme.textMuted),

@@ -86,18 +86,18 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 74),
+        padding: const EdgeInsets.only(bottom: 76),
         child: ClaySurface(
           radius: ClayTheme.radiusPill,
           color: ClayTheme.danger,
           depth: 1.1,
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           onTap: _openCompose,
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.campaign_rounded, color: Colors.white, size: 20),
-              SizedBox(width: 9),
+              SizedBox(width: 8),
               Text(
                 'Buat Laporan',
                 style: TextStyle(
@@ -119,7 +119,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
               color: ClayTheme.primarySoft,
               radius: ClayTheme.radiusSmall,
               depth: 0.6,
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Icon(
@@ -127,7 +127,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
                     size: 19,
                     color: ClayTheme.primary,
                   ),
-                  const SizedBox(width: 11),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Laporan Anda tampil anonim. Identitas pelapor tidak '
@@ -158,7 +158,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
                     _load();
                   },
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 _FilterPill(
                   label: 'Laporan Saya',
                   selected: _mineOnly,
@@ -205,12 +205,12 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
                     color: ClayTheme.primary,
                     child: ClayAnimatedList(
                       child: ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 110),
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 112),
                         itemCount: _reports.length,
                         itemBuilder: (context, i) => ClayStaggered(
                           index: i,
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 14),
+                            padding: const EdgeInsets.only(bottom: 16),
                             child: PanicReportCard(
                               report: _reports[i],
                               onSupport: () => _toggleSupport(_reports[i]),
@@ -251,7 +251,7 @@ class _FilterPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ClaySurface(
     radius: ClayTheme.radiusPill,
-    padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 9),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     color: selected ? ClayTheme.primary : ClayTheme.surface,
     depth: 0.6,
     onTap: onTap,
@@ -293,7 +293,7 @@ class PanicReportCard extends StatelessWidget {
             children: [
               ClaySurface(
                 radius: ClayTheme.radiusPill,
-                padding: const EdgeInsets.all(9),
+                padding: const EdgeInsets.all(8),
                 depth: 0.5,
                 color: severityColor.withValues(alpha: 0.13),
                 child: Icon(
@@ -302,7 +302,7 @@ class PanicReportCard extends StatelessWidget {
                   color: severityColor,
                 ),
               ),
-              const SizedBox(width: 11),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,7 +318,7 @@ class PanicReportCard extends StatelessWidget {
                           ),
                         ),
                         if (report.isMine) ...[
-                          const SizedBox(width: 7),
+                          const SizedBox(width: 8),
                           ClayBadge(label: 'Anda', color: ClayTheme.primary),
                         ],
                       ],
@@ -342,7 +342,7 @@ class PanicReportCard extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
           Text(
             report.title,
@@ -353,7 +353,7 @@ class PanicReportCard extends StatelessWidget {
               height: 1.35,
             ),
           ),
-          const SizedBox(height: 7),
+          const SizedBox(height: 8),
           Text(
             report.body,
             maxLines: 3,
@@ -366,13 +366,13 @@ class PanicReportCard extends StatelessWidget {
           ),
 
           if (report.media.isNotEmpty) ...[
-            const SizedBox(height: 13),
+            const SizedBox(height: 12),
             SizedBox(
               height: 92,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: report.media.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 9),
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
                 itemBuilder: (context, i) => ClipRRect(
                   borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
                   child: AuthedImage(report.media[i], width: 92, height: 92),
@@ -381,7 +381,7 @@ class PanicReportCard extends StatelessWidget {
             ),
           ],
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Row(
             children: [
               ClayBadge(
@@ -403,7 +403,7 @@ class PanicReportCard extends StatelessWidget {
 
           const SizedBox(height: 12),
           const Divider(),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
 
           Row(
             children: [
@@ -469,12 +469,12 @@ class _ActionButton extends StatelessWidget {
     onTap: onTap,
     borderRadius: BorderRadius.circular(ClayTheme.radiusSmall),
     child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 9),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 17, color: color),
-          const SizedBox(width: 7),
+          const SizedBox(width: 8),
           Flexible(
             child: Text(
               label,

@@ -37,14 +37,14 @@ class BerandaTab extends StatelessWidget {
             // dipakai memastikan perangkat dan jam sekolah sudah benar sebelum
             // melihat data absensi di bawahnya.
             const WaktuLokasiCard(),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
 
             // --- Kartu absensi per siswa yang tertaut ---
             if (s.students.isNotEmpty) ...[
               const _SectionLabel('Absensi Hari Ini'),
               ...s.students.map(
                 (student) => Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: _StudentCard(student: student),
                 ),
               ),
@@ -54,7 +54,7 @@ class BerandaTab extends StatelessWidget {
             if (s.school != null) ...[
               const _SectionLabel('Sekolah Anda'),
               _SchoolCard(school: s.school!),
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
             ],
 
             // --- Pintasan tindakan ---
@@ -76,7 +76,7 @@ class BerandaTab extends StatelessWidget {
                   title: '${s.documentActions} pengajuan berkas menunggu',
                   subtitle: 'Ada berkas yang perlu dilengkapi atau diperiksa.',
                 ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
             ],
 
             // --- Menu yang tersedia ---
@@ -95,7 +95,7 @@ class BerandaTab extends StatelessWidget {
                     size: 18,
                     color: ClayTheme.textMuted,
                   ),
-                  const SizedBox(width: 11),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Layanan lain dari lingkungan Pemerintah Provinsi Sumatera '
@@ -124,7 +124,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 6, top: 14, bottom: 12),
+    padding: const EdgeInsets.only(left: 8, top: 16, bottom: 12),
     child: Text(
       text.toUpperCase(),
       style: TextStyle(
@@ -161,7 +161,7 @@ class _StudentCard extends StatelessWidget {
                 color: color,
                 background: ClayTheme.statusSoft(student.todayStatus),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +256,7 @@ class _StudentCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Center(
             child: Text(
               'rekap bulan berjalan',
@@ -287,14 +287,14 @@ class _TimeBox extends StatelessWidget {
     return ClaySurface(
       sunken: true,
       radius: ClayTheme.radiusSmall,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(icon, size: 13, color: ClayTheme.textMuted),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
@@ -305,7 +305,7 @@ class _TimeBox extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(
@@ -455,7 +455,7 @@ class _AlertRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClaySurface(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(16),
       depth: 0.75,
       child: Row(
         children: [
@@ -466,7 +466,7 @@ class _AlertRow extends StatelessWidget {
             size: 19,
             padding: 11,
           ),
-          SizedBox(width: 13),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -210,7 +210,7 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
                         onPressed: _busy ? null : _test,
                       ),
                     ),
-                    const SizedBox(width: 11),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: ClayButton(
                         label: 'Simpan',
@@ -223,7 +223,7 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
                   ],
                 ),
                 if (ApiConfig.isOverridden) ...[
-                  const SizedBox(height: 11),
+                  const SizedBox(height: 12),
                   ClayGhostButton(
                     label: 'Kembalikan ke Bawaan (${ApiConfig.defaultBaseUrl})',
                     icon: Icons.restart_alt_rounded,
@@ -310,12 +310,12 @@ class _Banner extends StatelessWidget {
     color: background,
     radius: ClayTheme.radiusSmall,
     depth: 0.6,
-    padding: const EdgeInsets.all(13),
+    padding: const EdgeInsets.all(12),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 18, color: color),
-        const SizedBox(width: 11),
+        const SizedBox(width: 12),
         Expanded(
           child: Text(
             text,
@@ -341,7 +341,7 @@ class _Hint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 14),
+    padding: const EdgeInsets.only(bottom: 16),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

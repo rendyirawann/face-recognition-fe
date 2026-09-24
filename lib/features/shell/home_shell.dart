@@ -212,10 +212,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           // bukan sebagai pembuka menu.
           leadingWidth: 62,
           leading: Padding(
-            padding: const EdgeInsets.only(left: 18),
+            padding: const EdgeInsets.only(left: 20),
             child: ClaySurface(
               radius: ClayTheme.radiusPill,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               depth: 0.7,
               onTap: () => _drawer.toggle?.call(),
               child: Icon(
@@ -258,10 +258,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               },
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 18),
+              padding: const EdgeInsets.only(right: 20),
               child: ClaySurface(
                 radius: ClayTheme.radiusPill,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 depth: 0.7,
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const ProfileScreen()),
@@ -315,10 +315,10 @@ class _LonengNotifikasi extends ConsumerWidget {
     final belum = ref.watch(unreadNotificationProvider).value ?? 0;
 
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 12),
       child: ClaySurface(
         radius: ClayTheme.radiusPill,
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         depth: 0.7,
         onTap: onTap,
         child: Stack(

@@ -93,7 +93,7 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
                 Text(
                   'Kode 8 digit diperoleh dari dashboard /admin pada menu '
                   'Perangkat Tablet. Kode berlaku 30 menit dan hanya bisa '
@@ -123,9 +123,9 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                   onSubmitted: (_) => _busy ? null : _submit(),
                 ),
                 if (_error != null) ...[
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF1416C).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
@@ -137,7 +137,7 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                           color: Color(0xFFF1416C),
                           size: 20,
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             _error!,
@@ -169,7 +169,7 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                 // Alamat server ditampilkan supaya kesalahan konfigurasi build
                 // (mis. APK uji dipasang di sekolah) langsung terlihat.
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
@@ -186,7 +186,7 @@ class _PairingScreenState extends ConsumerState<PairingScreen> {
                           fontSize: 12,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 8),
                       Text(
                         'Server: ${AppConfig.apiBaseUrl}',
                         style: const TextStyle(fontSize: 11),

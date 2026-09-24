@@ -171,7 +171,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                         color: ClayTheme.primary,
                         size: 22,
                       ),
-                      const SizedBox(width: 13),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Nama Anda tidak ditampilkan. Laporan muncul dengan '
@@ -188,7 +188,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
 
                 // --- Kategori ---
                 const _Label('Kategori Laporan'),
@@ -200,8 +200,8 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                     return ClaySurface(
                       radius: ClayTheme.radiusPill,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
+                        horizontal: 16,
+                        vertical: 12,
                       ),
                       color: selected ? ClayTheme.primary : ClayTheme.surface,
                       depth: 0.6,
@@ -219,9 +219,9 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                 ),
 
                 if (_selected?.description != null) ...[
-                  const SizedBox(height: 11),
+                  const SizedBox(height: 12),
                   Padding(
-                    padding: const EdgeInsets.only(left: 6),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       _selected!.description!,
                       style: TextStyle(
@@ -233,7 +233,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   ),
                 ],
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
                 ClayField(
                   controller: _title,
                   label: 'Judul Laporan',
@@ -242,7 +242,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   enabled: !_busy,
                 ),
 
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 ClayField(
                   controller: _body,
                   label: 'Ceritakan Kejadiannya',
@@ -254,7 +254,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   enabled: !_busy,
                 ),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
 
                 // --- Foto bukti ---
                 const _Label('Foto Bukti (opsional)'),
@@ -262,7 +262,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   children: [
                     ..._photos.asMap().entries.map(
                       (e) => Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.only(right: 12),
                         child: Stack(
                           children: [
                             ClipRRect(
@@ -325,9 +325,9 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                       ),
                   ],
                 ),
-                const SizedBox(height: 9),
+                const SizedBox(height: 8),
                 Padding(
-                  padding: EdgeInsets.only(left: 6),
+                  padding: EdgeInsets.only(left: 8),
                   child: Text(
                     'Data lokasi pada foto dihapus otomatis sebelum disimpan.',
                     style: TextStyle(
@@ -338,7 +338,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
 
                 // --- Visibilitas ---
                 const _Label('Siapa yang boleh melihat'),
@@ -352,7 +352,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                       'agar orang lain tahu mereka tidak sendirian.',
                   onSelected: (v) => setState(() => _visibility = v),
                 ),
-                const SizedBox(height: 11),
+                const SizedBox(height: 12),
                 _VisibilityOption(
                   value: 'terbatas',
                   group: _visibility,
@@ -370,7 +370,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                     color: ClayTheme.dangerSoft,
                     radius: ClayTheme.radiusSmall,
                     depth: 0.5,
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(16),
                     child: Text(
                       _error!,
                       style: TextStyle(
@@ -383,7 +383,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   ),
                 ],
 
-                const SizedBox(height: 26),
+                const SizedBox(height: 28),
                 ClayButton(
                   label: 'Kirim Laporan',
                   icon: Icons.send_rounded,
@@ -391,7 +391,7 @@ class _PanicComposeScreenState extends ConsumerState<PanicComposeScreen> {
                   busy: _busy,
                   onPressed: _busy ? null : _submit,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
                 Text(
                   'Laporan palsu dapat dikenai sanksi. Sampaikan hal yang '
                   'benar-benar Anda alami atau saksikan.',
@@ -415,7 +415,7 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 6, bottom: 11),
+    padding: const EdgeInsets.only(left: 8, bottom: 12),
     child: Text(
       text,
       style: TextStyle(
@@ -449,7 +449,7 @@ class _VisibilityOption extends StatelessWidget {
     final selected = value == group;
 
     return ClaySurface(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       depth: selected ? 1 : 0.55,
       color: selected ? ClayTheme.primarySoft : ClayTheme.surface,
       onTap: () => onSelected(value),
@@ -461,7 +461,7 @@ class _VisibilityOption extends StatelessWidget {
             size: 20,
             color: selected ? ClayTheme.primary : ClayTheme.textMuted,
           ),
-          const SizedBox(width: 13),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -511,7 +511,7 @@ class _SentDialog extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: ClaySurface(
         depth: 1.3,
-        padding: const EdgeInsets.all(26),
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -535,7 +535,7 @@ class _SentDialog extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Text(
               message,
               textAlign: TextAlign.center,
@@ -545,14 +545,14 @@ class _SentDialog extends StatelessWidget {
                 height: 1.55,
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
 
             // Handle diperlihatkan agar pelapor bisa mengenali laporannya
             // sendiri di beranda tanpa harus membuka "Laporan Saya".
             ClaySurface(
               sunken: true,
               radius: ClayTheme.radiusSmall,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Column(
                 children: [
                   Text(
@@ -562,7 +562,7 @@ class _SentDialog extends StatelessWidget {
                       fontSize: 10.5,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 4),
                   Text(
                     handle,
                     style: TextStyle(
@@ -575,7 +575,7 @@ class _SentDialog extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
             ClayButton(
               label: 'Selesai',
               onPressed: () => Navigator.of(context).pop(),

@@ -97,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 430),
               child: Column(
@@ -111,10 +111,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       radius: 34,
                       padding: const EdgeInsets.all(24),
                       depth: 1.25,
-                      child: Icon(
-                        Icons.school_rounded,
-                        size: 48,
-                        color: ClayTheme.primary,
+                      // Lambang aplikasi, bukan ikon Material.
+                      //
+                      // `jargon-mark.png` adalah versi tanpa latar: bentuk
+                      // persegi membulatnya sudah digambar `ClaySurface` di
+                      // sekelilingnya, dan menumpuk dua bentuk membulat
+                      // dengan radius berbeda terlihat seperti tempelan.
+                      child: Image.asset(
+                        'assets/brand/jargon-mark.png',
+                        width: 52,
+                        height: 52,
                       ),
                     ),
                   ),
@@ -129,7 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       letterSpacing: -0.8,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Text(
                     'Super Apps Dinas Pendidikan\nProvinsi Sumatera Utara',
                     textAlign: TextAlign.center,
@@ -139,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 34),
+                  const SizedBox(height: 36),
 
                   // --- Formulir ---
                   ClayField(
@@ -160,7 +166,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8, top: 7),
+                    padding: const EdgeInsets.only(left: 8, top: 8),
                     child: Text(
                       _identityHint,
                       style: TextStyle(
@@ -174,7 +180,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
 
                   ClayField(
                     controller: _password,
@@ -197,12 +203,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
 
                   if (_error != null) ...[
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 20),
                     ClaySurface(
                       color: ClayTheme.dangerSoft,
                       radius: ClayTheme.radiusSmall,
                       depth: 0.6,
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -211,7 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             color: ClayTheme.danger,
                             size: 19,
                           ),
-                          const SizedBox(width: 11),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               _error!,
@@ -228,7 +234,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ],
 
-                  const SizedBox(height: 26),
+                  const SizedBox(height: 28),
                   ClayButton(
                     label: 'Masuk',
                     icon: Icons.arrow_forward_rounded,
@@ -236,7 +242,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: _busy ? null : _submit,
                   ),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 32),
 
                   // --- Penjelasan tidak ada pendaftaran mandiri ---
                   ClaySurface(
@@ -251,7 +257,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           size: 18,
                           color: ClayTheme.textMuted,
                         ),
-                        const SizedBox(width: 11),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             'Akun didaftarkan oleh operator sekolah, bukan mandiri. '
@@ -274,7 +280,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // alamatnya salah, pengguna TIDAK BISA masuk — jadi layar
                   // Profil (yang ada di balik login) tidak akan pernah
                   // terjangkau untuk memperbaikinya.
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 16),
                   Center(
                     child: ClayGhostButton(
                       label: ref.watch(apiBaseUrlProvider),

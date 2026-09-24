@@ -119,15 +119,15 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: students.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 10),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, i) {
                   final s = students[i];
                   final selected = s.id == _selectedStudentId;
                   return ClaySurface(
                     radius: ClayTheme.radiusPill,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 11,
+                      horizontal: 20,
+                      vertical: 12,
                     ),
                     color: selected ? ClayTheme.primary : ClayTheme.surface,
                     depth: 0.7,
@@ -147,7 +147,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
           ],
 
           // --- Rentang waktu ---
@@ -155,12 +155,12 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
             children: [7, 30, 90].map((days) {
               final selected = _rangeDays == days;
               return Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 12),
                 child: ClaySurface(
                   radius: ClayTheme.radiusPill,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 9,
+                    vertical: 8,
                   ),
                   color: selected ? ClayTheme.primarySoft : ClayTheme.surface,
                   depth: 0.6,
@@ -180,14 +180,14 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
               );
             }).toList(),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
 
           // --- Rekap ---
           if (_recap != null) _RecapCard(recap: _recap!),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.only(left: 6, bottom: 12),
+            padding: EdgeInsets.only(left: 8, bottom: 12),
             child: Text(
               'RIWAYAT',
               style: TextStyle(
@@ -208,7 +208,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
           else
             ..._rows.map(
               (row) => Padding(
-                padding: const EdgeInsets.only(bottom: 11),
+                padding: const EdgeInsets.only(bottom: 12),
                 child: _AttendanceRowCard(
                   row: row,
                   showName: students.length != 1,
@@ -291,7 +291,7 @@ class _RecapCard extends StatelessWidget {
             ],
           ),
           if (v('total_menit_terlambat') > 0) ...[
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             Text(
               'Total keterlambatan ${v('total_menit_terlambat')} menit '
               'pada periode ini.',
@@ -317,7 +317,7 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     decoration: BoxDecoration(
       color: color.withValues(alpha: 0.12),
       borderRadius: BorderRadius.circular(ClayTheme.radiusPill),
@@ -333,7 +333,7 @@ class _Chip extends StatelessWidget {
             fontWeight: FontWeight.w900,
           ),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: 8),
         Text(
           label,
           style: TextStyle(
@@ -358,7 +358,7 @@ class _AttendanceRowCard extends StatelessWidget {
     final color = ClayTheme.statusColor(row.status);
 
     return ClaySurface(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       depth: 0.7,
       child: Row(
         children: [
@@ -370,7 +370,7 @@ class _AttendanceRowCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

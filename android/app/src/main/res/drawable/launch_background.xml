@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
+<!--
+    Layar peluncuran.
 
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
+    Ditampilkan Android sebelum Flutter sempat menggambar bingkai pertamanya.
+    Sebelumnya putih polos, sehingga pembukaan aplikasi terlihat sebagai kilat
+    putih lalu langsung berganti ke latar biru gelap. Warnanya kini disamakan
+    dengan latar aplikasi supaya peralihannya tidak terlihat sama sekali.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/splash_background" />
+    <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:src="@drawable/splash_logo" />
+    </item>
 </layer-list>

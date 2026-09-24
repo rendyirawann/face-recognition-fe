@@ -169,7 +169,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                                   ? ClayTheme.warning
                                   : ClayTheme.info,
                             ),
-                            const SizedBox(width: 9),
+                            const SizedBox(width: 8),
                             Text(
                               'Catatan Verifikator'
                               '${detail.reviewerName != null ? ' · ${detail.reviewerName}' : ''}',
@@ -183,7 +183,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 9),
+                        const SizedBox(height: 8),
                         Text(
                           detail.reviewNote!,
                           style: TextStyle(
@@ -197,12 +197,12 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                   ),
                 ],
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 24),
                 const _SectionTitle('Daftar Berkas'),
 
                 ...detail.checklist.map(
                   (item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 11),
+                    padding: const EdgeInsets.only(bottom: 12),
                     child: _ChecklistCard(
                       item: item,
                       editable: detail.isEditable,
@@ -218,7 +218,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                     ClaySurface(
                       sunken: true,
                       radius: ClayTheme.radiusSmall,
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -227,7 +227,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                             size: 18,
                             color: ClayTheme.warning,
                           ),
-                          const SizedBox(width: 11),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               'Masih kurang ${detail.missingRequired.length} '
@@ -243,14 +243,14 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                         ],
                       ),
                     ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
                   ClayButton(
                     label: 'Ajukan untuk Diperiksa',
                     icon: Icons.send_rounded,
                     onPressed: detail.canSubmit ? _submit : null,
                   ),
                   if (!detail.canSubmit) ...[
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Text(
                       'Lengkapi seluruh dokumen wajib untuk dapat mengajukan.',
                       textAlign: TextAlign.center,
@@ -263,21 +263,21 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
                 ],
 
                 if (detail.timeline.isNotEmpty) ...[
-                  const SizedBox(height: 26),
+                  const SizedBox(height: 28),
                   const _SectionTitle('Riwayat'),
                   ClaySurface(
                     child: Column(
                       children: detail.timeline
                           .map(
                             (e) => Padding(
-                              padding: const EdgeInsets.only(bottom: 14),
+                              padding: const EdgeInsets.only(bottom: 16),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     width: 8,
                                     height: 8,
-                                    margin: const EdgeInsets.only(top: 5),
+                                    margin: const EdgeInsets.only(top: 4),
                                     decoration: BoxDecoration(
                                       color: ClayTheme.primary,
                                       shape: BoxShape.circle,
@@ -353,7 +353,7 @@ class _HeaderCard extends StatelessWidget {
               height: 1.3,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             [
               Submission.purposeLabel(s.purpose),
@@ -371,7 +371,7 @@ class _HeaderCard extends StatelessWidget {
               _ => ClayTheme.info,
             },
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(
@@ -386,7 +386,7 @@ class _HeaderCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 13),
+              const SizedBox(width: 12),
               Text(
                 '$done/$total wajib',
                 style: TextStyle(
@@ -431,7 +431,7 @@ class _ChecklistCard extends StatelessWidget {
           );
 
     return ClaySurface(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       depth: 0.65,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,7 +445,7 @@ class _ChecklistCard extends StatelessWidget {
                 size: 17,
                 padding: 10,
               ),
-              const SizedBox(width: 13),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,7 +463,7 @@ class _ChecklistCard extends StatelessWidget {
                           ),
                         ),
                         if (item.isRequired) ...[
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 8),
                           Text(
                             '*',
                             style: TextStyle(
@@ -491,7 +491,7 @@ class _ChecklistCard extends StatelessWidget {
               if (editable)
                 uploading
                     ? const Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(12),
                         child: SizedBox(
                           width: 18,
                           height: 18,
@@ -522,7 +522,7 @@ class _ChecklistCard extends StatelessWidget {
                     size: 15,
                     color: ClayTheme.danger,
                   ),
-                  const SizedBox(width: 9),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       item.rejectReason!,
@@ -551,7 +551,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(left: 6, bottom: 12),
+    padding: const EdgeInsets.only(left: 8, bottom: 12),
     child: Text(
       text.toUpperCase(),
       style: TextStyle(
