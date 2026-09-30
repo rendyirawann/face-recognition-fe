@@ -7,6 +7,7 @@ import 'core/storage.dart';
 import 'data/models.dart';
 import 'data/offline_queue.dart';
 import 'data/repository.dart';
+import 'data/jargon_models.dart';
 
 /// Dependensi yang disiapkan sebelum aplikasi berjalan (lihat main.dart),
 /// lalu di-override ke dalam graf provider. Dengan begitu tidak ada layar
@@ -38,6 +39,15 @@ final repositoryProvider = Provider<AbsensiRepository>((ref) {
 /// menampilkan alamat ikut berubah begitu pengguna menyimpannya, tanpa perlu
 /// keluar-masuk halaman.
 final apiBaseUrlProvider = StateProvider<String>((ref) => ApiConfig.baseUrl);
+
+/// Ringkasan beranda terakhir yang dimuat.
+///
+/// Diisi `HomeShell` sekali per pemuatan, lalu dibaca layar detail yang
+/// membutuhkan penanda kemampuan (`canHandlePanic`, `canVerifyDocument`).
+/// Alternatifnya adalah memanggil `/me/home` lagi setiap kali satu detail
+/// dibuka — satu permintaan jaringan tambahan hanya untuk memutuskan
+/// apakah sebuah tombol tampil.
+final homeSummaryProvider = StateProvider<HomeSummary?>((ref) => null);
 
 /// Profil perangkat kios yang tersimpan lokal. `null` bila belum dipasangkan.
 final deviceProfileProvider = StateProvider<Map<String, dynamic>?>((ref) {

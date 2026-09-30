@@ -484,9 +484,46 @@ class AbsensiRepository {
     return PanicComment.fromJson(data);
   }
 
+  /// Ubah status laporan. Hanya untuk peran penangan.
+  ///
+  /// `note` WAJIB diisi minimal 3 karakter oleh server: perubahan status
+  /// tanpa keterangan membuat lini masa laporan tidak dapat dibaca kembali
+  /// oleh penangan berikutnya di jenjang atasnya.
+  Future<void> updatePanicStatus({
+    required String reportId,
+    required String status,
+    required String note,
+    String? resolution,
+    bool visibleToReporter = true,
+  }) async {
+    await _api.post(
+      ApiRoutes.panicStatus(reportId),
+      body: {
+        'status': status,
+        'note': note,
+        'resolution': ?resolution,
+        'visible_to_reporter': visibleToReporter,
+      },
+    );
+  }
+
   // =================================================================
   // Pemberkasan
   // =================================================================
+
+  /// Putuskan hasil pemeriksaan satu pengajuan berkas.
+  ///
+  /// `status`: `diperiksa`, `revisi`, `disetujui`, atau `ditolak`.
+  Future<void> reviewSubmission({
+    required String submissionId,
+    required String status,
+    required String note,
+  }) async {
+    await _api.post(
+      ApiRoutes.reviewSubmission(submissionId),
+      body: {'status': status, 'note': note},
+    );
+  }
 
   Future<List<DocumentType>> documentTypes(String purpose) async {
     final list = await _api.getList(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
+import '../../core/theme/clay_aksi_sheet.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -25,6 +26,7 @@ class BerkasDetailScreen extends ConsumerStatefulWidget {
 class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
   SubmissionDetail? _detail;
   bool _loading = true;
+  bool _periksaSedangJalan = false;
   String? _uploadingTypeId;
   String? _error;
 
@@ -124,12 +126,84 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
     }
   }
 
+  /// Putuskan hasil pemeriksaan. Hanya untuk peran verifikator.
+  Future<void> _periksa() async {
+    final hasil = await tampilkanLembarAksi(
+      context,
+      judul: 'Hasil pemeriksaan berkas',
+      labelCatatan: 'Catatan pemeriksaan',
+      pilihan: const [
+        ClayPilihanStatus(
+          nilai: 'disetujui',
+          label: 'Disetujui',
+          warna: Color(0xFF1E9E5A),
+          keterangan: 'Seluruh berkas lengkap dan sah',
+        ),
+        ClayPilihanStatus(
+          nilai: 'revisi',
+          label: 'Perlu revisi',
+          warna: Color(0xFFB9740B),
+          keterangan: 'Ada berkas yang harus diperbaiki pemohon',
+        ),
+        ClayPilihanStatus(
+          nilai: 'ditolak',
+          label: 'Ditolak',
+          warna: Color(0xFFCE2F35),
+          keterangan: 'Pengajuan tidak dapat dilanjutkan',
+        ),
+      ],
+    );
+    if (hasil == null || !mounted) return;
+
+    setState(() => _periksaSedangJalan = true);
+    try {
+      await ref
+          .read(repositoryProvider)
+          .reviewSubmission(
+            submissionId: widget.submissionId,
+            status: hasil.status,
+            note: hasil.catatan,
+          );
+      if (!mounted) return;
+      showClaySnack(context, 'Hasil pemeriksaan tersimpan.');
+      await _load();
+    } on ApiFailure catch (e) {
+      if (mounted) showClaySnack(context, e.message, error: true);
+    } finally {
+      if (mounted) setState(() => _periksaSedangJalan = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detail = _detail;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detail Pengajuan')),
+      appBar: AppBar(
+        title: const Text('Detail Pengajuan'),
+        actions: [
+          // Hanya untuk peran verifikator, dan hanya selama pengajuannya
+          // belum diputuskan — memeriksa ulang yang sudah disetujui akan
+          // menimpa keputusan yang mungkin dibuat orang lain.
+          if ((ref.watch(homeSummaryProvider)?.canVerifyDocument ?? false) &&
+              const [
+                'diajukan',
+                'diperiksa',
+              ].contains(detail?.submission.status))
+            Padding(
+              padding: const EdgeInsets.only(right: ClayTheme.sLg),
+              child: Center(
+                child: ClayButton(
+                  label: 'Periksa',
+                  compact: true,
+                  expanded: false,
+                  busy: _periksaSedangJalan,
+                  onPressed: _periksaSedangJalan ? null : _periksa,
+                ),
+              ),
+            ),
+        ],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : detail == null

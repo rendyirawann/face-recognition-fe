@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/authed_image.dart';
 import '../../core/failure.dart';
+import '../../core/theme/clay_aksi_sheet.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -79,12 +80,78 @@ class _PanicDetailScreenState extends ConsumerState<PanicDetailScreen> {
     }
   }
 
+  /// Ubah status laporan. Hanya muncul bagi peran penangan.
+  Future<void> _tangani() async {
+    final hasil = await tampilkanLembarAksi(
+      context,
+      judul: 'Tindak lanjut laporan',
+      pilihan: const [
+        ClayPilihanStatus(
+          nilai: 'diverifikasi',
+          label: 'Diverifikasi',
+          warna: Color(0xFF2B54C4),
+          keterangan: 'Isinya sudah dibaca dan dinyatakan sah',
+        ),
+        ClayPilihanStatus(
+          nilai: 'ditindaklanjuti',
+          label: 'Ditindaklanjuti',
+          warna: Color(0xFF1E9E5A),
+          keterangan: 'Penanganan sedang berjalan',
+        ),
+        ClayPilihanStatus(
+          nilai: 'ditolak',
+          label: 'Ditolak',
+          warna: Color(0xFFCE2F35),
+          keterangan: 'Bukan perkara yang dapat ditangani lewat kanal ini',
+        ),
+      ],
+    );
+    if (hasil == null || !mounted) return;
+
+    setState(() => _sending = true);
+    try {
+      await ref
+          .read(repositoryProvider)
+          .updatePanicStatus(
+            reportId: widget.reportId,
+            status: hasil.status,
+            note: hasil.catatan,
+          );
+      if (!mounted) return;
+      showClaySnack(context, 'Status laporan diperbarui.');
+      await _load();
+    } on ApiFailure catch (e) {
+      if (mounted) showClaySnack(context, e.message, error: true);
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final detail = _detail;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detail Laporan')),
+      appBar: AppBar(
+        title: const Text('Detail Laporan'),
+        actions: [
+          // Hanya untuk peran penangan. Penandanya datang dari server, bukan
+          // disimpulkan dari peran di sisi aplikasi.
+          if (ref.watch(homeSummaryProvider)?.canHandlePanic ?? false)
+            Padding(
+              padding: const EdgeInsets.only(right: ClayTheme.sLg),
+              child: Center(
+                child: ClayButton(
+                  label: 'Tindak lanjut',
+                  compact: true,
+                  expanded: false,
+                  busy: _sending,
+                  onPressed: _sending ? null : _tangani,
+                ),
+              ),
+            ),
+        ],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : detail == null

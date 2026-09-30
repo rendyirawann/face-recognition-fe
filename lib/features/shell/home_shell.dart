@@ -60,6 +60,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         _summary = summary;
         _loading = false;
       });
+      // Dicerminkan ke provider agar layar detail yang dibuka dari sini
+      // dapat membaca penanda kemampuan tanpa memanggil /me/home lagi.
+      ref.read(homeSummaryProvider.notifier).state = summary;
       // Lencana lonceng ikut disegarkan saat beranda ditarik ulang.
       ref.invalidate(unreadNotificationProvider);
     } on ApiFailure catch (e) {

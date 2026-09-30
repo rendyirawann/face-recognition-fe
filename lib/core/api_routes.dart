@@ -65,6 +65,8 @@ class ApiRoutes {
 
   static String panicComments(String id) => '$panicReports/$id/comments';
 
+  static String panicStatus(String id) => '$panicReports/$id/status';
+
   // =================================================================
   // Pemberkasan
   // =================================================================
@@ -77,6 +79,8 @@ class ApiRoutes {
   static String submissionFiles(String id) => '$submissions/$id/files';
 
   static String submitSubmission(String id) => '$submissions/$id/submit';
+
+  static String reviewSubmission(String id) => '$submissions/$id/review';
 
   static String documentFile(String fileId) =>
       '$prefix/documents/files/$fileId';
