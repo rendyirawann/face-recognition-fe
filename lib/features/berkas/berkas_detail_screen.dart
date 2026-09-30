@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
 import '../../core/theme/clay_aksi_sheet.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -28,7 +29,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
   bool _loading = true;
   bool _periksaSedangJalan = false;
   String? _uploadingTypeId;
-  String? _error;
+  ApiFailure? _error;
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
@@ -207,11 +208,7 @@ class _BerkasDetailScreenState extends ConsumerState<BerkasDetailScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : detail == null
-          ? ClayEmpty(
-              icon: Icons.search_off_rounded,
-              title: 'Pengajuan tidak tersedia',
-              message: _error,
-            )
+          ? ClayError(failure: _error!, onRetry: _load)
           : ListView(
               // 32 + inset sistem: pada navigasi gestur Android, bilah bawah
               // menutupi isi terakhir bila paddingnya dipatok tetap.

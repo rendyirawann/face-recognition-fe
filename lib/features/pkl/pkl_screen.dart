@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/failure.dart';
 import '../../core/theme/clay_backdrop.dart';
 import '../../core/theme/clay_loading.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -38,7 +39,7 @@ class _PklScreenState extends ConsumerState<PklScreen> {
 
   PklPlacement? _pkl;
   bool _loading = true;
-  String? _error;
+  ApiFailure? _error;
 
   Position? _posisi;
   String? _galatLokasi;
@@ -68,7 +69,7 @@ class _PklScreenState extends ConsumerState<PklScreen> {
     } on ApiFailure catch (e) {
       if (!mounted) return;
       setState(() {
-        _error = e.message;
+        _error = e;
         _loading = false;
       });
     }
@@ -189,11 +190,7 @@ class _PklScreenState extends ConsumerState<PklScreen> {
         body: _loading
             ? const ClayBerandaSkeleton()
             : _error != null
-            ? ClayEmpty(
-                icon: Icons.wifi_off_rounded,
-                title: 'Gagal memuat',
-                message: _error!,
-              )
+            ? ClayError(failure: _error!, onRetry: _muat)
             : _pkl == null
             ? const ClayEmpty(
                 icon: Icons.business_center_outlined,

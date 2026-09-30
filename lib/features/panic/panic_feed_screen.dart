@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/authed_image.dart';
 import '../../core/failure.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../core/theme/clay_motion.dart';
@@ -30,7 +31,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
   List<PanicReport> _reports = const [];
   bool _loading = true;
   bool _mineOnly = false;
-  String? _error;
+  ApiFailure? _error;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
@@ -175,17 +176,7 @@ class _PanicFeedScreenState extends ConsumerState<PanicFeedScreen> {
             child: _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
-                ? ClayEmpty(
-                    icon: Icons.cloud_off_rounded,
-                    title: 'Gagal memuat laporan',
-                    message: _error,
-                    action: ClayButton(
-                      label: 'Coba Lagi',
-                      icon: Icons.refresh_rounded,
-                      expanded: false,
-                      onPressed: _load,
-                    ),
-                  )
+                ? ClayError(failure: _error!, onRetry: _load)
                 : _reports.isEmpty
                 ? ClayEmpty(
                     icon: _mineOnly

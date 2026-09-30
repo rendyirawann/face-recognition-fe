@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
 import '../../core/theme/clay_loading.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../core/theme/clay_motion.dart';
@@ -23,7 +24,7 @@ class NotifikasiScreen extends ConsumerStatefulWidget {
 
 class _NotifikasiScreenState extends ConsumerState<NotifikasiScreen> {
   NotificationList? _data;
-  String? _error;
+  ApiFailure? _error;
   bool _loading = true;
 
   @override
@@ -55,7 +56,7 @@ class _NotifikasiScreenState extends ConsumerState<NotifikasiScreen> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
@@ -82,17 +83,7 @@ class _NotifikasiScreenState extends ConsumerState<NotifikasiScreen> {
               ),
             )
           : _error != null
-          ? ClayEmpty(
-              icon: Icons.cloud_off_rounded,
-              title: 'Tidak dapat memuat notifikasi',
-              message: _error,
-              action: ClayButton(
-                label: 'Coba Lagi',
-                icon: Icons.refresh_rounded,
-                expanded: false,
-                onPressed: _muat,
-              ),
-            )
+          ? ClayError(failure: _error!, onRetry: _muat)
           : (_data?.items.isEmpty ?? true)
           ? const ClayEmpty(
               icon: Icons.notifications_none_rounded,

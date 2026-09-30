@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/models.dart';
@@ -29,7 +30,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
   List<AttendanceRow> _rows = const [];
   Map<String, dynamic>? _recap;
   bool _loading = true;
-  String? _error;
+  ApiFailure? _error;
   String? _selectedStudentId;
 
   /// Rentang disimpan sebagai dua TANGGAL, bukan jumlah hari.
@@ -169,7 +170,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
@@ -185,17 +186,7 @@ class _AbsensiScreenState extends ConsumerState<AbsensiScreen> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_error != null) {
-      return ClayEmpty(
-        icon: Icons.cloud_off_rounded,
-        title: 'Gagal memuat absensi',
-        message: _error,
-        action: ClayButton(
-          label: 'Coba Lagi',
-          icon: Icons.refresh_rounded,
-          expanded: false,
-          onPressed: _load,
-        ),
-      );
+      return ClayError(failure: _error!, onRetry: _load);
     }
 
     return RefreshIndicator(

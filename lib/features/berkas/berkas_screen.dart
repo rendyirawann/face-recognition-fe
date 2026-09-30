@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/failure.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../core/theme/clay_motion.dart';
@@ -24,7 +25,7 @@ class BerkasScreen extends ConsumerStatefulWidget {
 class _BerkasScreenState extends ConsumerState<BerkasScreen> {
   List<Submission> _items = const [];
   bool _loading = true;
-  String? _error;
+  ApiFailure? _error;
 
   static const _purposes = {
     'kenaikan_pangkat': 'Kenaikan Pangkat',
@@ -56,7 +57,7 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
@@ -126,17 +127,7 @@ class _BerkasScreenState extends ConsumerState<BerkasScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-          ? ClayEmpty(
-              icon: Icons.cloud_off_rounded,
-              title: 'Gagal memuat pengajuan',
-              message: _error,
-              action: ClayButton(
-                label: 'Coba Lagi',
-                icon: Icons.refresh_rounded,
-                expanded: false,
-                onPressed: _load,
-              ),
-            )
+          ? ClayError(failure: _error!, onRetry: _load)
           : _items.isEmpty
           ? const ClayEmpty(
               icon: Icons.folder_open_rounded,

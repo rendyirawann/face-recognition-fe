@@ -4,6 +4,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 import '../../core/failure.dart';
 import '../../core/theme/clay_backdrop.dart';
+import '../../core/theme/clay_error.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
@@ -41,7 +42,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   int _index = 0;
   HomeSummary? _summary;
   bool _loading = true;
-  String? _error;
+  ApiFailure? _error;
 
   @override
   void initState() {
@@ -69,14 +70,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     } on ApiFailure catch (e) {
       if (mounted) {
         setState(() {
-          _error = e.message;
+          _error = e;
           _loading = false;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Gagal memuat beranda: $e';
+          _error = ApiFailure('Gagal memuat beranda: $e');
           _loading = false;
         });
       }
@@ -305,17 +306,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           body: _loading
               ? const Center(child: CircularProgressIndicator())
               : _error != null
-              ? ClayEmpty(
-                  icon: Icons.cloud_off_rounded,
-                  title: 'Tidak dapat memuat data',
-                  message: _error,
-                  action: ClayButton(
-                    label: 'Coba Lagi',
-                    icon: Icons.refresh_rounded,
-                    expanded: false,
-                    onPressed: _load,
-                  ),
-                )
+              ? ClayError(failure: _error!, onRetry: _load)
               : IndexedStack(index: index, children: tabs.pages),
           bottomNavigationBar:
               _loading || _error != null || tabs.items.length < 2

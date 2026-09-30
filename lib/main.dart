@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/api_config.dart';
 import 'core/storage.dart';
+import 'core/theme/clay_error.dart';
 import 'core/theme/clay_theme.dart';
 import 'data/offline_queue.dart';
 import 'features/auth/login_screen.dart';
@@ -43,6 +44,12 @@ Future<void> main() async {
   // supaya request pertama pun sudah menuju server yang benar. Tanpa ini,
   // pemulihan sesi di layar pertama akan menembak alamat bawaan build.
   ApiConfig.load(storage);
+
+  // Widget yang gagal digambar menampilkan layar bermerek, bukan area abu
+  // kosong. Pada build rilis, galat widget menghasilkan kotak abu tanpa
+  // pesan apa pun — pengguna melihat sebagian layar hilang dan menyimpulkan
+  // aplikasinya rusak total, padahal bagian lain masih bekerja.
+  ErrorWidget.builder = (detail) => ClayErrorWidget(detail: detail);
 
   runApp(
     ProviderScope(
