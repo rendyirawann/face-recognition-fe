@@ -677,3 +677,96 @@ class NotificationList {
         .toList(),
   );
 }
+
+// =====================================================================
+// PKL
+// =====================================================================
+
+/// Penempatan PKL yang berlaku hari ini.
+class PklPlacement {
+  const PklPlacement({
+    required this.placementId,
+    required this.placeName,
+    required this.placeAddress,
+    required this.latitude,
+    required this.longitude,
+    required this.radiusMeters,
+    required this.startsOn,
+    required this.endsOn,
+    required this.daysLeft,
+    required this.checkedIn,
+    required this.checkedOut,
+    this.checkInAfter,
+    this.checkOutBefore,
+  });
+
+  final String placementId;
+  final String placeName;
+  final String placeAddress;
+
+  /// Datang sebagai STRING dari server, bukan angka.
+  ///
+  /// Kolomnya NUMERIC(10,7) dan tidak punya padanan persis di JSON; double
+  /// membulatkan digit terakhir, dan titik yang bergeser beberapa
+  /// sentimeter pada peta terlihat seperti data yang salah. Diurai ke
+  /// double hanya saat benar-benar dipakai menghitung.
+  final String latitude;
+  final String longitude;
+
+  final int radiusMeters;
+  final DateTime startsOn;
+  final DateTime endsOn;
+
+  /// Sisa hari termasuk hari ini. Nol berarti hari terakhir.
+  final int daysLeft;
+
+  final bool checkedIn;
+  final bool checkedOut;
+
+  final String? checkInAfter;
+  final String? checkOutBefore;
+
+  double get lat => double.tryParse(latitude) ?? 0;
+  double get lon => double.tryParse(longitude) ?? 0;
+
+  /// Keduanya sudah dilakukan hari ini.
+  bool get selesaiHariIni => checkedIn && checkedOut;
+
+  factory PklPlacement.fromJson(Map<String, dynamic> j) => PklPlacement(
+    placementId: j['placement_id'] as String,
+    placeName: j['place_name'] as String? ?? '-',
+    placeAddress: j['place_address'] as String? ?? '-',
+    latitude: '${j['latitude'] ?? 0}',
+    longitude: '${j['longitude'] ?? 0}',
+    radiusMeters: (j['radius_meters'] as num?)?.toInt() ?? 100,
+    startsOn: DateTime.tryParse('${j['starts_on']}') ?? DateTime.now(),
+    endsOn: DateTime.tryParse('${j['ends_on']}') ?? DateTime.now(),
+    daysLeft: (j['days_left'] as num?)?.toInt() ?? 0,
+    checkedIn: j['checked_in'] as bool? ?? false,
+    checkedOut: j['checked_out'] as bool? ?? false,
+    checkInAfter: j['check_in_after'] as String?,
+    checkOutBefore: j['check_out_before'] as String?,
+  );
+}
+
+/// Hasil satu kali absen PKL.
+class PklCheckResult {
+  const PklCheckResult({
+    required this.kind,
+    required this.recordedAt,
+    required this.distanceMeters,
+    required this.status,
+  });
+
+  final String kind;
+  final DateTime recordedAt;
+  final double distanceMeters;
+  final String status;
+
+  factory PklCheckResult.fromJson(Map<String, dynamic> j) => PklCheckResult(
+    kind: j['kind'] as String? ?? '-',
+    recordedAt: DateTime.tryParse('${j['recorded_at']}') ?? DateTime.now(),
+    distanceMeters: (j['distance_meters'] as num?)?.toDouble() ?? 0,
+    status: j['status'] as String? ?? 'hadir',
+  );
+}

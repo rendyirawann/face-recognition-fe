@@ -508,6 +508,50 @@ class AbsensiRepository {
   }
 
   // =================================================================
+  // PKL
+  // =================================================================
+
+  /// Penempatan PKL yang berlaku hari ini.
+  ///
+  /// Mengembalikan null bila siswanya tidak sedang PKL. Server menjawab 404
+  /// untuk itu, dan 404 di sini BUKAN galat: "tidak sedang PKL" adalah
+  /// keadaan normal bagi hampir seluruh siswa. Memperlakukannya sebagai
+  /// galat akan memunculkan pesan merah di layar setiap siswa biasa.
+  Future<PklPlacement?> pklPlacement() async {
+    try {
+      final data = await _api.getObject(ApiRoutes.myPkl);
+      return PklPlacement.fromJson(data);
+    } on ApiFailure catch (e) {
+      if (e.statusCode == 404) return null;
+      rethrow;
+    }
+  }
+
+  /// Absen masuk atau pulang dari tempat PKL.
+  Future<PklCheckResult> pklCheck({
+    required String kind,
+    required double latitude,
+    required double longitude,
+    double? accuracyMeters,
+    required List<int> photoBytes,
+  }) async {
+    final data = await _api.post(
+      ApiRoutes.myPklAttendance,
+      body: {
+        'kind': kind,
+        'latitude': latitude,
+        'longitude': longitude,
+        'accuracy_meters': ?accuracyMeters,
+        'photo_base64': base64Encode(photoBytes),
+        // Waktu ponsel dikirim apa adanya untuk DIBANDINGKAN server dengan
+        // waktunya sendiri, bukan untuk dipakai sebagai waktu absen.
+        'client_time': DateTime.now().toUtc().toIso8601String(),
+      },
+    );
+    return PklCheckResult.fromJson(data);
+  }
+
+  // =================================================================
   // Pemberkasan
   // =================================================================
 

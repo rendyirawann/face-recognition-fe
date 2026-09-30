@@ -57,6 +57,13 @@ class ApiRoutes {
   // =================================================================
 
   static const String panicCategories = '$prefix/panic/categories';
+  // =================================================================
+  // PKL
+  // =================================================================
+
+  static const String myPkl = '$prefix/me/pkl';
+  static const String myPklAttendance = '$prefix/me/pkl/attendance';
+
   static const String panicReports = '$prefix/panic/reports';
 
   static String panicReport(String id) => '$panicReports/$id';
