@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api_client.dart';
 import '../../core/api_config.dart';
+import '../../core/config.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../providers.dart';
@@ -164,6 +165,42 @@ class _ServerSettingsScreenState extends ConsumerState<ServerSettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Pintasan ke server yang sudah dikenal. Mengisi kotak di
+                // bawah, BUKAN langsung menyimpan: pengguna tetap melihat
+                // alamat lengkapnya dan dapat mengujinya lebih dulu.
+                Wrap(
+                  spacing: ClayTheme.sSm,
+                  runSpacing: ClayTheme.sSm,
+                  children: [
+                    for (final s in AppConfig.serverPilihan)
+                      ClaySurface(
+                        radius: ClayTheme.radiusPill,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: ClayTheme.sLg,
+                          vertical: ClayTheme.sSm,
+                        ),
+                        color: _url.text.trim() == s.url
+                            ? ClayTheme.primarySoft
+                            : ClayTheme.surface,
+                        depth: 0.6,
+                        onTap: _busy
+                            ? null
+                            : () => setState(() => _url.text = s.url),
+                        child: Text(
+                          s.nama,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: _url.text.trim() == s.url
+                                ? ClayTheme.primary
+                                : ClayTheme.textMuted,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: ClayTheme.sMd),
+
                 ClayField(
                   controller: _url,
                   hint: 'http://192.168.1.10:8080',

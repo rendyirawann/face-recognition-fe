@@ -23,7 +23,36 @@ class AppConfig {
   /// Tanpa garis miring di ujung: penggabungan menghasilkan `//v1/...` yang
   /// menjadi 404 pada sebagian reverse proxy.
   static const String productionApiBaseUrl =
-      'https://beoulve-dev.biz.id/jargon-be';
+      'https://hustlesync.my.id/jargon-be';
+
+  /// Server yang dapat dipilih langsung dari layar login.
+  ///
+  /// MENGAPA DAFTAR, BUKAN SATU ALAMAT
+  ///
+  /// Sistem ini berjalan di lebih dari satu tempat sekaligus — satu untuk
+  /// uji coba, satu lagi untuk demo — dan penguji berpindah di antaranya
+  /// dalam satu hari. Menuntut mereka mengetik ulang URL lengkap setiap
+  /// kali berpindah adalah undangan untuk salah ketik, dan salah ketik pada
+  /// alamat server muncul sebagai "tidak dapat menghubungi server" yang
+  /// tidak menunjuk ke penyebabnya.
+  ///
+  /// Yang PERTAMA menjadi bawaan build release. Mengetik alamat sendiri
+  /// tetap bisa: daftar ini pintasan, bukan pembatasan.
+  ///
+  /// Tanpa garis miring di ujung — penggabungan dengan path menghasilkan
+  /// `//v1/...` yang menjadi 404 pada sebagian reverse proxy.
+  static const List<ServerPilihan> serverPilihan = [
+    ServerPilihan(
+      nama: 'HustleSync',
+      url: 'https://hustlesync.my.id/jargon-be',
+      keterangan: 'Server utama',
+    ),
+    ServerPilihan(
+      nama: 'Beoulve Dev',
+      url: 'https://beoulve-dev.biz.id/jargon-be',
+      keterangan: 'Server pengembangan',
+    ),
+  ];
 
   /// Wajib sama dengan `FACE_MODEL_VERSION` di server. Embedding dari versi
   /// model berbeda tidak sebanding, dan server menolaknya.
@@ -74,4 +103,17 @@ class AppConfig {
 
   /// Sudut kepala maksimum (derajat) yang masih diterima untuk absensi.
   static const double maxHeadAngle = 22.0;
+}
+
+/// Satu pilihan server siap pakai di layar login.
+class ServerPilihan {
+  const ServerPilihan({
+    required this.nama,
+    required this.url,
+    required this.keterangan,
+  });
+
+  final String nama;
+  final String url;
+  final String keterangan;
 }

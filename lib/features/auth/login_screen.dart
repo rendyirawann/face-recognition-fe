@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api_config.dart';
+import '../../core/config.dart';
 import '../../core/failure.dart';
 import '../../core/theme/clay_backdrop.dart';
 import '../../core/theme/clay_theme.dart';
@@ -283,10 +285,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     // alamatnya salah, pengguna TIDAK BISA masuk — jadi layar
                     // Profil (yang ada di balik login) tidak akan pernah
                     // terjangkau untuk memperbaikinya.
-                    const SizedBox(height: 16),
+                    const SizedBox(height: ClayTheme.sLg),
+
+                    // Pilihan server siap pakai.
+                    //
+                    // Sistem ini berjalan di lebih dari satu tempat, dan
+                    // penguji berpindah di antaranya dalam satu hari.
+                    // Menuntut mereka mengetik ulang URL lengkap setiap kali
+                    // adalah undangan untuk salah ketik — dan salah ketik
+                    // pada alamat server muncul sebagai "tidak dapat
+                    // menghubungi server", yang tidak menunjuk ke penyebabnya.
+                    _PilihanServer(
+                      aktif: ref.watch(apiBaseUrlProvider),
+                      onPilih: (url) async {
+                        await ApiConfig.save(ref.read(storageProvider), url);
+                        ref.read(apiBaseUrlProvider.notifier).state =
+                            ApiConfig.baseUrl;
+                        if (context.mounted) {
+                          showClaySnack(context, 'Alamat server diubah.');
+                        }
+                      },
+                    ),
+
+                    const SizedBox(height: ClayTheme.sMd),
+
+                    // Tetap dapat diisi sendiri. Daftar di atas pintasan,
+                    // bukan pembatasan — pengujian di jaringan lokal
+                    // memakai IP laptop yang tidak mungkin ada di daftar.
                     Center(
                       child: ClayGhostButton(
-                        label: ref.watch(apiBaseUrlProvider),
+                        label: 'Alamat lain…',
                         icon: Icons.dns_rounded,
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute<void>(
@@ -301,6 +329,120 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Deretan pilihan server, plus penanda bila alamatnya diisi sendiri.
+class _PilihanServer extends StatelessWidget {
+  const _PilihanServer({required this.aktif, required this.onPilih});
+
+  final String aktif;
+  final ValueChanged<String> onPilih;
+
+  @override
+  Widget build(BuildContext context) {
+    final bawaan = AppConfig.serverPilihan;
+    final dikenal = bawaan.any((s) => s.url == aktif);
+
+    return Column(
+      children: [
+        Text(
+          'SERVER',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.2,
+            color: ClayTheme.textMuted,
+          ),
+        ),
+        const SizedBox(height: ClayTheme.sSm),
+
+        for (final s in bawaan) ...[
+          _BarisServer(
+            nama: s.nama,
+            keterangan: s.keterangan,
+            url: s.url,
+            terpilih: s.url == aktif,
+            onTap: () => onPilih(s.url),
+          ),
+          const SizedBox(height: ClayTheme.sSm),
+        ],
+
+        // Alamat yang diisi sendiri tetap terlihat, supaya pengguna tahu
+        // mengapa tidak ada satu pun pilihan di atas yang bertanda aktif.
+        if (!dikenal)
+          _BarisServer(
+            nama: 'Alamat sendiri',
+            keterangan: aktif,
+            url: aktif,
+            terpilih: true,
+            onTap: () {},
+          ),
+      ],
+    );
+  }
+}
+
+class _BarisServer extends StatelessWidget {
+  const _BarisServer({
+    required this.nama,
+    required this.keterangan,
+    required this.url,
+    required this.terpilih,
+    required this.onTap,
+  });
+
+  final String nama;
+  final String keterangan;
+  final String url;
+  final bool terpilih;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClaySurface(
+      radius: ClayTheme.radiusSmall,
+      padding: const EdgeInsets.symmetric(
+        horizontal: ClayTheme.sLg,
+        vertical: ClayTheme.sMd,
+      ),
+      color: terpilih ? ClayTheme.primarySoft : ClayTheme.surface,
+      depth: terpilih ? 0.4 : 0.7,
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(
+            terpilih
+                ? Icons.radio_button_checked_rounded
+                : Icons.radio_button_unchecked_rounded,
+            size: ClayTheme.icon,
+            color: terpilih ? ClayTheme.primary : ClayTheme.textMuted,
+          ),
+          const SizedBox(width: ClayTheme.sMd),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  nama,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: ClayTheme.textStrong,
+                  ),
+                ),
+                Text(
+                  keterangan,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 11, color: ClayTheme.textMuted),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
