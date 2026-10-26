@@ -1,4 +1,4 @@
-# jargon-fe — Jargon GO
+# face-recognition-fe — Jargon GO
 
 Aplikasi Flutter Super Apps Dinas Pendidikan Provinsi Sumatera Utara. Satu APK
 melayani perangkat sekolah maupun ponsel pribadi:
@@ -40,15 +40,15 @@ merah bila tidak menguji di browser.
 ### 2. Ambil kode dan dependensinya
 
 ```bash
-git clone https://github.com/rendyirawann/jargon-fe.git
-cd jargon-fe
+git clone https://github.com/rendyirawann/face-recognition-fe.git
+cd face-recognition-fe
 flutter pub get
 ```
 
 ### 3. Jalankan
 
 Aplikasi perlu backend yang hidup. Nyalakan
-[`jargon-be`](https://github.com/rendyirawann/jargon-be) lebih dulu — satu
+[`face-recognition-be`](https://github.com/rendyirawann/face-recognition-be) lebih dulu — satu
 perintah, `setup.bat`, dan panduannya ada di README repositori itu. Setelah
 itu seluruh backend berada di satu alamat: `http://localhost`.
 
@@ -68,7 +68,7 @@ flutter run --dart-define=API_BASE_URL=http://192.168.1.10
 flutter run -d chrome --web-port 5000 --dart-define=API_BASE_URL=http://localhost
 ```
 
-> Port 80 sudah dipakai Apache atau IIS? `jargon-be` dijalankan dengan
+> Port 80 sudah dipakai Apache atau IIS? `face-recognition-be` dijalankan dengan
 > `HTTP_PORT=8090` di `.env`, dan semua alamat di atas menjadi
 > `http://localhost:8090`, `http://10.0.2.2:8090`, dan seterusnya.
 
@@ -78,14 +78,14 @@ flutter run -d chrome --web-port 5000 --dart-define=API_BASE_URL=http://localhos
 
 ### 4. Masuk
 
-Akun uji dibuat oleh migrasi dan seeder di `jargon-be`:
+Akun uji dibuat oleh migrasi dan seeder di `face-recognition-be`:
 
 | Peran | Akun | Sandi |
 |---|---|---|
 | Superadmin | `superadmin` | `Superadmin#2026` |
 | Siswa | `siswa9000000001` | `Siswa#2026` |
 
-Daftar lengkapnya ada di README `jargon-be`.
+Daftar lengkapnya ada di README `face-recognition-be`.
 
 ### 5. Membangun APK
 
@@ -132,7 +132,7 @@ gunakan tombol ujinya sebelum menyimpan.
 
 **Sesi berakhir terus setelah sejam**
 Itu memang umur access token. Aplikasi menyegarkannya otomatis; bila tetap
-terjadi, pastikan `jargon-be` yang dipakai sudah versi terbaru.
+terjadi, pastikan `face-recognition-be` yang dipakai sudah versi terbaru.
 
 ---
 
@@ -287,7 +287,7 @@ pernah terjangkau untuk memperbaikinya.
 
 Backend dijalankan dengan Docker, dan nginx menyatukan API, dashboard, serta
 aplikasi web di **satu port** — 80 secara bawaan, atau nilai `HTTP_PORT` di
-`.env` milik `jargon-be`.
+`.env` milik `face-recognition-be`.
 
 | Tempat menjalankan | Alamat |
 |---|---|
@@ -467,5 +467,5 @@ disiapkan di `FaceEngine.analyze()`.
 
 **Model tidak disertakan** dalam repositori (lisensi dan ukuran).
 
-Backend: [`../jargon-be`](../jargon-be) ·
-Arsitektur: [`../jargon-be/docs/ARCHITECTURE.md`](../jargon-be/docs/ARCHITECTURE.md)
+Backend: [`../face-recognition-be`](../face-recognition-be) ·
+Arsitektur: [`../face-recognition-be/docs/ARCHITECTURE.md`](../face-recognition-be/docs/ARCHITECTURE.md)

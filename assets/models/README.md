@@ -22,7 +22,7 @@ berbeda sehingga harus dipilih secara sadar oleh Dinas.
 Ukuran input dan dimensi output dapat diubah lewat `--dart-define`
 (`FACE_MODEL_INPUT`, `FACE_EMBEDDING_DIM`) bila memakai model lain, **tetapi
 nilainya harus sama dengan konfigurasi server** (`FACE_EMBEDDING_DIM` pada
-`jargon-be/api/.env`).
+`face-recognition-be/api/.env`).
 
 ## Aturan yang tidak boleh dilanggar
 
@@ -39,7 +39,7 @@ menolak request yang versinya tidak cocok. Rantainya:
 ```
 FACE_MODEL_VERSION (Flutter --dart-define)
         ==
-FACE_MODEL_VERSION (jargon-be/api/.env)
+FACE_MODEL_VERSION (face-recognition-be/api/.env)
         ==
 face_embeddings.model_version (kolom di PostgreSQL)
 ```

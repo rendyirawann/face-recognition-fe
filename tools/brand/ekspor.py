@@ -2,7 +2,7 @@
 import os
 from buat_logo import mark
 
-FE = r"c:/xampp/htdocs/myProject/face-recognition/jargon-fe"
+FE = r"c:/xampp/htdocs/myProject/face-recognition-only/face-recognition-fe"
 RES = f"{FE}/android/app/src/main/res"
 
 # Kepadatan layar Android. Ikon warisan 48dp, ikon adaptif 108dp.

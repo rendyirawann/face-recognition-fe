@@ -44,6 +44,6 @@ Thumbs.db
 # run-web.bat menjalankan `flutter run -d chrome` dengan port dan alamat
 # API yang tetap. Berguna saat mengoding, tetapi repositori ini
 # mendokumentasikan satu cara saja menjalankan sistem lengkap: Docker,
-# lewat setup.bat di jargon-be.
+# lewat setup.bat di face-recognition-be.
 # ----------------------------------------------------------------------
 /run-web.bat
