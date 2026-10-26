@@ -57,28 +57,6 @@ class BerandaTab extends StatelessWidget {
               const SizedBox(height: 16),
             ],
 
-            // --- Pintasan tindakan ---
-            if (s.panicUpdates > 0 || s.documentActions > 0) ...[
-              const _SectionLabel('Perlu Perhatian'),
-              if (s.panicUpdates > 0)
-                _AlertRow(
-                  icon: Icons.campaign_rounded,
-                  color: ClayTheme.info,
-                  background: ClayTheme.infoSoft,
-                  title: '${s.panicUpdates} laporan Anda diperbarui',
-                  subtitle: 'Buka menu Lapor untuk melihat tindak lanjutnya.',
-                ),
-              if (s.documentActions > 0)
-                _AlertRow(
-                  icon: Icons.folder_open_rounded,
-                  color: ClayTheme.warning,
-                  background: ClayTheme.warningSoft,
-                  title: '${s.documentActions} pengajuan berkas menunggu',
-                  subtitle: 'Ada berkas yang perlu dilengkapi atau diperiksa.',
-                ),
-              const SizedBox(height: 8),
-            ],
-
             // --- Menu yang tersedia ---
             const _SectionLabel('Layanan'),
             _MenuGrid(menus: s.availableMenus),
@@ -429,67 +407,6 @@ class _SchoolCard extends StatelessWidget {
                 color: ClayTheme.textMuted,
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AlertRow extends StatelessWidget {
-  const _AlertRow({
-    required this.icon,
-    required this.color,
-    required this.background,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final IconData icon;
-  final Color color;
-  final Color background;
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClaySurface(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
-      depth: 0.75,
-      child: Row(
-        children: [
-          ClayIcon(
-            icon: icon,
-            color: color,
-            background: background,
-            size: 19,
-            padding: 11,
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: ClayTheme.textStrong,
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    color: ClayTheme.textMuted,
-                    fontSize: 11.5,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

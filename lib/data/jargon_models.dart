@@ -14,11 +14,7 @@ class HomeSummary {
     required this.roleLabel,
     required this.students,
     this.school,
-    required this.panicUpdates,
-    required this.documentActions,
     required this.availableMenus,
-    required this.canHandlePanic,
-    required this.canVerifyDocument,
   });
 
   final String greeting;
@@ -26,11 +22,7 @@ class HomeSummary {
   final List<StudentTodayCard> students;
   final SchoolTodayCard? school;
 
-  /// Jumlah pengaduan milik sendiri yang statusnya berubah.
-  final int panicUpdates;
 
-  /// Pengajuan berkas yang menunggu tindakan pengguna.
-  final int documentActions;
 
   /// Menu yang boleh ditampilkan, ditentukan server dari izin akun.
   ///
@@ -38,16 +30,7 @@ class HomeSummary {
   /// dashboard tidak boleh menuntut rilis aplikasi baru.
   final List<String> availableMenus;
 
-  /// Boleh MENGUBAH status laporan, bukan sekadar melihatnya.
-  ///
-  /// Datang sebagai penanda siap-pakai dari server. Aplikasi sengaja tidak
-  /// menyimpulkannya dari peran: penanganan laporan tersebar di empat izin
-  /// berbeda menurut jenjangnya, dan menyalin aturan itu ke sini berarti dua
-  /// tempat yang harus diubah bersamaan.
-  final bool canHandlePanic;
 
-  /// Boleh memverifikasi pengajuan berkas.
-  final bool canVerifyDocument;
 
   bool hasMenu(String key) => availableMenus.contains(key);
 
@@ -57,8 +40,6 @@ class HomeSummary {
     // Bawaan false: versi server lama tidak mengirim penanda ini, dan
     // menampilkan tombol penanganan yang pasti ditolak lebih buruk daripada
     // tidak menampilkannya.
-    canHandlePanic: j['can_handle_panic'] as bool? ?? false,
-    canVerifyDocument: j['can_verify_document'] as bool? ?? false,
     students: (j['students'] as List<dynamic>? ?? const [])
         .whereType<Map<String, dynamic>>()
         .map(StudentTodayCard.fromJson)
@@ -66,8 +47,6 @@ class HomeSummary {
     school: j['school'] is Map<String, dynamic>
         ? SchoolTodayCard.fromJson(j['school'] as Map<String, dynamic>)
         : null,
-    panicUpdates: (j['panic_updates'] as num?)?.toInt() ?? 0,
-    documentActions: (j['document_actions'] as num?)?.toInt() ?? 0,
     availableMenus: (j['available_menus'] as List<dynamic>? ?? const [])
         .map((e) => e.toString())
         .toList(),

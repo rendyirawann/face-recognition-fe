@@ -10,9 +10,6 @@ import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
 import '../../providers.dart';
 import '../absensi/absensi_screen.dart';
-import '../berkas/berkas_screen.dart';
-import '../panic/panic_feed_screen.dart';
-import '../pkl/pkl_screen.dart';
 import 'beranda_tab.dart';
 import 'notifikasi_screen.dart';
 import 'profile_screen.dart';
@@ -105,44 +102,6 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ),
       );
       pages.add(const AbsensiScreen());
-    }
-
-    if (summary?.hasMenu('panic_button') ?? false) {
-      items.add(
-        ClayNavItem(
-          icon: Icons.campaign_outlined,
-          activeIcon: Icons.campaign_rounded,
-          label: 'Lapor',
-          badge: summary?.panicUpdates ?? 0,
-        ),
-      );
-      pages.add(const PanicFeedScreen());
-    }
-
-    // PKL muncul HANYA bila server menyatakan siswanya sedang menjalani
-    // penempatan hari ini. Tabnya hilang sendiri saat masa PKL berakhir,
-    // tanpa aplikasi perlu tahu tanggal apa pun.
-    if (summary?.hasMenu('pkl') ?? false) {
-      items.add(
-        const ClayNavItem(
-          icon: Icons.business_center_outlined,
-          activeIcon: Icons.business_center_rounded,
-          label: 'PKL',
-        ),
-      );
-      pages.add(const PklScreen());
-    }
-
-    if (summary?.hasMenu('pemberkasan') ?? false) {
-      items.add(
-        ClayNavItem(
-          icon: Icons.folder_outlined,
-          activeIcon: Icons.folder_rounded,
-          label: 'Berkas',
-          badge: summary?.documentActions ?? 0,
-        ),
-      );
-      pages.add(const BerkasScreen());
     }
 
     return (items: items, pages: pages);

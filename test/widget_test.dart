@@ -229,15 +229,14 @@ void main() {
         'greeting': 'Selamat pagi, Budi',
         'role_label': 'Siswa',
         'students': <dynamic>[],
-        'panic_updates': 2,
-        'document_actions': 0,
-        'available_menus': ['absensi', 'panic_button'],
+        'available_menus': ['absensi', 'face_recognition'],
       });
 
       expect(s.hasMenu('absensi'), isTrue);
-      expect(s.hasMenu('panic_button'), isTrue);
+      expect(s.hasMenu('face_recognition'), isTrue);
+      // Menu yang tidak dikirim server tidak boleh muncul: inilah yang
+      // menjaga aplikasi tidak menampilkan tab untuk modul yang sudah tidak ada.
       expect(s.hasMenu('pemberkasan'), isFalse);
-      expect(s.panicUpdates, 2);
     });
 
     test('siswa yang belum discan berbeda dari alfa', () {
