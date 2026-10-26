@@ -9,6 +9,7 @@ import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../data/jargon_models.dart';
 import '../../providers.dart';
+import '../pkl/pkl_screen.dart';
 import '../absensi/absensi_screen.dart';
 import 'beranda_tab.dart';
 import 'notifikasi_screen.dart';
@@ -102,6 +103,20 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         ),
       );
       pages.add(const AbsensiScreen());
+    }
+
+    // PKL muncul HANYA bila server menyatakan siswanya sedang menjalani
+    // penempatan hari ini. Tabnya hilang sendiri saat masa PKL berakhir,
+    // tanpa aplikasi perlu tahu tanggal apa pun.
+    if (summary?.hasMenu('pkl') ?? false) {
+      items.add(
+        const ClayNavItem(
+          icon: Icons.business_center_outlined,
+          activeIcon: Icons.business_center_rounded,
+          label: 'PKL',
+        ),
+      );
+      pages.add(const PklScreen());
     }
 
     return (items: items, pages: pages);
