@@ -142,7 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Super Apps Dinas Pendidikan\nProvinsi Sumatera Utara',
+                      'Sistem Absensi Wajah\nSMKS Sinar Husni',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: ClayTheme.textMuted,
