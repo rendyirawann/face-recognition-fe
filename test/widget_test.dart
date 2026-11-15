@@ -1,41 +1,14 @@
-import 'dart:typed_data';
-
 import 'package:jargon_go/core/api_config.dart';
 import 'package:jargon_go/core/config.dart';
 import 'package:jargon_go/core/api_routes.dart';
 import 'package:jargon_go/data/jargon_models.dart';
 import 'package:jargon_go/data/models.dart';
-import 'package:jargon_go/features/kiosk/face_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Pengujian unit untuk logika yang paling berkonsekuensi di sisi klien:
 /// normalisasi vektor (menentukan apakah pencocokan wajah bisa dipercaya) dan
 /// pembacaan respons API (menentukan apa yang dilihat siswa di layar).
 void main() {
-  group('Normalisasi embedding', () {
-    test('menghasilkan vektor bernorm satu', () {
-      final v = FaceEngine.l2Normalize(Float32List.fromList([3, 4]));
-      final norm = v.fold<double>(0, (s, x) => s + x * x);
-      expect(norm, closeTo(1.0, 1e-6));
-    });
-
-    test('vektor nol dibiarkan apa adanya, bukan menghasilkan NaN', () {
-      // Membagi dengan norm nol akan menghasilkan NaN yang lalu ditolak
-      // server sebagai embedding tidak valid — lebih baik dikembalikan utuh
-      // agar penyebabnya terlihat pada pemeriksaan dimensi.
-      final v = FaceEngine.l2Normalize(Float32List.fromList([0, 0, 0]));
-      expect(v.every((x) => x == 0), isTrue);
-    });
-
-    test('vektor yang sudah normal tidak berubah', () {
-      final once = FaceEngine.l2Normalize(Float32List.fromList([1, 2, 3, 4]));
-      final twice = FaceEngine.l2Normalize(once);
-      for (var i = 0; i < once.length; i++) {
-        expect(twice[i], closeTo(once[i], 1e-6));
-      }
-    });
-  });
-
   group('RecognizeResult', () {
     test('membaca absensi masuk beserta jam lokal', () {
       final r = RecognizeResult.fromJson({

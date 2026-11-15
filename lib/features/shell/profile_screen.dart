@@ -5,11 +5,9 @@ import '../../core/theme/clay_theme.dart';
 import '../../core/theme/clay_widgets.dart';
 import '../../providers.dart';
 import '../auth/login_screen.dart';
-import '../kiosk/kiosk_entry.dart';
-import '../pairing/pairing_screen.dart';
 import 'server_settings_screen.dart';
 
-/// Profil pengguna + akses mode kios.
+/// Profil pengguna.
 ///
 /// Mode kios (tablet absensi wajah) sengaja ditaruh di sini, bukan di menu
 /// utama: hanya segelintir perangkat yang dipasang sebagai kios, sementara
@@ -22,7 +20,6 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
-    final deviceProfile = ref.watch(deviceProfileProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profil')),
@@ -152,63 +149,6 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ],
-
-          // --- Mode kios ---
-          const SizedBox(height: 16),
-          ClayCard(
-            title: 'Mode Kios (Tablet Sekolah)',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  deviceProfile == null
-                      ? 'Perangkat ini belum dipasangkan sebagai tablet absensi. '
-                            'Absensi wajah hanya dilakukan pada tablet yang '
-                            'terpasang di sekolah.'
-                      : 'Terpasang di ${deviceProfile['school_name']} '
-                            '(${deviceProfile['device_code']}).',
-                  style: TextStyle(
-                    color: ClayTheme.textMuted,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                if (deviceProfile == null)
-                  ClayGhostButton(
-                    label: 'Pasangkan Perangkat',
-                    icon: Icons.link_rounded,
-                    compact: false,
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const PairingScreen()),
-                    ),
-                  )
-                else
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ClayButton(
-                          label: 'Buka Kios',
-                          icon: Icons.center_focus_strong_rounded,
-                          compact: true,
-                          onPressed: () => openKiosk(context),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      ClayGhostButton(
-                        label: 'Lepas',
-                        icon: Icons.link_off_rounded,
-                        color: ClayTheme.danger,
-                        onPressed: () async {
-                          await ref.read(storageProvider).clearDevice();
-                          ref.read(deviceProfileProvider.notifier).state = null;
-                        },
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
 
           const SizedBox(height: 16),
           ClayCard(

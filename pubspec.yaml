@@ -46,9 +46,6 @@ dependencies:
   go_router: ^17.5.0
   dio: ^5.11.0
   camera: ^0.12.0+2
-  google_mlkit_face_detection: ^0.14.0
-  tflite_flutter: ^0.12.1
-  image: ^4.8.0
   sqflite: ^2.4.3
   path: ^1.9.1
   path_provider: ^2.1.6
@@ -57,7 +54,6 @@ dependencies:
   intl: 0.20.2
   connectivity_plus: ^7.3.1
   permission_handler: ^13.0.1
-  wakelock_plus: ^1.7.0
   device_info_plus: ^13.2.0
   crypto: ^3.0.7
   collection: ^1.19.1
@@ -144,22 +140,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # Model embedding wajah (TFLite).
-  #
-  # Berkas model TIDAK disertakan dalam repositori: lisensi model pra-latih
-  # bervariasi dan ukurannya beberapa MB. Lihat assets/models/README.md untuk
-  # cara memperolehnya.
-  #
-  # KOREKSI: komentar di sini sebelumnya menyatakan `flutter build` akan
-  # gagal bila berkas modelnya belum ada. Itu TIDAK benar, dan sudah
-  # dibuktikan dengan memeriksa APK yang sudah jadi — karena yang
-  # didaftarkan adalah DIREKTORI (`assets/models/`), bukan berkas tertentu,
-  # build lolos diam-diam dan APK hanya memuat README.md.
-  #
-  # Akibatnya jalur absensi wajah di HP tidak dapat berjalan, dan
-  # kegagalannya muncul saat aplikasi dipakai, bukan saat dibangun.
   assets:
-    - assets/models/
     - assets/brand/
 
   # Plus Jakarta Sans, DIBUNDEL bukan diunduh paket google_fonts saat
