@@ -1,5 +1,4 @@
-/// Model untuk fitur Super App Jargon GO: beranda, Panic Button, dan
-/// Pemberkasan.
+/// Model untuk beranda aplikasi dan notifikasinya.
 ///
 /// Model absensi & kios tetap di `models.dart`.
 library;

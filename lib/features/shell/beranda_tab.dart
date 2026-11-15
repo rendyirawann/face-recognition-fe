@@ -423,7 +423,7 @@ class _MenuGrid extends StatelessWidget {
   /// tema yang kini ditentukan saat berjalan, bukan saat kompilasi.
   ///
   /// Konsekuensi yang disengaja: peta ini dibangun ulang setiap build. Isinya
-  /// empat entri, jadi biayanya tidak terukur — dan alternatifnya adalah
+  /// dua entri, jadi biayanya tidak terukur — dan alternatifnya adalah
   /// warna yang tidak ikut berubah saat tema diganti.
   static Map<String, (IconData, String, String, Color, Color)> get _meta => {
     'absensi': (
@@ -433,19 +433,12 @@ class _MenuGrid extends StatelessWidget {
       ClayTheme.primary,
       ClayTheme.primarySoft,
     ),
-    'panic_button': (
-      Icons.campaign_rounded,
-      'Panic Button',
-      'Lapor anonim',
-      ClayTheme.danger,
-      ClayTheme.dangerSoft,
-    ),
-    'pemberkasan': (
-      Icons.folder_rounded,
-      'Pemberkasan',
-      'Unggah berkas',
-      ClayTheme.warning,
-      ClayTheme.warningSoft,
+    'pkl': (
+      Icons.business_center_rounded,
+      'PKL',
+      'Absen di tempat PKL',
+      ClayTheme.success,
+      ClayTheme.successSoft,
     ),
   };
 
