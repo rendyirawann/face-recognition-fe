@@ -228,110 +228,6 @@ void main() {
     });
   });
 
-  group('Panic Button', () {
-    test('laporan membawa handle anonim, bukan nama pelapor', () {
-      final r = PanicReport.fromJson({
-        'id': 'r1',
-        'created_at': '2026-08-14T02:00:00Z',
-        'category_code': 'pungli',
-        'category_name': 'Pungutan Liar',
-        'anonymous_handle': 'Siswa#7K4M',
-        'author_role': 'siswa',
-        'school_label': 'SMA di Medan',
-        'title': 'Ada pungutan di kelas',
-        'body': 'Diminta uang di luar ketentuan.',
-        'severity': 'tinggi',
-        'status': 'ditindaklanjuti',
-        'support_count': 4,
-        'comment_count': 2,
-        'is_mine': true,
-        'is_supported': false,
-        'media': <dynamic>[],
-      });
-
-      expect(r.anonymousHandle, 'Siswa#7K4M');
-      expect(r.schoolLabel, 'SMA di Medan');
-      expect(r.statusLabel, 'Sedang Ditindaklanjuti');
-      expect(r.isMine, isTrue);
-    });
-
-    test('komentar resmi menampilkan nama petugas, komentar warga tidak', () {
-      final resmi = PanicComment.fromJson({
-        'id': 'c1',
-        'is_official': true,
-        'official_name': 'Sari Dewi',
-        'official_title': 'Petugas Pengaduan',
-        'body': 'Laporan sedang kami tindaklanjuti.',
-        'is_mine': false,
-        'created_at': '2026-08-14T03:00:00Z',
-      });
-      expect(resmi.displayName, 'Sari Dewi');
-
-      final warga = PanicComment.fromJson({
-        'id': 'c2',
-        'anonymous_handle': 'Siswa#22XY',
-        'is_official': false,
-        'body': 'Saya juga mengalami.',
-        'is_mine': false,
-        'created_at': '2026-08-14T03:05:00Z',
-      });
-      expect(warga.displayName, 'Siswa#22XY');
-    });
-  });
-
-  group('Pemberkasan', () {
-    SubmissionDetail detail({required bool lengkap, String status = 'draft'}) =>
-        SubmissionDetail.fromJson({
-          'id': 'sub1',
-          'owner_name': 'Budi',
-          'purpose': 'kenaikan_pangkat',
-          'title': 'Kenaikan Pangkat IV/a',
-          'status': status,
-          'file_count': lengkap ? 2 : 1,
-          'approved_file_count': 0,
-          'rejected_file_count': 0,
-          'created_at': '2026-08-01T00:00:00Z',
-          'is_editable': status == 'draft' || status == 'revisi',
-          'files': <dynamic>[],
-          'timeline': <dynamic>[],
-          'checklist': [
-            {
-              'document_type_id': 'd1',
-              'code': 'sk_pangkat_terakhir',
-              'name': 'SK Pangkat Terakhir',
-              'is_required': true,
-              'uploaded': true,
-            },
-            {
-              'document_type_id': 'd2',
-              'code': 'pak_terakhir',
-              'name': 'PAK Terakhir',
-              'is_required': true,
-              'uploaded': lengkap,
-            },
-          ],
-        });
-
-    test('tidak bisa diajukan bila dokumen wajib belum lengkap', () {
-      final d = detail(lengkap: false);
-      expect(d.missingRequired.single.name, 'PAK Terakhir');
-      expect(d.canSubmit, isFalse);
-    });
-
-    test('bisa diajukan setelah seluruh dokumen wajib terunggah', () {
-      final d = detail(lengkap: true);
-      expect(d.missingRequired, isEmpty);
-      expect(d.canSubmit, isTrue);
-    });
-
-    test('pengajuan yang sudah dikirim terkunci', () {
-      // Berkas tidak boleh bisa ditukar setelah sebagian diperiksa.
-      final d = detail(lengkap: true, status: 'diajukan');
-      expect(d.isEditable, isFalse);
-      expect(d.canSubmit, isFalse);
-    });
-  });
-
   group('AttendanceRow', () {
     test('membedakan id absensi dari id siswa', () {
       // Endpoint koreksi memakai student_id; menukarnya dengan id baris
@@ -433,16 +329,13 @@ void main() {
       expect(ApiRoutes.needsNoCredential(ApiRoutes.login), isTrue);
       expect(ApiRoutes.needsNoCredential(ApiRoutes.devicePair), isTrue);
       expect(ApiRoutes.needsNoCredential(ApiRoutes.health), isTrue);
-      expect(ApiRoutes.needsNoCredential(ApiRoutes.panicReports), isFalse);
+      expect(ApiRoutes.needsNoCredential(ApiRoutes.myPkl), isFalse);
     });
 
     test('path bersarang dibangun dari path induknya', () {
-      // Sehingga mengubah `submissions` sekali ikut memindahkan seluruh
-      // turunannya.
-      expect(ApiRoutes.submissionFiles('abc'),
-          '${ApiRoutes.submissions}/abc/files');
-      expect(ApiRoutes.panicComments('xyz'),
-          '${ApiRoutes.panicReports}/xyz/comments');
+      // Sehingga mengubah path induknya sekali ikut memindahkan seluruh
+      // turunannya, bukan menyisakan satu yang tertinggal.
+      expect(ApiRoutes.myPklAttendance, startsWith(ApiRoutes.myPkl));
     });
   });
 }

@@ -53,44 +53,11 @@ class ApiRoutes {
   static const String attendanceManual = '$prefix/attendances/manual';
 
   // =================================================================
-  // Panic Button
-  // =================================================================
-
-  static const String panicCategories = '$prefix/panic/categories';
-  // =================================================================
   // PKL
   // =================================================================
 
   static const String myPkl = '$prefix/me/pkl';
   static const String myPklAttendance = '$prefix/me/pkl/attendance';
-
-  static const String panicReports = '$prefix/panic/reports';
-
-  static String panicReport(String id) => '$panicReports/$id';
-
-  static String panicSupport(String id) => '$panicReports/$id/support';
-
-  static String panicComments(String id) => '$panicReports/$id/comments';
-
-  static String panicStatus(String id) => '$panicReports/$id/status';
-
-  // =================================================================
-  // Pemberkasan
-  // =================================================================
-
-  static const String documentTypes = '$prefix/documents/types';
-  static const String submissions = '$prefix/documents/submissions';
-
-  static String submission(String id) => '$submissions/$id';
-
-  static String submissionFiles(String id) => '$submissions/$id/files';
-
-  static String submitSubmission(String id) => '$submissions/$id/submit';
-
-  static String reviewSubmission(String id) => '$submissions/$id/review';
-
-  static String documentFile(String fileId) =>
-      '$prefix/documents/files/$fileId';
 
   // =================================================================
   // Perangkat kios (tablet sekolah)

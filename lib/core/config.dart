@@ -78,8 +78,6 @@ class AppConfig {
     defaultValue: 112,
   );
 
-  /// Berkas model TFLite di dalam assets.
-  static const String modelAsset = 'assets/models/mobilefacenet.tflite';
 
   /// Jeda minimum antara dua scan siswa yang sama. Penjaga sisi klien;
   /// server punya penjaganya sendiri.
