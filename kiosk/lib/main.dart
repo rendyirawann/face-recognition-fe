@@ -23,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Alamat dashboard, diisi saat build:
 ///
@@ -30,7 +31,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 ///       --dart-define=BASE_URL=https://absensi.sekolah.id
 const String kBaseUrl = String.fromEnvironment(
   'BASE_URL',
-  defaultValue: 'https://hustlesync.my.id/jargon-be',
+  defaultValue: 'https://jargon-be.hustlesync.my.id',
 );
 
 /// Dua halaman yang dibuka kios, keduanya milik dashboard.
@@ -141,6 +142,20 @@ class _LayarKiosState extends State<LayarKios> {
       platform.setMediaPlaybackRequiresUserGesture(false);
     }
 
+    _mulai();
+  }
+
+  /// Izin kamera Android harus diminta saat aplikasi berjalan. Izin di
+  /// manifest saja tidak cukup sejak Android 6: tanpa ini WebView
+  /// menyetujui permintaan halaman, tetapi kameranya tetap tertutup oleh
+  /// sistem dan layar absensi hanya hitam.
+  Future<void> _mulai() async {
+    final s = await Permission.camera.request();
+    if (!s.isGranted && mounted) {
+      setState(() => _galat = 'Izin kamera ditolak. Buka Pengaturan > Aplikasi > '
+          'Jargon GO Kios > Izin, lalu izinkan Kamera.');
+      if (s.isPermanentlyDenied) await openAppSettings();
+    }
     _web.loadRequest(Uri.parse(_halaman.url()));
   }
 
