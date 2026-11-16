@@ -19,11 +19,11 @@ class AppConfig {
 
   /// Bawaan build release bila `API_BASE_URL` tidak diisi.
   ///
-  /// Memuat awalan path `/jargon-be` karena backend dipasang di subpath.
+  /// Subdomain sendiri; alamat lama `hustlesync.my.id/jargon-be` kini hanya mengalihkan ke sini.
   /// Tanpa garis miring di ujung: penggabungan menghasilkan `//v1/...` yang
   /// menjadi 404 pada sebagian reverse proxy.
   static const String productionApiBaseUrl =
-      'https://hustlesync.my.id/jargon-be';
+      'https://jargon-be.hustlesync.my.id';
 
   /// Server yang dapat dipilih langsung dari layar login.
   ///
@@ -44,7 +44,7 @@ class AppConfig {
   static const List<ServerPilihan> serverPilihan = [
     ServerPilihan(
       nama: 'HustleSync',
-      url: 'https://hustlesync.my.id/jargon-be',
+      url: 'https://jargon-be.hustlesync.my.id',
       keterangan: 'Server utama',
     ),
     ServerPilihan(
