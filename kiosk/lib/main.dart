@@ -34,9 +34,11 @@ const String kBaseUrl = String.fromEnvironment(
   defaultValue: 'https://jargon-be.hustlesync.my.id',
 );
 
-/// Dua halaman yang dibuka kios, keduanya milik dashboard.
+/// Halaman yang dibuka kios, semuanya milik dashboard: absen wajah,
+/// absen kartu (barcode/QR), dan pendaftaran wajah.
 enum Halaman {
   absensi('Absensi', '/admin/biometric/scan', Icons.center_focus_strong_rounded),
+  kartu('Kartu', '/admin/attendance-card/scan', Icons.qr_code_scanner_rounded),
   pendaftaran('Pendaftaran Wajah', '/admin/biometric', Icons.person_add_alt_1_rounded);
 
   const Halaman(this.judul, this.path, this.ikon);
